@@ -7,7 +7,8 @@ import RTL from "../views/Rtl.vue";
 import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
-import Login from "../views/aula/login.vue";
+import Cursos from "../views/aministrador/adminCursos/Cursos.vue"
+import Categorias from "../views/aministrador/adminCursos/Categorias.vue"
 
 const routes = [
   {
@@ -56,12 +57,17 @@ const routes = [
     component: Signup,
   },
   //  
-  {
-    path: "/login",
-    name: "Login",
-    component: Login,
-  },
-//
+
+{
+  path:"/Cursos",
+  name: "Cursos",
+  component: Cursos,
+},
+{
+  path:"/Categorias",
+  name:"/Categorias",
+  component: Categorias,
+},
 ];
 
 const router = createRouter({

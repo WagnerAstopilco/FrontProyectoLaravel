@@ -1,6 +1,6 @@
 import apiClient from '@/axios';
 export default {
-    getCategorias(){
-        return apiClient.get('/category');
+    getCursos(){
+        return apiClient.get('/courses');
     }
 }
