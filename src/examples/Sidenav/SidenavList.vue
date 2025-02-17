@@ -37,7 +37,6 @@ const getRoute = () => {
         </sidenav-item>
       </li>
 
-      <!-- Dropdown for Tables -->
       <li class="nav-item dropdown" @mouseenter="state.dropdownOpen = true" @mouseleave="state.dropdownOpen = false">
         <a class="nav-link d-flex align-items-center" href="#" @click.prevent="state.dropdownOpen = !state.dropdownOpen">
           <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10 me-2"></i>
@@ -46,19 +45,19 @@ const getRoute = () => {
         </a>
         <ul v-if="state.dropdownOpen" class="dropdown-menu show" style="display: block; position: relative;">
           <li>
-            <sidenav-item to="/tables/Categorias" :navText="isRTL ? 'الجدول الأساسي' : 'Categorías'" />
+            <sidenav-item to="/AdminCursos/Categorias" :class="getRoute() === 'Categorias' ? 'active' : ''" :navText="isRTL ? 'الجدول الأساسي' : 'Categorías'" />
           </li>
           <li>
-            <sidenav-item to="/tables/Cursos" :navText="isRTL ? 'الجدول المتقدم' : 'Cursos'" />
+            <sidenav-item to="/AdminCursos/Cursos" :class="getRoute() === 'Cursos' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Cursos'" />
           </li>
           <li>
-            <sidenav-item to="/tables/Cursos" :navText="isRTL ? 'الجدول المتقدم' : 'Materiales'" />
+            <sidenav-item to="/AdminCursos/Materiales" :class="getRoute() === 'Materiales' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Materiales'" />
           </li>
           <li>
-            <sidenav-item to="/tables/Cursos" :navText="isRTL ? 'الجدول المتقدم' : 'Modulos'" />
+            <sidenav-item to="/AdminCursos/Modulos" :class="getRoute() === 'Modulos' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Modulos'" />
           </li>
           <li>
-            <sidenav-item to="/tables/Cursos" :navText="isRTL ? 'الجدول المتقدم' : 'Capacitadores'" />
+            <sidenav-item to="/AdminCursos/Capacitadores" :class="getRoute() === 'Capacitadores' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Capacitadores'" />
           </li>
         </ul>
       </li>

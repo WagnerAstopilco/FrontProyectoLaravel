@@ -9,6 +9,11 @@ import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
 import Cursos from "../views/aministrador/adminCursos/Cursos.vue"
 import Categorias from "../views/aministrador/adminCursos/Categorias.vue"
+import Materiales from "../views/aministrador/adminCursos/Materiales.vue";
+import Modulos from "../views/aministrador/adminCursos/Modulos.vue";
+import Capacitadores from "../views/aministrador/adminCursos/Capacitadores.vue";
+import CategoriaDetalle from "../views/aministrador/adminCursos/CategoriaDetalle.vue";
+import CategoriaNueva from "../views/aministrador/adminCursos/CategoriaNueva.vue";
 
 const routes = [
   {
@@ -57,17 +62,42 @@ const routes = [
     component: Signup,
   },
   //  
-
-{
-  path:"/Cursos",
-  name: "Cursos",
-  component: Cursos,
-},
-{
-  path:"/Categorias",
-  name:"/Categorias",
-  component: Categorias,
-},
+  {
+    path:"/AdminCursos/Categorias",
+    name:"Categorias",
+    component: Categorias,
+  },
+  {
+    path: '/AdminCursos/CategoriaDetalle/:id',
+    name: 'CategoriaDetalle',
+    component: CategoriaDetalle, 
+    props: true
+  },
+  {
+    path:'/AdminCursos/CategoriaNueva',
+    name:'NuevaCategoria',
+    component: CategoriaNueva,
+  },
+  {
+    path:"/AdminCursos/Cursos",
+    name: "Cursos",
+    component: Cursos,
+  },
+  {
+    path:"/AdminCursos/Materiales",
+    name:"Materiales",
+    component: Materiales,
+  },
+  {
+    path:"/AdminCursos/Modulos",
+    name:"Modulos",
+    component: Modulos,
+  },
+  {
+    path:"/AdminCursos/Capacitadores",
+    name:"Capacitadores",
+    component: Capacitadores,
+  },
 ];
 
 const router = createRouter({

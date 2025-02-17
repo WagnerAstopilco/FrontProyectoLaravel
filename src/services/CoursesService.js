@@ -1,6 +1,6 @@
 import apiClient from '@/axios';
 export default {
-    getCursos(){
+    getCourses(){
         return apiClient.get('/courses');
     }
 }

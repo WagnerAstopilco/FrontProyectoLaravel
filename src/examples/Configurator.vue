@@ -51,7 +51,7 @@ const darkMode = () => {
           :class="isRTL ? 'float-start' : 'float-end'"
         >
           <button class="p-0 btn btn-link text-dark fixed-plugin-close-button">
-            <i class="fa fa-close"></i>
+            <i class="fa fa-close">X</i>
           </button>
         </div>
         <!-- End Toggle Button -->

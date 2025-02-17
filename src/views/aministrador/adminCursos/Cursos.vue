@@ -3,27 +3,27 @@
         <div class="login-card">
             <h2>Cursos</h2>            
             <div>
-                {{cursos}}
+                {{courses}}
             </div>
 
         </div>
     </div>
 </template>
 <script>
-import CursoService from '@/services/CursosService.js'
+import CourseService from '@/services/CoursesService.js'
 export default {
     data() {
         return {
-            cursos:[]
+            courses:[]
         };          
     },
     mounted() {
-        this.getCursos();
+        this.getCourses();
     },
     methods: {
-        async getCursos(){
-            const response=await CursoService.getCursos();
-            this.categorias=response.data.data;
+        async getCourses(){
+            const response=await CourseService.getCourses();
+            this.courses=response.data.data;
         }
     }
 };
