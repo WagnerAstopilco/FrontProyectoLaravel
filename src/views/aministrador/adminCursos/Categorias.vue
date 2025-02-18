@@ -2,7 +2,7 @@
     
   <div class="category-container">
         <div class="category-card">
-            <div>
+            <div class="head-page">
                 <h2>Categorías</h2>
                 <button type="button" class="btn btn-info" @click="newCategory"><i class="bi bi-plus"></i> Nuevo</button>            
             </div>
@@ -15,13 +15,14 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr v-for="category in categories" :key="category.id" @click="goToCategoryDetail(category.id)"> 
+                    <tr v-for="category in categories" :key="category.id" @click="categoryDetail(category.id)"> 
                         <td>{{ category.name }}</td>
                         <td>{{ category.description }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+          
     </div>
 </template>
 
@@ -34,10 +35,10 @@ import 'datatables.net-bs4';
 export default {
     data() {
         return {
-            categories:[]
+            categories:[],
         };          
     },
-    mounted() {
+    created() {
         this.getCategories();
     },
     beforeUnmount() {
@@ -53,7 +54,7 @@ export default {
                 $('#categoryTable').DataTable();
             });
         },
-        goToCategoryDetail(id) {
+        categoryDetail(id) {
         this.$router.push({ name: 'CategoriaDetalle', params: { id: id } });
         },
         newCategory(){
@@ -63,10 +64,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #categoryTable{
     background-color: #ffffff;
-    max-width: 98%;
+    max-width: 95%;
 }
 thead{
     background-color: #000000;
@@ -74,5 +75,13 @@ thead{
 }
 tr{
     cursor: pointer;
+}
+.head-page{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.head-page button{
+    margin-left:5%;
 }
 </style>

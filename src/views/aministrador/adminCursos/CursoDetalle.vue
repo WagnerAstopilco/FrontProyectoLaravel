@@ -1,16 +1,14 @@
 <template>
     <div class="category-details">
-        <div class="head-page">
-            <h2>Detalles de la Categoría</h2>
+        <div class="head">
+            <h2>Detalles del Curso</h2>
             <div class="dropdown">
                 <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Opciones
                 </button>
                 <ul class="dropdown-menu">
-                    <div v-if="category">
-                    <li><a class="dropdown-item" href="#" @click="editCategory(category.id)">Editar</a></li>
-                    <li><a class="dropdown-item" href="#" @click="deleteCategory">Eliminar</a></li>
-                </div>
+                    <li><a class="dropdown-item" href="#" >Editar</a></li>
+                    <li><a class="dropdown-item" href="#">Eliminar</a></li>
                 </ul>
             </div>            
         </div>
@@ -23,25 +21,20 @@
                 <div class="courses">
                     <h3>Cursos</h3>
                     <div v-if="category.courses">
-                        <table id="courseCategoryTable" class="table table-striped">
+                        <table>
                             <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Abreviación</th>
-                                    <th>Descripción</th>
-                                </tr>
+                                <tr>Nombre</tr>
+                                <tr>Abreviación</tr>
+                                <tr>Descripcion</tr>
                             </thead>
                             <tbody>
-                                <tr v-for="course in category.courses" :key="course.id" @click="courseCategoryDetails(course.id)">
+                                <tr v-for="course in category.courses" :key="course.id" @click="goToCourseDetail(course.id)">
                                     <td>{{ course.name_long }}</td>
                                     <td>{{ course.name_short }}</td>
                                     <td>{{ course.description }}</td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <div v-else>
-                        <p>Sin cursos asignados</p>
                     </div>
                 </div>
             </div>
@@ -63,7 +56,7 @@ export default {
             category: null
         };
     },
-    created() {
+    mounted() {
         this.getCategoryDetails();
     },
     methods: {
@@ -75,27 +68,13 @@ export default {
         goBack() {
             this.$router.push({ name: 'Categorias' }); 
         },
-        courseCategoryDetails(id){
-            this.$router.push({ name: 'CursoDetalle', params: { id: id } });
-        },
-        editCategory(id) {
-        this.$router.push({ name: 'EditarCategoria', params: { id: id } });
-        },
-        async deleteCategory() {
-            const confirmed = confirm('¿Estás seguro de que deseas eliminar esta categoría?');
-            if (confirmed) {
-                try {
-                    await CategoryService.deleteCategory(this.category.id); 
-                    this.$router.push({ name: 'Categorias' });
-                } catch (error) {
-                    alert('Hubo un error al intentar eliminar la categoría.');
-                }
-            }
+        goToCourseDetail(id){
+            this.$router.push({ name: 'CusrsoDetalle', params: { id: id } });
         }
     }
 };
 </script>
-<style scoped>
+<style>
 #courseCategoryTable{
     justify-self: center;
     max-width: 95%;
@@ -106,17 +85,5 @@ export default {
 .head{
     display: flex;
     justify-content: space-between;
-}
-.head-page{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-.head-page .dropdown{
-    margin-left:5%;
-}
-p{
-    font-size: large;
-    color:rgba(0, 0, 0, 0.808);
 }
 </style>
