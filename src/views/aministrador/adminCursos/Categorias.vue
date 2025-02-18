@@ -1,5 +1,4 @@
-<template>
-    
+<template> 
   <div class="category-container">
         <div class="category-card">
             <div class="head-page">
@@ -22,7 +21,6 @@
                 </tbody>
             </table>
         </div>
-          
     </div>
 </template>
 
