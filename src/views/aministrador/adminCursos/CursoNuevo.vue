@@ -21,7 +21,6 @@
         <div class="form-group">
             <label for="descripcion">Descripción</label>
             <textarea id="descripcion" v-model="newCourse.description" placeholder="Descripción del curso"></textarea>
-            <p v-if="error" class="error">{{ error }}</p> 
         </div>
         <div class="form-group">
             <label for="store">Tienda</label>
@@ -36,8 +35,9 @@
                 </option>
             </select>
         </div>        
+        <p v-if="error" class="error">{{ error }}</p> 
         <div class="buttons">
-        <button type="submit" class="btn btn-info" @click="addCourse">{{ loading ? "Agregando..." : "Agregar" }}</button>
+        <button type="submit" class="btn btn-info">{{ loading ? "Agregando..." : "Agregar" }}</button>
         <button type="button" class="btn btn-primary" @click="goBack">Volver</button>
         </div>
     </form>

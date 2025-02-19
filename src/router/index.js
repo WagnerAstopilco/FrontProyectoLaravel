@@ -18,6 +18,9 @@ import CursoDetalle from "../views/aministrador/adminCursos/CursoDetalle.vue";
 import CategoriaEditar from "../views/aministrador/adminCursos/CategoriaEditar.vue";
 import CursoNuevo from "../views/aministrador/adminCursos/CursoNuevo.vue";
 import CursoEditar from "../views/aministrador/adminCursos/CursoEditar.vue";
+import MaterialDetalle from "../views/aministrador/adminCursos/MaterialDetalle.vue";
+import MaterialEditar from "../views/aministrador/adminCursos/MaterialEditar.vue";
+import MaterialNuevo from "../views/aministrador/adminCursos/MaterialNuevo.vue";
 
 const routes = [
   {
@@ -110,11 +113,30 @@ const routes = [
     name: 'CursoNuevo',
     component: CursoNuevo,
   },
+  //routes materials
   {
     path:"/AdminCursos/Materiales",
     name:"Materiales",
     component: Materiales,
   },
+  {
+    path: '/AdminCursos/DetalleMaterial/:id',
+    name: 'MaterialDetalle',
+    component: MaterialDetalle, 
+    props: true
+  },
+  {
+    path:'/AdminCursos/EditarMaterial/:id',
+    name:'EditarMaterial',
+    component: MaterialEditar,
+    props:true
+  },
+  {
+    path: '/AdminCursos/NuevoMaterial',
+    name: 'MaterialNuevo',
+    component: MaterialNuevo,
+  },
+  //routes moudules
   {
     path:"/AdminCursos/Modulos",
     name:"Modulos",

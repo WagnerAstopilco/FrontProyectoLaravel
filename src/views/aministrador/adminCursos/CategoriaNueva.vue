@@ -12,7 +12,7 @@
                 <p v-if="error" class="error">{{ error }}</p> 
             </div>
             <div class="buttons">
-            <button type="submit" class="btn btn-info" @click="addCategory">{{ loading ? "Agregando..." : "Agregar" }}</button>
+            <button type="submit" class="btn btn-info">{{ loading ? "Agregando..." : "Agregar" }}</button>
             <button type="button" class="btn btn-primary" @click="goBack">Volver</button>
             </div>
         </form>

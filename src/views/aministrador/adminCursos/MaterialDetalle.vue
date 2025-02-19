@@ -1,5 +1,5 @@
 <template>
-    <div class="course-details">
+    <div class="category-details">
         <div class="head">
             <h2>Detalles del Curso</h2>
             <div class="dropdown">

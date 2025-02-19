@@ -22,7 +22,7 @@
                 </div>
                 <div class="courses">
                     <h3>Cursos</h3>
-                    <div v-if="category.courses">
+                    <div v-if="category.courses && category.courses.length>0">
                         <table id="courseCategoryTable" class="table table-striped">
                             <thead>
                                 <tr>
