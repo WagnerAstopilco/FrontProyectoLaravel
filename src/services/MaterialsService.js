@@ -14,5 +14,8 @@ export default {
     },
     deleteMaterial(id){
         return apiClient.delete(`/materials/${id}`);
+    },
+    postCourseToMaterial(id){
+        return  apiClient.post(`/materials/${id}/courses`);
     }
 }

@@ -74,7 +74,6 @@ methods: {
     async listCategories(){
         const response=await CategoryService.getCategories();
         this.categories=response.data.data;
-        console.log(response);
     },
     async addCourse() {
         this.error = "";

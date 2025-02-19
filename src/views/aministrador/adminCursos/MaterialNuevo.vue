@@ -23,6 +23,15 @@
                 </option>
             </select>
         </div>
+        <!-- <div class="form-group" v-if="newMaterial.grado === 'course'">
+            <label for="lesson">Selecciona un curso</label>
+            <select name="lesson" v-model="newMaterial.course_id" required>
+                <option value="" disabled selected>{{courseList? "---Selecciona un curso---":"---No hay cursos disponibles---"}}</option>
+                <option v-for="course in courses" :key="course.id" :value="course.id">
+                    {{ course.name_long }}
+                </option>
+            </select>
+        </div> -->
         <div class="form-group">
             <label for="type">Tipo</label>
             <select name="type" v-model="newMaterial.type">
@@ -52,6 +61,7 @@
 <script>
 import MaterialService from '@/services/MaterialsService.js';
 import LessonService from '@/services/LessonsService.js';
+// import CourseService from '@/services/CoursesService.js';
 
 export default {
 data() {
@@ -64,10 +74,16 @@ data() {
             content: ""
         },
         lessons:[],
+        courses:[],
         error: "",
         loading: false,
         lessonList:false,
+        courseList:false,
     };
+},
+created(){
+    // this.listCourses();
+    this.listLessons();
 },
 methods: {
     goBack() {
@@ -92,14 +108,15 @@ methods: {
         }
     },
     async listLessons() {
-        if (this.newMaterial.grado === "lesson") {
             const response = await LessonService.getLessons(); 
-            this.lessons = response.data.data; 
-        } else {
-            this.lessons = [];
+            this.lessons = response.data.data;             
             this.lessonList=true;
-        }
     },
+    // async listCourses() {
+    //         const response = await CourseService.getCourses(); 
+    //         this.courses = response.data.data;
+    //         this.courseList=true;
+    // },
 }
 };
 </script>
