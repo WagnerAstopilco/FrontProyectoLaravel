@@ -15,7 +15,10 @@ export default {
     deleteMaterial(id){
         return apiClient.delete(`/materials/${id}`);
     },
-    postCourseToMaterial(id){
-        return  apiClient.post(`/materials/${id}/courses`);
+    postCourseToMaterial(materialId,courseId){
+        return  apiClient.post(`/materials/${materialId}/${courseId}/`);
+    },
+    deleteCourseToMaterial(materialId,courseId){
+        return  apiClient.delete(`/materials/${materialId}/${courseId}/`);
     }
 }

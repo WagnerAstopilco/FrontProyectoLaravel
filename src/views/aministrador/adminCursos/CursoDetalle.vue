@@ -91,12 +91,14 @@
                         <table id="coursematerialsTable" class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
+                                    <th>Titulo</th>
+                                    <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="material in course.materials" :key="material.id" @click="materialDetail(material.id)">
-                                    <td>{{ material.name }}</td>
+                                <tr v-for="material in course.materials" :key="material.id">
+                                    <td>{{ material.title }}</td>
+                                    <td><button type="button" class="btn btn-danger" @click="deleteMaterialToCourse(material.id)">Elinimar</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -118,6 +120,7 @@
 </template>
 <script>
 import CourseService from '@/services/CoursesService.js';
+import MaterialService from '@/services/MaterialsService.js';
 
 
 export default {
@@ -154,8 +157,19 @@ export default {
                     alert('Hubo un error al intentar eliminar el curso.');
                 }
             }   
+        },
+        async deleteMaterialToCourse(materialId){
+            const confirmed = confirm('¿Estás seguro de que deseas eliminar este material del curso?');
+            if (confirmed) {
+                try {
+                    const courselId = this.$route.params.id; 
+                    await MaterialService.deleteCourseToMaterial(materialId,courselId); 
+                    this.getCourseDetails(); 
+                } catch (error) {
+                    alert('Hubo un error al intentar eliminar el curso.');
+                }
+            }   
         }
-
     }
 };
 </script>

@@ -23,8 +23,8 @@
                     <p><strong>Link:</strong> {{ material.url }}</p>
                     <p><strong>Contenido:</strong> {{ material.content }}</p>
                 </div>
-                <div class="materialLessons">
-                    <h3>Lecciones</h3>
+                <div class="materialLessons" v-if="material.grado==='lesson'">
+                    <h3>Lección</h3>
                     <div v-if="material.lessons && material.lessons.length > 0">
                         <table id="materialLessonsTable" class="table table-striped">
                             <thead>
@@ -43,61 +43,51 @@
                         <p>Sin lecciones vinculadas</p>
                     </div>
                 </div>
-                <div class="materialCourses">
+                <div class="materialCourses" v-if="material.grado==='course'">
                     <div>
                         <h3>Cursos</h3>
                         <button type="button" class="btn btn-info" @click="showFormCourseMaterial">Vincular Curso</button>
                     </div>
-                    <form class="courses-form" v-if="showSearchBar" @submit.prevent="addCourseToMaterial">
-                        <div class="form-group">
-                            <label for="courses">Cursos disponibles</label>
-                            <div class="search-bar">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                </svg>
-                                <input v-model="searchQuery" type="text" class=" search-bar-input" placeholder="Buscar cursos..." @input="filterCourses" />
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                                </svg>
-                            </div>                            
-                            <ul v-if="filteredCourses.length">
-                                <li 
-                                    v-for="course in filteredCourses" 
-                                    :key="course.id" 
-                                    @click="addCourseToMaterial(course)"
-                                >
-                                    {{ course.name_long }}
-                                </li>
-                            </ul>
-                            <p v-else>Sin resultados.</p>
-                            
-                            <!-- <select name="courses" v-model="material.courses">
-                                <option value="" disabled selected>---Selecciona un Curso---</option>
-                                <option v-for="course in courses" :key="course.id" :value="course.id">
-                                    {{ course.name_long }}
-                                </option>
-                            </select> -->
-                        </div>
-                        <div class="buttons">
-                            <button type="submit" class="btn btn-info">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                            <button type="button" class="btn btn-warring" @click="showFormCourseMaterial">Cancelar</button>
-                        </div>
-                    </form>
-                    <!-- Barra de búsqueda de cursos -->
-                    <div v-if="showSearchBar">
-                        
-                    </div>
 
+                    <form class="courses-form" v-if="showSearchBar" @submit.prevent="addCourseToMaterial(selectedCourse?.id)">
+                            <div class="form-group">
+                                <div class="search-bar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                    </svg>
+                                    <input v-model="searchQuery" type="text" class=" search-bar-input" placeholder="Buscar cursos..." @click="filterCourses" @input="filterCourses" @focus="inputFocus = true" @blur="handleBlur"/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16" @click="reset">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
+                                </div>
+                                <div class="courses-container"  v-if="inputFocus && (filteredCourses.length > 0 || searchQuery)" >
+                                    <ul class="coursesList">
+                                        <li v-for="course in filteredCourses" :key="course.id" 
+                                        @click="addCourseToInput(course)">
+                                        {{ course.name_long }}
+                                        </li>
+                                        <li v-if="searchQuery && filteredCourses.length ===0">Sin resultados.</li>
+                                    </ul>
+                              </div> 
+                            </div>
+                            <div class="buttons">
+                                <button type="submit" class="btn btn-info">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                                <button type="button" id="button-cancel" class="btn btn-warring" @click="showFormCourseMaterial">Cancelar</button>
+                            </div>
+                        </form>
+                    
                     <div v-if="material.courses && material.courses.length > 0">
                         <table id="materialCoursesTable" class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
+                                    <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="course in material.courses" :key="course.id" @click="courseDetail(course.id)">
+                                <tr v-for="course in material.courses" :key="course.id">
                                     <td>{{ course.name_long }}</td>
+                                    <td><button type="button" class="btn btn-danger" @click="deleteCourseToMaterial(course.id)">Elinimar</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -124,11 +114,13 @@ export default {
     data() {
         return {
             material: null,
-            showSearchBar: false, // Para controlar la visibilidad de la barra de búsqueda
-            searchQuery: '', // Almacena la búsqueda
-            courses: [], // Lista de cursos disponibles
-            filteredCourses: [], // Cursos filtrados según la búsqueda
+            showSearchBar: false,
+            searchQuery: '', 
+            courses: [], 
+            filteredCourses: [],
             loading:"",
+            inputFocus:false,
+            selectedCourse: null,
         };
     },
     mounted() {
@@ -164,28 +156,65 @@ export default {
             }   
         },
         showFormCourseMaterial() {
-            this.showSearchBar = !this.showSearchBar; // Mostrar o ocultar la barra de búsqueda
-            // if (course) {
-            //     // Aquí puedes agregar el curso al material
-            //     console.log(`Curso vinculado: ${course.name_long}`);
-            // }
+            this.showSearchBar = !this.showSearchBar; 
         },
-        addCourseToMaterial(){
-
+        async addCourseToMaterial(courseId){
+            if (!courseId) {
+            alert("Por favor, selecciona un curso antes de agregar.");
+            return;
+            }
+            const materialId = this.$route.params.id; 
+            try {
+                this.loading = true;
+                console.log(`Agregando curso ${courseId} al material ${materialId}`)
+                 await MaterialService.postCourseToMaterial(materialId,courseId);
+                 this.getMaterialDetails(); 
+            } catch (error) {
+                alert("Hubo un error al agregar el curso.");
+            } finally {
+                this.loading = false;
+            }          
         },
         filterCourses() {
             if (this.searchQuery) {
-                this.filteredCourses = this.courses.filter(course => 
+                const results = this.courses.filter(course => 
                     course.name_long.toLowerCase().includes(this.searchQuery.toLowerCase())
                 );
+                this.filteredCourses = results.length > 0 ? results : [];
             } else {
                 this.filteredCourses = this.courses;
             }
         },
-    }
-};
+
+        reset(){
+            this.filteredCourses=[];
+            this.searchQuery="";
+        },
+        handleBlur() {
+            setTimeout(() => {
+                this.inputFocus = false;
+            }, 200); 
+        },
+        addCourseToInput(course){
+            this.selectedCourse = course; 
+            this.searchQuery = course.name_long;
+        },
+        async deleteCourseToMaterial(courseId){
+            const confirmed = confirm('¿Estás seguro de que deseas eliminar este curso de este material?');
+            if (confirmed) {
+                try {
+                    const materialId = this.$route.params.id; 
+                    await MaterialService.deleteCourseToMaterial(materialId,courseId); 
+                    this.getMaterialDetails(); 
+                } catch (error) {
+                    alert('Hubo un error al intentar eliminar el curso.');
+                }
+            }   
+        }
+    },
+}
 </script>
-<style>
+<style scoped>
 #courseCategoryTable{
     justify-self: center;
     max-width: 95%;
@@ -206,31 +235,76 @@ export default {
     padding:5px;
 }
 .search-bar-input {
-    background-color: transparent; /* Hace el fondo transparente */
-    border: none; /* Elimina los bordes */
-    outline: none; /* Elimina el contorno que aparece al hacer clic */
-    padding: 8px 12px; /* Ajusta el espaciado interno (opcional) */
-    font-size: 16px; /* Ajusta el tamaño de la fuente (opcional) */
-    color: #333; /* Cambia el color del texto (opcional) */
+    background-color: transparent; 
+    border: none; 
+    outline: none; 
+    padding: 8px 12px; 
+    font-size: 16px;  
+    color: #333;
     width: 100%;
     
 }
-
 .search-bar-input:focus {
-    outline: none; /* Asegura que no haya contorno al hacer foco */
+    outline: none; 
 }
-.courses-form{
+
+.courses-form {
     display: flex;
-    flex-direction: row;
+    align-items: center; 
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 10px;
+    position: relative; 
+}
+
+.form-group {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+}
+
+.search-bar {
+    display: flex;
     align-items: center;
+    border: 3px solid rgb(19, 136, 103);
+    border-radius: 10px;
+    padding: 5px;
     width: 100%;
 }
-.form-group{
-    width: 60%;
-    margin:10px;
+
+.courses-container {
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 200px; 
 }
-.buttons{
-    width: 40%;
-    justify-items: space-around;
+
+.coursesList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.coursesList li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.coursesList li:hover {
+    background-color: #f1f1f1;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.buttons button {
+    white-space: nowrap;
 }
 </style>

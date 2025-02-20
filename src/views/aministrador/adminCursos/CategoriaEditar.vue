@@ -2,7 +2,6 @@
     <div class="categoria-editar" v-if="category">
         <h1>Editar Categoría</h1>
         <form @submit.prevent="updateCategory">
-            <input type="text" id="nombre" v-model="category.id" hidden/>
             <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" v-model="category.name" required/>
