@@ -21,6 +21,9 @@ import CursoEditar from "../views/aministrador/adminCursos/CursoEditar.vue";
 import MaterialDetalle from "../views/aministrador/adminCursos/MaterialDetalle.vue";
 import MaterialEditar from "../views/aministrador/adminCursos/MaterialEditar.vue";
 import MaterialNuevo from "../views/aministrador/adminCursos/MaterialNuevo.vue";
+import ModuloDetalle from "../views/aministrador/adminCursos/ModuloDetalle.vue";
+import ModuloNuevo from "../views/aministrador/adminCursos/ModuloNuevo.vue";
+import ModuloEditar from "../views/aministrador/adminCursos/ModuloEditar.vue";
 
 const routes = [
   {
@@ -68,7 +71,7 @@ const routes = [
     name: "Signup",
     component: Signup,
   },
-  //  
+  //routes categorias
   {
     path:"/AdminCursos/Categorias",
     name:"Categorias",
@@ -91,6 +94,7 @@ const routes = [
     component: CategoriaEditar,
     props:true
   },
+  //routes cursos
   {
     path:"/AdminCursos/Cursos",
     name: "Cursos",
@@ -142,6 +146,24 @@ const routes = [
     name:"Modulos",
     component: Modulos,
   },
+  {
+    path: '/AdminCursos/DetalleModulo/:id',
+    name: 'ModuloDetalle',
+    component: ModuloDetalle, 
+    props: true
+  },
+  {
+    path: '/AdminCursos/NuevoModulo',
+    name: 'ModuloNuevo',
+    component: ModuloNuevo,
+  },
+  {
+    path:'/AdminCursos/EditarModulo/:id',
+    name:'EditarModulo',
+    component: ModuloEditar,
+    props:true
+  },
+  //routes capacitadores
   {
     path:"/AdminCursos/Capacitadores",
     name:"Capacitadores",

@@ -48,52 +48,52 @@ import CourseService from '@/services/CoursesService.js';
 import CategoryService from '@/services/CategoryService.js';
 
 export default {
-data() {
-    return {
-        newCourse: {
-            name_long: "",
-            name_short: "",
-            price: "",
-            image: "",
-            description: "",
-            store_id: "",
-            category_id:"",
+    data() {
+        return {
+            newCourse: {
+                name_long: "",
+                name_short: "",
+                price: "",
+                image: "",
+                description: "",
+                store_id: "",
+                category_id:"",
+            },
+            categories:[],
+            error: "",
+            loading: false,
+        };
+    },
+    created(){
+        this.listCategories();
+    },
+    methods: {
+        goBack() {
+            this.$router.push({ name: 'Cursos' }); 
         },
-        categories:[],
-        error: "",
-        loading: false,
-    };
-},
-created(){
-    this.listCategories();
-},
-methods: {
-    goBack() {
-        this.$router.push({ name: 'Cursos' }); 
-    },
-    async listCategories(){
-        const response=await CategoryService.getCategories();
-        this.categories=response.data.data;
-    },
-    async addCourse() {
-        this.error = "";
-        this.loading = true;
-        try {
-            const response = await CourseService.postCourse(this.newCourse);
-            const courseId = response.data.data.id;
-            this.$router.push({name: 'CursoDetalle',params: { id: courseId },});
-        } catch (err) {
-            if (err.response && err.response.status === 422) {
-            // Mostrar los errores de validación
-            this.error = Object.values(err.response.data.errors).flat().join(" ");
-            } else {
-            this.error = "Error al agregar el curso.";
+        async listCategories(){
+            const response=await CategoryService.getCategories();
+            this.categories=response.data.data;
+        },
+        async addCourse() {
+            this.error = "";
+            this.loading = true;
+            try {
+                const response = await CourseService.postCourse(this.newCourse);
+                const courseId = response.data.data.id;
+                this.$router.push({name: 'CursoDetalle',params: { id: courseId },});
+            } catch (err) {
+                if (err.response && err.response.status === 422) {
+                // Mostrar los errores de validación
+                this.error = Object.values(err.response.data.errors).flat().join(" ");
+                } else {
+                this.error = "Error al agregar el curso.";
+                }
+            } finally {
+                this.loading = false;
             }
-        } finally {
-            this.loading = false;
-        }
-    },
-}
+        },
+    }
 };
 </script>
 <style scoped>

@@ -37,13 +37,13 @@ const getRoute = () => {
         </sidenav-item>
       </li>
 
-      <li class="nav-item dropdown" @mouseenter="state.dropdownOpen = true" @mouseleave="state.dropdownOpen = false">
+      <li class="dropdown" @mouseenter="state.dropdownOpen = true" @mouseleave="state.dropdownOpen = false">
         <a class="nav-link d-flex align-items-center" href="#" @click.prevent="state.dropdownOpen = !state.dropdownOpen">
           <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10 me-2"></i>
           <span>{{ isRTL ? 'الجداول' : 'Administrar Cursos' }}</span>
           <i class="ms-auto" :class="state.dropdownOpen ? 'ni ni-bold-down' : 'ni ni-bold-right'"></i>
         </a>
-        <ul v-if="state.dropdownOpen" class="dropdown-menu show" style="display: block; position: relative;">
+        <ul v-if="state.dropdownOpen" class="dropdown-menu show">
           <li>
             <sidenav-item to="/AdminCursos/Categorias" :class="getRoute() === 'Categorias' ? 'active' : ''" :navText="isRTL ? 'الجدول الأساسي' : 'Categorías'" />
           </li>
