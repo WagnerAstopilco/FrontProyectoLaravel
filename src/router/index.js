@@ -8,12 +8,12 @@ import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
 import Cursos from "../views/aministrador/adminCursos/Cursos.vue"
-import Categorias from "../views/aministrador/adminCursos/Categorias.vue"
+import Categorias from "../views/aministrador/adminCursos/categorias/Categorias.vue"
 import Materiales from "../views/aministrador/adminCursos/Materiales.vue";
 import Modulos from "../views/aministrador/adminCursos/Modulos.vue";
 import Capacitadores from "../views/aministrador/adminCursos/Capacitadores.vue";
-import CategoriaDetalle from "../views/aministrador/adminCursos/CategoriaDetalle.vue";
-import CategoriaNueva from "../views/aministrador/adminCursos/CategoriaNueva.vue";
+import CategoriaDetalle from "../views/aministrador/adminCursos/categorias/CategoriaDetalle.vue";
+import CategoriaNueva from "../views/aministrador/adminCursos/categorias/CategoriaNueva.vue";
 import CursoDetalle from "../views/aministrador/adminCursos/CursoDetalle.vue";
 import CategoriaEditar from "../views/aministrador/adminCursos/CategoriaEditar.vue";
 import CursoNuevo from "../views/aministrador/adminCursos/CursoNuevo.vue";
@@ -73,18 +73,28 @@ const routes = [
   },
   //routes categorias
   {
-    path:"/AdminCursos/Categorias",
+    path:"/admincursos/categorias",
     name:"Categorias",
     component: Categorias,
   },
   {
+    path:"/admincursos/categorias/:idcategoria?/ver",
+    name:"CategoriaDetalleVer",
+    component: CategoriaDetalle,
+  },
+  {
+    path:"/admincursos/categorias/:idcategoria?/editar",
+    name:"CategoriaDetalleEditar",
+    component: CategoriaDetalle,
+  },
+ /* {
     path: '/AdminCursos/DetalleCategoria/:id',
     name: 'CategoriaDetalle',
     component: CategoriaDetalle, 
     props: true
-  },
+  },*/
   {
-    path:'/AdminCursos/NuevaCategoria',
+    path:'/AdminCursos/categorias/nueva',
     name:'NuevaCategoria',
     component: CategoriaNueva,
   },
