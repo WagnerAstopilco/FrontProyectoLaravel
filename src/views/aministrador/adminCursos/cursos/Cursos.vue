@@ -1,8 +1,9 @@
 <template>
-  <div class="courses-container">
-        <div class="courses-card">
-            <div class="head-page">
-                <h2>Cursos</h2>
+  <div class="container">
+        <div class="card p-4">
+            <div class="head">
+                <h1 class="fs-4">{{ name }}</h1>
+                <Preloader :visible="cargando"></Preloader>
                 <button type="button" class="btn btn-info" @click="newCourse"><i class="bi bi-plus"></i> Nuevo</button>            
             </div>
 
@@ -18,7 +19,7 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr v-for="course in courses" :key="course.id" @click="courseDetail(course.id)"> 
+                    <tr v-for="course in courses" :key="course.id" @click="courseDetail(course.id)" style="cursor:pointer"> 
                         <td>{{ course.image }}</td>
                         <td>{{ course.name_long }}</td>
                         <td>{{ course.name_short }}</td>
@@ -36,10 +37,13 @@ import CourseService from '@/services/CoursesService.js'
 import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 import $ from 'jquery';
 import 'datatables.net-bs4';
+import Preloader from '../../../components/Preloader.vue';
 
 export default {
     data() {
         return {
+            name:'Cursos',
+            cargando:false,
             courses:[]
         };          
     },
@@ -51,16 +55,26 @@ export default {
             $('#coursesTable').DataTable().destroy();
         }
     },
+    components:{
+        Preloader
+    },
     methods: {
         async getCourses(){
-            const response=await CourseService.getCourses();
-            this.courses=response.data.data;
-            this.$nextTick(() => {
-                $('#coursesTable').DataTable();
-            });
+            try{
+                this.cargando=true;
+                const response=await CourseService.getCourses();
+                this.courses=response.data.data;
+                this.$nextTick(() => {
+                    $('#coursesTable').DataTable();
+                });
+            }catch(error){
+                console.log(error);
+            }finally{
+                this.cargando=false;
+            }
         },
         courseDetail(id) {
-        this.$router.push({ name: 'CursoDetalle', params: { id: id } });
+            this.$router.push({ name: 'CursoDetalleVer', params: { idcurso: id } });
         },
         newCourse(){
             this.$router.push({name:'CursoNuevo'});

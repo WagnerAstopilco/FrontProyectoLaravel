@@ -4,7 +4,9 @@
             <div class="head">
                 <h1 class="fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
-                <button type="button" style="margin-left: auto;" class="btn btn-info" @click="newCategory"><i class="bi bi-plus"></i> Nuevo</button>            
+                <div class="ms-auto">
+                    <button type="button" class="btn btn-info" @click="newCategory"><i class="bi bi-plus"></i> Nuevo</button>            
+                </div>
             </div>
             <table id="categoryTable" class="table table-striped">
                 <thead>

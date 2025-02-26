@@ -46,19 +46,19 @@ const getRoute = () => {
         </a>
         <ul v-if="state.dropdownOpen" class="dropdown-menu show">
           <li>
-            <sidenav-item to="/AdminCursos/Categorias" :class="getRoute() === 'Categorias' ? 'active' : ''" :navText="isRTL ? 'الجدول الأساسي' : 'Categorías'" />
+            <sidenav-item to="/AdminCursos/categorias" :class="getRoute() === 'Categorias' ? 'active' : ''" :navText="isRTL ? 'الجدول الأساسي' : 'Categorías'" />
           </li>
           <li>
-            <sidenav-item to="/AdminCursos/Cursos" :class="getRoute() === 'Cursos' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Cursos'" />
+            <sidenav-item to="/AdminCursos/cursos" :class="getRoute() === 'Cursos' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Cursos'" />
           </li>
           <li>
-            <sidenav-item to="/AdminCursos/Materiales" :class="getRoute() === 'Materiales' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Materiales'" />
+            <sidenav-item to="/AdminCursos/materiales" :class="getRoute() === 'Materiales' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Materiales'" />
           </li>
           <li>
-            <sidenav-item to="/AdminCursos/Modulos" :class="getRoute() === 'Modulos' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Modulos'" />
+            <sidenav-item to="/AdminCursos/modulos" :class="getRoute() === 'Modulos' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Modulos'" />
           </li>
           <li>
-            <sidenav-item to="/AdminCursos/Capacitadores" :class="getRoute() === 'Capacitadores' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Capacitadores'" />
+            <sidenav-item to="/AdminCursos/capacitadores" :class="getRoute() === 'Capacitadores' ? 'active' : ''" :navText="isRTL ? 'الجدول المتقدم' : 'Capacitadores'" />
           </li>
         </ul>
       </li>
