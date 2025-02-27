@@ -1,17 +1,16 @@
 <template>
     <div class="container">
         <div class="card p-4">
-            <h1 class="card-title fs-4">Nueva Categoría</h1>
-            <Preloader :visible="cargando"></Preloader>
-            <div class="card-body col-6 mx-auto">
+            <h1 class="card-title fs-4">{{ name }}</h1>
+            <div class="card-body col-8 mx-auto">
                 <form @submit.prevent="addCategory">
                     <div class="form-group d-flex flex-column">
                         <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" v-model="newCategory.name" placeholder="Nombre de la categoría" required/>
+                        <input type="text" class="form-control p-2" id="nombre" v-model="newCategory.name" placeholder="Nombre de la categoría" required/>
                     </div>
                     <div class="form-group d-flex flex-column">
                         <label for="descripcion">Descripción</label>
-                        <textarea id="descripcion" v-model="newCategory.description" placeholder="Descripción de la categoría"></textarea>
+                        <textarea id="descripcion" class="form-control p-2" v-model="newCategory.description" placeholder="Descripción de la categoría"></textarea>
                         <p v-if="error" class="error">{{ error }}</p> 
                     </div>
                     <div class="d-flex justify-content-center">
@@ -29,6 +28,7 @@ import CategoryService from '@/services/CategoryService.js';
 export default {
     data() {
         return {
+            name: 'Nueva Categoría',
             newCategory: {
             name: "",
             description: "",
@@ -37,6 +37,7 @@ export default {
             loading: false,
         };
     },
+
     methods: {
         goBack() {
             this.$router.push({ name: 'Categorias' }); 

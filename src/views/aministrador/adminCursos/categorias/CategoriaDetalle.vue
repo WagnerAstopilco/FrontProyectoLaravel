@@ -1,11 +1,11 @@
 <template>
     <div class="container">
     <div class="card p-4">
-        <div class="head">
+        <div class="head d-flex">
             <h1 class="fs-4">{{ name }}</h1>
             <Preloader :visible="cargando"></Preloader>
             <div class="dropdown ms-auto" >
-                <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-info dropdown-toggle ms auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Opciones 
                 </button>
                 <ul class="dropdown-menu" v-if="category">
@@ -14,7 +14,6 @@
                 </ul>
             </div>            
         </div>
-        <card>
             <div v-if="category">
                 <form @submit.prevent="updateCategory">
                     <div class="form-group">
@@ -25,7 +24,7 @@
                   
                     </div>
                     <div v-if="isEditing ">
-                        <button type="submit" class="btn btn-outline-warning m-2" >Actualizar</button>
+                        <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
                         <button type="button" class="btn btn-outline-secondary m-2" @click="cancelEdit">Cancelar</button>
                     </div>
                 </form>
@@ -63,10 +62,9 @@
             <div v-else>
                 <p>Cargando...</p>
             </div>
-        </card>
-    </div>
-    <div class="volver">
-        <button type="button" class="btn btn-primary" @click="goBack">Volver</button>
+        <div class="volver mx-auto">
+            <button type="button" class="btn btn-primary" @click="goBack">Volver</button>
+        </div>
     </div>
 </div>
 </template>
@@ -83,7 +81,8 @@ export default {
             cargando: false,
             category: null,
             isViewing: false,
-            isEditing: false
+            isEditing: false,
+            loading:false,
         };
     },
     mounted() {
@@ -101,28 +100,40 @@ export default {
     },
     methods: {
         async getCategoryDetails() {
-            const id = this.$route.params.idcategoria; 
-            const response = await CategoryService.getCategoryDetails(id);
-            this.category = response.data.data;
-            console.log(this.category)
+            try {
+                this.cargando=true;
+                const id = this.$route.params.idcategoria; 
+                const response = await CategoryService.getCategoryDetails(id);
+                this.category = response.data.data;
+            } catch (error) {
+                console.log(error);
+                
+            }finally{
+                this.cargando=false
+            }
         },
         goBack() {
             this.$router.push({ name: 'Categorias' }); 
         },
         editCourse(id){
-            this.$router.push({ name: 'EditarCurso', params: { id: id } });
+            this.$router.push({ name: 'CursoDetalleEditar', params: { idcurso: id } });
         },
         editCategory(id) {
             this.isEditing = true;
             this.$router.push({ name: 'CategoriaDetalleEditar', params: { idcategoria: id } });
         },
         async updateCategory() {
-            const categoryId = this.$route.params.idcategoria;          
-            if (categoryId) {
-                await CategoryService.patchCategory(categoryId, this.category);
-                console.log("actualizada", categoryId);
+            try
+            {
+                this.loading = true;
+                await CategoryService.patchCategory(this.category.id, this.category);
                 this.isEditing = false;
-                this.$router.replace({name: 'CategoriaDetalleVer',params: { idcategoria: categoryId },});
+                this.$router.replace({name: 'CategoriaDetalleVer',params: { idcategoria: this.category.id },});
+            }catch(error){
+                console.log(error);
+            }     
+            finally{
+                this.loading=false;
             }
         },
         async deleteCategory() {
@@ -144,24 +155,5 @@ export default {
 };
 </script>
 <style scoped>
-#courseCategoryTable{
-    justify-self: center;
-    max-width: 95%;
-}
-.volver{
-    justify-self: center;
-}
-.head{
-    display: flex;
-    justify-content: space-between;
-}
-.head-page{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-p{
-    font-size: large;
-    color:rgba(0, 0, 0, 0.808);
-}
+
 </style>
