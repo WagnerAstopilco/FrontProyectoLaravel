@@ -86,19 +86,19 @@ export default {
             this.categories = response.data.data;
         },
         handleImageUpload(event) {
-            const file = event.target.files[0];  // Obtener el primer archivo seleccionado
+            const file = event.target.files[0];  
             if (file) {
-                this.newCourse.image=file;  // Asignar el archivo al campo image
-                this.previewImage(file);  // Vista previa de la imagen
+                this.newCourse.image=file; 
+                this.previewImage(file);
             }
         },
         previewImage(file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                this.imagePreview = reader.result;  // Asignar la vista previa
+                this.imagePreview = reader.result;
             };
             if (file) {
-                reader.readAsDataURL(file);  // Leer el archivo como Data URL
+                reader.readAsDataURL(file); 
             }
         },
         async addCourse() {

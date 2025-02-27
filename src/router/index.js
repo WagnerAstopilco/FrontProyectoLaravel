@@ -7,7 +7,7 @@ import RTL from "../views/Rtl.vue";
 import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
-import Materiales from "../views/aministrador/adminCursos/Materiales.vue";
+import Materiales from "../views/aministrador/adminCursos/materiales/Materiales.vue";
 import Modulos from "../views/aministrador/adminCursos/Modulos.vue";
 import Capacitadores from "../views/aministrador/adminCursos/Capacitadores.vue";
 import Categorias from "../views/aministrador/adminCursos/categorias/Categorias.vue"
@@ -16,9 +16,8 @@ import CategoriaNueva from "../views/aministrador/adminCursos/categorias/Categor
 import Cursos from "../views/aministrador/adminCursos/cursos/Cursos.vue"
 import CursoDetalle from "../views/aministrador/adminCursos/cursos/CursoDetalle.vue";
 import CursoNuevo from "../views/aministrador/adminCursos/cursos/CursoNuevo.vue";
-import MaterialDetalle from "../views/aministrador/adminCursos/MaterialDetalle.vue";
-import MaterialEditar from "../views/aministrador/adminCursos/MaterialEditar.vue";
-import MaterialNuevo from "../views/aministrador/adminCursos/MaterialNuevo.vue";
+import MaterialDetalle from "../views/aministrador/adminCursos/materiales/MaterialDetalle.vue";
+import MaterialNuevo from "../views/aministrador/adminCursos/materiales/MaterialNuevo.vue";
 import ModuloDetalle from "../views/aministrador/adminCursos/ModuloDetalle.vue";
 import ModuloNuevo from "../views/aministrador/adminCursos/ModuloNuevo.vue";
 import ModuloEditar from "../views/aministrador/adminCursos/ModuloEditar.vue";
@@ -118,15 +117,15 @@ const routes = [
     component: Materiales,
   },
   {
-    path: '/admincursos/DetalleMaterial/:id',
-    name: 'MaterialDetalle',
+    path: '/admincursos/materiales/:idmaterial?/ver',
+    name: 'MaterialDetalleVer',
     component: MaterialDetalle, 
     props: true
   },
   {
-    path:'/admincursos/EditarMaterial/:id',
-    name:'EditarMaterial',
-    component: MaterialEditar,
+    path:'/admincursos/materiales/:idmaterial?/Editar',
+    name:'MaterialDetalleEditar',
+    component: MaterialDetalle,
     props:true
   },
   {

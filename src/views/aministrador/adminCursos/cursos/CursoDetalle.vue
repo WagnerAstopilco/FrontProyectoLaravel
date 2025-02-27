@@ -10,7 +10,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <div v-if="course">
-                        <li><a class="dropdown-item" @click="editCourse(course.id)">Editar</a></li>
+                        <li><a class="dropdown-item" @click="editCourse()">Editar</a></li>
                         <li><a class="dropdown-item" @click="deleteCourse">Eliminar</a></li>
                         </div>
                     </ul>
@@ -25,12 +25,19 @@
                                     <input type="text" class="form-control" id="name_long" v-model="course.name_long" :readonly="!isEditing">
                                     <label for="name_short">Abreviación</label>
                                     <input type="text" class="form-control" id="name_short" v-model="course.name_short" :readonly="!isEditing">
-                                    <label for="category">Categoría</label>
-                                    <input type="text" class="form-control" id="category" v-model="course.category.name" :readonly="!isEditing">
+                                    <label for="category">Categoria</label>
+                                    <select name="category" class="form-control p-2" v-model="course.category_id" :readonly="!isEditing">
+                                        <option value="" disabled selected>---Selecciona una Categoría---</option>
+                                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                                            {{ category.name }}
+                                        </option>
+                                    </select>
                                     <label for="price">Precio</label>
-                                    <input type="text" class="form-control" id="price" v-model="course.price" :readonly="!isEditing">
+                                    <input type="number" class="form-control" id="price" v-model="course.price" :readonly="!isEditing">
                                     <label for="discount">Descuento</label>
-                                    <input type="text" class="form-control" id="discount" v-model="course.category.name" :readonly="!isEditing">
+                                    <input type="number" class="form-control" id="discount" v-model="course.discount" :readonly="!isEditing">
+                                    <label for="store">Tienda</label>
+                                    <input type="text" class="form-control p-2" id="store" v-model="course.store_id" placeholder="Tienda" :readonly="!isEditing">
                                     <label for="name">Descripción</label>
                                     <input type="text" class="form-control" id="name" v-model="course.description" :readonly="!isEditing">
                                     <div v-if="isEditing">
@@ -147,6 +154,7 @@
 <script>
 import CourseService from '@/services/CoursesService.js';
 import MaterialService from '@/services/MaterialsService.js';
+import CategoryService from '@/services/CategoryService.js';
 import Preloader from '../../../components/Preloader.vue';
 
 
@@ -157,6 +165,7 @@ export default {
             idcurso:this.$route.params.idcurso,
             cargando: false,
             course: null,
+            categories: [],
             isViewing: false,
             isEditing: false,
             loading: false,
@@ -172,11 +181,25 @@ export default {
     },
     created() {
         this.getCourseDetails();
+        this.getCategories();
     },
     components: {
         Preloader
     },
     methods: {
+        async getCategories(){
+            try{
+                this.cargando=true;
+                const response = await CategoryService.getCategories();
+                this.categories = response.data.data;
+            }catch(error){
+                console.log(error);
+            }
+            finally
+            {
+                this.cargando=false;
+            }
+        },
         async getCourseDetails() {
             try{
                 this.cargando=true;
@@ -192,10 +215,10 @@ export default {
         goBack() {
             this.$router.push({ name: 'Cursos' }); 
         },
-        editCourse(id){
+        editCourse(){
             this.isEditing = true;
             this.isViewing = false;
-            this.$router.push({ name: 'CursoDetalleEditar', params: { idcurso: id } });
+            this.$router.push({ name: 'CursoDetalleEditar', params: { idcurso: this.idcurso } });
         },
         async updateCourse() {
             this.error = "";
@@ -206,15 +229,16 @@ export default {
             formData.append("price", this.course.price);
             formData.append("description", this.course.description);
             formData.append("store_id", this.course.store_id);
+            formData.append("discount", this.course.discount);
             formData.append("category_id", this.course.category_id);
             if (this.course.image) {
             formData.append("image", this.course.image);        
             }
+            
             try {
-                const response = await CourseService.patchCourse(this.course.id, formData);  // Usamos FormData aquí
-                // Si la actualización fue exitosa, redirigir al detalle del curso
-                const courseId = response.data.data.id;
-                this.$router.replace({ name: 'CursoDetalleVer', params: { idcurso: courseId } });
+                const response = await CourseService.patchCourse(this.idcurso, formData);
+                console.log(response);
+                this.$router.replace({ name: 'CursoDetalleVer', params: { idcurso: this.idcurso } });
 
             } catch (err) {
                 if (err.response && err.response.status === 422) {

@@ -15,7 +15,7 @@
             </div>            
         </div>
             <div v-if="category">
-                <form @submit.prevent="updateCategory">
+                <form @submit.prevent="updateCategory" class="w-50">
                     <div class="form-group">
                         <label for="name">Nombre</label>
                         <input type="text" class="form-control" id="name" v-model="category.name" :readonly="!isEditing">
