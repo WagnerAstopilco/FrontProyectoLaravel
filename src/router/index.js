@@ -7,19 +7,21 @@ import RTL from "../views/Rtl.vue";
 import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
-import Materiales from "../views/aministrador/adminCursos/materiales/Materiales.vue";
-import Modulos from "../views/aministrador/adminCursos/modulos/Modulos.vue";
-import Capacitadores from "../views/aministrador/adminCursos/Capacitadores.vue";
 import Categorias from "../views/aministrador/adminCursos/categorias/Categorias.vue"
-import CategoriaDetalle from "../views/aministrador/adminCursos/categorias/CategoriaDetalle.vue";
 import CategoriaNueva from "../views/aministrador/adminCursos/categorias/CategoriaNueva.vue";
+import CategoriaDetalle from "../views/aministrador/adminCursos/categorias/CategoriaDetalle.vue";
 import Cursos from "../views/aministrador/adminCursos/cursos/Cursos.vue"
-import CursoDetalle from "../views/aministrador/adminCursos/cursos/CursoDetalle.vue";
 import CursoNuevo from "../views/aministrador/adminCursos/cursos/CursoNuevo.vue";
-import MaterialDetalle from "../views/aministrador/adminCursos/materiales/MaterialDetalle.vue";
+import CursoDetalle from "../views/aministrador/adminCursos/cursos/CursoDetalle.vue";
+import Materiales from "../views/aministrador/adminCursos/materiales/Materiales.vue";
 import MaterialNuevo from "../views/aministrador/adminCursos/materiales/MaterialNuevo.vue";
-import ModuloDetalle from "../views/aministrador/adminCursos/modulos/ModuloDetalle.vue";
+import MaterialDetalle from "../views/aministrador/adminCursos/materiales/MaterialDetalle.vue";
+import Modulos from "../views/aministrador/adminCursos/modulos/Modulos.vue";
 import ModuloNuevo from "../views/aministrador/adminCursos/modulos/ModuloNuevo.vue";
+import ModuloDetalle from "../views/aministrador/adminCursos/modulos/ModuloDetalle.vue";
+import Capacitadores from "../views/aministrador/adminCursos/capacitadores/Capacitadores.vue";
+import CapacitadorNuevo from "../views/aministrador/adminCursos/capacitadores/CapacitadorNuevo.vue";
+import CapacitadorDetalle from "../views/aministrador/adminCursos/capacitadores/CapacitadorDetalle.vue";
 
 const routes = [
   {
@@ -155,10 +157,25 @@ const routes = [
   },
   //routes capacitadores
   {
-    path:"/admincursos/Capacitadores",
+    path:"/admincursos/capacitadores",
     name:"Capacitadores",
     component: Capacitadores,
   },
+  {
+    path:"/admincursos/capacitadores/:idcapacitador?/ver",
+    name:'CapacitadorDetallesVer',
+    component:CapacitadorDetalle,
+  },
+  {
+    path:"/admincursos/capacitadores/:idcapacitador?/editar",
+    name:'CapacitadorDetallesEditar',
+    component:CapacitadorDetalle,
+  },
+  {
+    path:"/admincursos/capacitadores/nuevo",
+    name:'CapacitadorNuevo',
+    component:CapacitadorNuevo,
+  }
 ];
 
 const router = createRouter({

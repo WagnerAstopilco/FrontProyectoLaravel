@@ -45,7 +45,7 @@ export default {
                 this.newModule.order = 0;
                 const response = await ModuleService.postModule(this.newModule);
                 const moduleId = response.data.data.id;
-                this.$router.push({name: 'ModuloDetalle',params: { id: moduleId },});
+                this.$router.push({name: 'ModuloDetalleVer',params: { idmodulo: moduleId },});
             } catch (err) {
                 if (err.response && err.response.status === 422) {
                     this.error = Object.values(err.response.data.errors).flat().join(" ");
