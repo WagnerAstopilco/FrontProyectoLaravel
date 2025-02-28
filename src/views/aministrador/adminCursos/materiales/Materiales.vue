@@ -23,9 +23,6 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr v-if="!materials.length" >
-                        <span class="text-center">Sin registros</span>
-                    </tr>
                     <tr v-for="material in materials" :key="material.id" @click="materialDetail(material.id)"> 
                         <td>{{ material.title }}</td>
                         <td>{{ material.type }}</td>

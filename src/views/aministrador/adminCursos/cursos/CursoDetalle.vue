@@ -85,12 +85,32 @@
                             <table id="courseModulesTable" class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th>Órden</th>
                                         <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="module in course.modules" :key="module.id" @click="moduleDetail(module.id)">
+                                    <tr v-for="module in course.modules" :key="module.id" >
+                                        <td>{{ module.order }}</td>
                                         <td>{{ module.name }}</td>
+                                        <td>{{ module.description }}</td>
+                                        <td >
+                                            <!-- <button type="button" class="btn btn-succes m-1" @click="lessonUp(module.lesson.order)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
+                                                <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
+                                            </svg>
+                                            Subir uno
+                                        </button>
+                                        <button type="button" class="btn btn-danger m-1" @click="lessonDown(module.lesson.order)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
+                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
+                                            </svg>
+                                            Bajar uno
+                                        </button> -->
+                                            <button type="button" class="btn btn-danger m-1" @click="editmodule(module.id)">Editar</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -125,13 +145,17 @@
                             <table id="coursematerialsTable" class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th>Órden</th>
                                         <th>Titulo</th>
+                                        <th>Tipo</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="material in course.materials" :key="material.id">
+                                        <td>{{ material.order }}</td>
                                         <td>{{ material.title }}</td>
+                                        <td>{{ material.type }}</td>
                                         <td><button type="button" class="btn btn-danger" @click="deleteMaterialToCourse(material.id)">Elinimar</button></td>
                                     </tr>
                                 </tbody>
@@ -156,6 +180,9 @@ import CourseService from '@/services/CoursesService.js';
 import MaterialService from '@/services/MaterialsService.js';
 import CategoryService from '@/services/CategoryService.js';
 import Preloader from '../../../components/Preloader.vue';
+import $ from 'jquery';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
+import 'datatables.net-bs4';
 
 
 export default {
@@ -180,8 +207,22 @@ export default {
         }
     },
     created() {
-        this.getCourseDetails();
         this.getCategories();
+        this.getCourseDetails();
+    },
+    beforeUnmount() {
+        if ($.fn.dataTable.isDataTable('#courseEvaluationsTable')) {
+            $('#courseEvaluationsTable').DataTable().destroy();
+        }
+        if ($.fn.dataTable.isDataTable('#coursematerialsTable')) {
+            $('#coursematerialsTable').DataTable().destroy();
+        }
+        if ($.fn.dataTable.isDataTable('#courseModulesTable')) {
+            $('#courseModulesTable').DataTable().destroy();
+        }
+        if ($.fn.dataTable.isDataTable('#courseTrainersTable')) {
+            $('#courseTrainersTable').DataTable().destroy();
+        }
     },
     components: {
         Preloader
@@ -192,6 +233,7 @@ export default {
                 this.cargando=true;
                 const response = await CategoryService.getCategories();
                 this.categories = response.data.data;
+                
             }catch(error){
                 console.log(error);
             }
@@ -205,7 +247,20 @@ export default {
                 this.cargando=true;
                 const response = await CourseService.getCourseDetails(this.idcurso);
                 this.course = response.data.data;
-                console.log(response);
+                this.$nextTick(() => {
+                    if (this.course && this.course.trainers && this.course.trainers.length > 0) {
+                            $('#courseTrainersTable').DataTable();  
+                        }
+                    if (this.course && this.course.modules && this.course.modules.length > 0) {
+                            $('#courseModulesTable').DataTable();  
+                        }
+                    if (this.course && this.course.evaluations && this.course.evaluations.length > 0) {
+                            $('#courseEvaluationsTable').DataTable();  
+                        }
+                    if (this.course && this.course.materials && this.course.materials.length > 0) {
+                            $('#coursematerialsTable').DataTable();  
+                        }
+                });
             }catch(error){
                 console.log(error);
             }finally{
@@ -236,8 +291,7 @@ export default {
             }
             
             try {
-                const response = await CourseService.patchCourse(this.idcurso, formData);
-                console.log(response);
+                await CourseService.patchCourse(this.idcurso, formData);
                 this.$router.replace({ name: 'CursoDetalleVer', params: { idcurso: this.idcurso } });
 
             } catch (err) {
@@ -268,17 +322,17 @@ export default {
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este material del curso?');
             if (confirmed) {
                 try {
-                    const courselId = this.$route.params.id; 
-                    await MaterialService.deleteCourseToMaterial(materialId,courselId); 
+                    await MaterialService.deleteCourseToMaterial(materialId,this.idcurso);
+                    console.log(this.$route.params.id) ;
                     this.getCourseDetails(); 
                 } catch (error) {
                     alert('Hubo un error al intentar eliminar el curso.');
                 }
             }   
         },
-        getImagenUrl(imagen) {
-            if (imagen) {
-                return process.env.VUE_APP_API_URL + "/storage/" + imagen; 
+        getImagenUrl(image) {
+            if (image) {
+                return process.env.VUE_APP_API_URL + "/storage/" + image; 
             }
         },
         cancelEdit(){
@@ -302,6 +356,9 @@ export default {
                 reader.readAsDataURL(file);  // Leer el archivo como Data URL
             }
         },
+        editmodule(id){
+            this.$router.push({ name: 'ModuloDetalleEditar', params: { idmodulo: id } });
+        }
     }
 };
 </script>

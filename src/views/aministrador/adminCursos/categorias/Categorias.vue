@@ -20,9 +20,6 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr v-if="!categories.length" >
-                        <span class="text-center">Sin registros</span>
-                    </tr>
                     <tr v-for="category in categories" :key="category.id" @click="categoryDetail(category.id)" style="cursor:pointer"> 
                         <td>{{ category.name }}</td>
                         <td>{{ category.description }}</td>

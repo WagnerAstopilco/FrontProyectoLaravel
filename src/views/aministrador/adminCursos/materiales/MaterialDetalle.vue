@@ -4,7 +4,7 @@
             <div class="head d-flex">
                 <h1 class="fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
-                <div class="dropdown ms">
+                <div class="dropdown ms-auto">
                     <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Opciones
                     </button>
@@ -16,9 +16,8 @@
                     </ul>
                 </div>            
             </div>
-            <card>
-                <div v-if="material" class="w-50">
-                    <form @submit.prevent="updateMaterial">
+                <div v-if="material" >
+                    <form @submit.prevent="updateMaterial" class="w-50">
                         <div class="form-group">
                         <label for="title">Título</label>
                         <input type="text" class="form-control" id="title" v-model="material.title" :readonly="!isEditing">
@@ -77,13 +76,14 @@
                             <p>Sin lección vinculada</p>
                         </div>
                     </div>
+                    
                     <div class="materialCourses" v-if="material.grado==='course'">
                         <div class="d-flex align-items-center">
                             <h2 class="fs-5">Cursos</h2>
                             <button type="button" class="btn btn-info m-4" @click="showFormCourseMaterial">Vincular Curso</button>
                         </div>
     
-                        <form class="courses-form" v-if="showSearchBar" @submit.prevent="addCourseToMaterial(selectedCourse?.id)">
+                        <form class="courses-form d-flex w-60" v-if="showSearchBar" @submit.prevent="addCourseToMaterial(selectedCourse?.id)">
                                 <div class="form-group">
                                     <div class="search-bar">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -104,9 +104,9 @@
                                         </ul>
                                   </div> 
                                 </div>
-                                <div class="buttons">
-                                    <button type="submit" class="btn btn-info">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                                    <button type="button" id="button-cancel" class="btn btn-warring" @click="showFormCourseMaterial">Cancelar</button>
+                                <div class="">
+                                    <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                                    <button type="button" id="button-cancel" class="btn btn-warring m-2" @click="showFormCourseMaterial">Cancelar</button>
                                 </div>
                             </form>
                         
@@ -114,13 +114,17 @@
                             <table id="materialCoursesTable" class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th>Imagen</th>
                                         <th>Nombre</th>
+                                        <th>Categoría</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="course in material.courses" :key="course.id">
+                                        <td><img :src="getImagenUrl(course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
                                         <td>{{ course.name_long }}</td>
+                                        <td >{{ course.category_id}}</td>
                                         <td><button type="button" class="btn btn-danger" @click="deleteCourseToMaterial(course.id)">Elinimar</button></td>
                                     </tr>
                                 </tbody>
@@ -133,11 +137,10 @@
                 </div>
                 <div v-else>
                     <p>Cargando...</p>
+                </div> 
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" @click="goBack">Volver</button>
                 </div>
-            </card>    
-        </div>
-        <div class="volver">
-            <button type="button" class="btn btn-primary" @click="goBack">Ver Materiales</button>
         </div>
         </div>
 </template>
@@ -145,6 +148,9 @@
 import MaterialService from '@/services/MaterialsService.js';
 import CourseService from '@/services/CoursesService.js';
 import Preloader from '../../../components/Preloader.vue';
+import $ from 'jquery';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
+import 'datatables.net-bs4';
 
 export default {
     data() {
@@ -165,6 +171,11 @@ export default {
         this.getMaterialDetails();
         this.getCourses(); 
     },
+    beforeUnmount() {
+        if ($.fn.dataTable.isDataTable('#materialCoursesTable')) {
+            $('#materialCoursesTable').DataTable().destroy();
+        }
+    },
     components:{
         Preloader
     },
@@ -174,6 +185,11 @@ export default {
                 this.cargando=true;
                 const response = await MaterialService.getMaterialDetails(this.idmaterial);
                 this.material = response.data.data;
+                this.$nextTick(() => {
+                    if (this.material && this.material.courses && this.material.courses.length > 0) {
+                            $('#materialCoursesTable').DataTable();  
+                        }
+                });
             }
             catch (error) {
                 console.log(error);
@@ -226,16 +242,22 @@ export default {
             alert("Por favor, selecciona un curso antes de agregar.");
             return;
             }
+            const isCourseAlreadyAdded = this.material.courses.some(course => course.id === courseId);
+    
+            if (isCourseAlreadyAdded) {
+                alert("Este curso ya está vinculado a este material.");
+                return; 
+            }
             const materialId = this.$route.params.idmaterial; 
             try {
                 this.loading = true;
-                console.log(`Agregando curso ${courseId} al material ${materialId}`)
                  await MaterialService.postCourseToMaterial(materialId,courseId);
                  this.getMaterialDetails(); 
             } catch (error) {
                 alert("Hubo un error al agregar el curso.");
             } finally {
                 this.loading = false;
+                this.showSearchBar = false;
             }          
         },
         filterCourses() {
@@ -277,22 +299,16 @@ export default {
         cancelEdit(){
             this.isEditing = false;
             this.$router.push({ name: 'MaterialDetalleVer', params: { idmaterial: this.material.id } });
-        }
+        },
+        getImagenUrl(image) {
+            if (image) {
+                return process.env.VUE_APP_API_URL + "/storage/" + image; 
+            }
+        },
     },
 }
 </script>
 <style scoped>
-#courseCategoryTable{
-    justify-self: center;
-    max-width: 95%;
-}
-.volver{
-    justify-self: center;
-}
-.head{
-    display: flex;
-    justify-content: space-between;
-}
 .search-bar{
     display: flex;
     flex-direction: row;
@@ -309,21 +325,11 @@ export default {
     font-size: 16px;  
     color: #333;
     width: 100%;
-    
 }
 .search-bar-input:focus {
     outline: none; 
 }
 
-.courses-form {
-    display: flex;
-    align-items: center; 
-    justify-content: space-between;
-    flex-wrap: wrap;
-    width: 100%;
-    gap: 10px;
-    position: relative; 
-}
 
 .form-group {
     flex: 1;
@@ -365,13 +371,5 @@ export default {
     background-color: #f1f1f1;
 }
 
-.buttons {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
 
-.buttons button {
-    white-space: nowrap;
-}
 </style>

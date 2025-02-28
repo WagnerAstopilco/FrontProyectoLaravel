@@ -37,7 +37,7 @@
                                     <th>Nombre</th>
                                     <th>Abreviación</th>
                                     <th>Descripción</th>
-                                    <ht>Opciones</ht>
+                                    <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,6 +71,10 @@
 <script>
 import CategoryService from '@/services/CategoryService.js';
 import Preloader from '../../../components/Preloader.vue';
+import $ from 'jquery';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
+import 'datatables.net-bs4';
+
 
 
 export default {
@@ -91,9 +95,15 @@ export default {
         } else if (this.$route.name === 'CategoriaDetalleEditar') {
             this.isEditing = true;
         }
+        
     },
     created() {
         this.getCategoryDetails();
+    },
+    beforeUnmount() {
+        if ($.fn.dataTable.isDataTable('#categoryTable')) {
+            $('#categoryTable').DataTable().destroy();
+        }
     },
     components: {
         Preloader
@@ -105,6 +115,11 @@ export default {
                 const id = this.$route.params.idcategoria; 
                 const response = await CategoryService.getCategoryDetails(id);
                 this.category = response.data.data;
+                this.$nextTick(() => {
+                if (this.category && this.category.courses && this.category.courses.length > 0) {
+                        $('#courseCategoryTable').DataTable();  
+                    }
+                });
             } catch (error) {
                 console.log(error);
                 

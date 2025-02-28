@@ -8,7 +8,7 @@ import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
 import Materiales from "../views/aministrador/adminCursos/materiales/Materiales.vue";
-import Modulos from "../views/aministrador/adminCursos/Modulos.vue";
+import Modulos from "../views/aministrador/adminCursos/modulos/Modulos.vue";
 import Capacitadores from "../views/aministrador/adminCursos/Capacitadores.vue";
 import Categorias from "../views/aministrador/adminCursos/categorias/Categorias.vue"
 import CategoriaDetalle from "../views/aministrador/adminCursos/categorias/CategoriaDetalle.vue";
@@ -18,9 +18,8 @@ import CursoDetalle from "../views/aministrador/adminCursos/cursos/CursoDetalle.
 import CursoNuevo from "../views/aministrador/adminCursos/cursos/CursoNuevo.vue";
 import MaterialDetalle from "../views/aministrador/adminCursos/materiales/MaterialDetalle.vue";
 import MaterialNuevo from "../views/aministrador/adminCursos/materiales/MaterialNuevo.vue";
-import ModuloDetalle from "../views/aministrador/adminCursos/ModuloDetalle.vue";
-import ModuloNuevo from "../views/aministrador/adminCursos/ModuloNuevo.vue";
-import ModuloEditar from "../views/aministrador/adminCursos/ModuloEditar.vue";
+import ModuloDetalle from "../views/aministrador/adminCursos/modulos/ModuloDetalle.vue";
+import ModuloNuevo from "../views/aministrador/adminCursos/modulos/ModuloNuevo.vue";
 
 const routes = [
   {
@@ -101,18 +100,18 @@ const routes = [
     component: CursoDetalle,
   },
   {
-    path:'/admincursos/cursos/:idcurso?/Editar',
+    path:'/admincursos/cursos/:idcurso?/editar',
     name:'CursoDetalleEditar',
     component: CursoDetalle,
   },
   {
-    path: '/admincursos/NuevoCurso',
+    path: '/admincursos/cursos/nuevo',
     name: 'CursoNuevo',
     component: CursoNuevo,
   },
   //routes materials
   {
-    path:"/admincursos/Materiales",
+    path:"/admincursos/materiales",
     name:"Materiales",
     component: Materiales,
   },
@@ -123,38 +122,36 @@ const routes = [
     props: true
   },
   {
-    path:'/admincursos/materiales/:idmaterial?/Editar',
+    path:'/admincursos/materiales/:idmaterial?/editar',
     name:'MaterialDetalleEditar',
     component: MaterialDetalle,
     props:true
   },
   {
-    path: '/admincursos/NuevoMaterial',
+    path: '/admincursos/materailes/nuevo',
     name: 'MaterialNuevo',
     component: MaterialNuevo,
   },
   //routes moudules
   {
-    path:"/admincursos/Modulos",
+    path:"/admincursos/modulos",
     name:"Modulos",
     component: Modulos,
   },
   {
-    path: '/admincursos/DetalleModulo/:id',
-    name: 'ModuloDetalle',
-    component: ModuloDetalle, 
-    props: true
+    path: '/admincursos/modulos/:idmodulo?/ver',
+    name: 'ModuloDetalleVer',
+    component: ModuloDetalle,
   },
   {
-    path: '/admincursos/NuevoModulo',
+    path: '/admincursos/modulos/nuevo',
     name: 'ModuloNuevo',
     component: ModuloNuevo,
   },
   {
-    path:'/admincursos/EditarModulo/:id',
-    name:'EditarModulo',
-    component: ModuloEditar,
-    props:true
+    path:'/admincursos/modulos/:idmodulo?/editar',
+    name:'ModuloDetalleEditar',
+    component: ModuloDetalle,
   },
   //routes capacitadores
   {

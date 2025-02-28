@@ -1,21 +1,25 @@
 <template>
-<div class="new-module">
-    <h1>Nuevo Modulo</h1>
-    <form @submit.prevent="addModule">
-        <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" v-model="newModule.name" placeholder="Nombre del módulo"/>
+<div class="container">
+    <div class="card p-4">
+        <h1 class="fs-4">{{ name }}</h1>
+        <div class="card-body col-8 mx-auto">
+            <form @submit.prevent="addModule">
+            <div class="form-group d-flex flex-column">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" class="form-control" v-model="newModule.name" placeholder="Nombre del módulo"/>
+            </div>
+            <div class="form-group d-flex flex-column">
+                <label for="description">Descripción</label>
+                <textarea id="descripcion" class="form-control" v-model="newModule.description" placeholder="Descripción del módulo"></textarea>
+            </div>
+            <p v-if="error" class="error">{{ error }}</p> 
+            <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
+            <button type="button" class="btn btn-primary m-2" @click="goBack">Volver</button>
+            </div>
+        </form>
         </div>
-        <div class="form-group">
-            <label for="description">Descripción</label>
-            <textarea id="descripcion" v-model="newModule.description" placeholder="Descripción del módulo"></textarea>
-        </div>
-        <p v-if="error" class="error">{{ error }}</p> 
-        <div class="buttons">
-        <button type="submit" class="btn btn-info">{{ loading ? "Agregando..." : "Agregar" }}</button>
-        <button type="button" class="btn btn-primary" @click="goBack">Volver</button>
-        </div>
-    </form>
+    </div>
 </div>
 </template>
 <script>
@@ -23,6 +27,7 @@ import ModuleService from '@/services/ModulesService.js';
 export default {
     data(){
         return{
+        name: "Nuevo Módulo",
         newModule: {
             name: "",
             description: "",
@@ -58,36 +63,5 @@ export default {
 }
 </script>
 <style scoped>
-.new-module {
-max-width: 600px;
-margin: 0 auto;
-}
-.form-group {
-margin-bottom: 1em;
-}
-label {
-display: block;
-margin-bottom: 0.5em;
-}
-input,
-textarea,select {
-width: 100%;
-padding: 0.5em;
-box-sizing: border-box;
-}
-button {
-padding: 0.5em 1em;
-border: none;
-cursor: pointer;
-}
-.error{
-color:red;
-}
-.buttons{
-display: flex;
-justify-self: center;
-max-width: 50%;
-min-width: 50%;
-justify-content: space-around;
-}
+
 </style>
