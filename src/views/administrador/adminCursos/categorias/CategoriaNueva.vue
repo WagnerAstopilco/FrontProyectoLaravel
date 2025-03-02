@@ -52,7 +52,6 @@ export default {
             } catch (err) {
                 console.log(err);
                 if (err.response && err.response.status === 422) {
-                // Mostrar los errores de validación
                 this.error = Object.values(err.response.data.errors).flat().join(" ");
                 } else {
                 this.error = "Error al agregar la categoría.";

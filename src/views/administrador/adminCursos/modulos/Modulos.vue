@@ -20,7 +20,7 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr v-for="module in modules" :key="module.id" @click="moduleDetail(module.id)">
+                    <tr v-for="module in modules" :key="module.id" @click="moduleDetail(module.id)" style="cursor:pointer">
                         <td>{{ module.order }}</td>
                         <td>{{ module.name }}</td>
                         <td>{{ module.description }}</td>

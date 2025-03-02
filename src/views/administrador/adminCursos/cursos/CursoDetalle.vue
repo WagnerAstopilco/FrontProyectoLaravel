@@ -252,7 +252,6 @@ export default {
                 this.cargando=true;
                 const response = await CourseService.getCourseDetails(this.idcurso);
                 this.course = response.data.data;
-                console.log(this.course);
                 this.getTrainers( this.course);
                 this.$nextTick(() => {
                     if (this.course && this.course.trainers && this.course.trainers.length > 0) {
@@ -303,9 +302,15 @@ export default {
             if (this.course.image) {
             formData.append("image", this.course.image);        
             }
-            
+            console.log("id curso",this.idcurso);
+            console.log("Datos enviados en FormData:");
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ':', pair[1]);
+            }
+
             try {
-                await CourseService.patchCourse(this.idcurso, formData);
+                const response=await CourseService.patchCourse(this.idcurso, formData);
+                console.log("respuesta",response);
                 this.$router.replace({ name: 'CursoDetalleVer', params: { idcurso: this.idcurso } });
 
             } catch (err) {

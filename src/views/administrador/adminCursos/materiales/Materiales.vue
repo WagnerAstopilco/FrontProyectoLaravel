@@ -23,7 +23,7 @@
                     </tr>
                 </thead>
                 <tbody >
-                    <tr v-for="material in materials" :key="material.id" @click="materialDetail(material.id)"> 
+                    <tr v-for="material in materials" :key="material.id" @click="materialDetail(material.id)" style="cursor:pointer"> 
                         <td>{{ material.title }}</td>
                         <td>{{ material.type }}</td>
                         <td>{{ material.grado }}</td>

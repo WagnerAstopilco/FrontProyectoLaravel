@@ -212,6 +212,7 @@ export default {
                 this.selectedUser.role='capacitador'
                 await UserService.patchUser(userId,this.selectedUser);
                 await TrainerService.postTrainer(this.trainer);
+                // this.getTrainers();
             } catch (error) {
                 alert("Hubo un error al promover al usuario");
             } finally {

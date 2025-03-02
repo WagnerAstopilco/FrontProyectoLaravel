@@ -123,7 +123,7 @@
                                 <tbody>
                                     <tr v-for="course in material.courses" :key="course.id">
                                         <td><img :src="getImagenUrl(course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
-                                        <td >{{ course.name}}</td>
+                                        <td >{{ course.name_long}}</td>
                                         <td>{{ course.category_id}}</td>
                                         <td><button type="button" class="btn btn-danger" @click="deleteCourseToMaterial(course.id)">Elinimar</button></td>
                                     </tr>

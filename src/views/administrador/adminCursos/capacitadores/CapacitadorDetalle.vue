@@ -122,6 +122,7 @@ export default{
             showSearchBar: false,
             searchQuery: '', 
             courses: [], 
+            coursesTrainer:[],
             filteredCourses: [],
             isViewing: false,
             isEditing: false,
@@ -150,6 +151,15 @@ export default{
         async getCourses(){
             const response=await CourseService.getCourses();
             this.courses=response.data.data;
+            this.getCoursesTrainer();
+        },
+        async getCoursesTrainer(){
+            console.log("cursos generales",this.courses);
+            this.coursesTrainer = this.courses.filter(course => 
+            course.trainers.some(trainer => trainer.id === this.idtrainer)
+        );
+
+        console.log("Cursos obtenidos y filtrados para el capacitador:", this.coursesTrainer)
         },
         async deleteTrainer(){
             this.user.role='comercial';
