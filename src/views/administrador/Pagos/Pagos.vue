@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <div class="card p-4">
-            <div class="head d-flex">
-                <h1 class="fs-4">{{ name }}</h1>
+            <div class="head ">
+                <h1 class="fs-4">{{name}}</h1>
             </div>
         </div>
     </div>
@@ -11,8 +11,8 @@
 export default{
     data(){
         return{
-            name:'Detalles del Capacitador',
-        };
-    },
+            name:'Pagos',
+        }
+    }
 }
 </script>

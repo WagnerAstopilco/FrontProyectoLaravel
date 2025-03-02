@@ -61,16 +61,20 @@
                     </div>
                     <div class="CourseTrainers">
                         <h3>Capacitadores</h3>
-                        <div v-if="course.trainers && course.trainers.length > 0">
+                        <div v-if="trainers.length > 0">
                             <table id="courseTrainersTable" class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
+                                        <th>Apellidos</th>
+                                        <td>Opciones</td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="trainer in course.trainers" :key="trainer.id" @click="trainerDetail(trainer.id)">
-                                        <td>{{ trainer.name }}</td>
+                                    <tr v-for="trainer in trainers" :key="trainer.id">
+                                        <td>{{ trainer.user.names }}</td>
+                                        <td>{{ trainer.user.last_names }}</td>
+                                        <td><button type="button" class="btn btn-danger" @click="deleteTrainerToCourse(trainer.id)">Elinimar</button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -179,6 +183,7 @@
 import CourseService from '@/services/CoursesService.js';
 import MaterialService from '@/services/MaterialsService.js';
 import CategoryService from '@/services/CategoryService.js';
+import TrainerService from '@/services/TrainersService.js';
 import Preloader from '../../../components/Preloader.vue';
 import $ from 'jquery';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
@@ -191,7 +196,8 @@ export default {
             name:"Detalles del Curso",
             idcurso:this.$route.params.idcurso,
             cargando: false,
-            course: null,
+            course:null,
+            trainers:[],
             categories: [],
             isViewing: false,
             isEditing: false,
@@ -233,7 +239,6 @@ export default {
                 this.cargando=true;
                 const response = await CategoryService.getCategories();
                 this.categories = response.data.data;
-                
             }catch(error){
                 console.log(error);
             }
@@ -247,6 +252,8 @@ export default {
                 this.cargando=true;
                 const response = await CourseService.getCourseDetails(this.idcurso);
                 this.course = response.data.data;
+                console.log(this.course);
+                this.getTrainers( this.course);
                 this.$nextTick(() => {
                     if (this.course && this.course.trainers && this.course.trainers.length > 0) {
                             $('#courseTrainersTable').DataTable();  
@@ -265,6 +272,13 @@ export default {
                 console.log(error);
             }finally{
                 this.cargando=false;
+            }
+        },
+        async getTrainers(course){
+            for(let trainer of course.trainers){
+                const response= await TrainerService.getTrainerDetails(trainer.id)
+                const trainerfiltered=response.data.data;
+                this.trainers.push(trainerfiltered);
             }
         },
         goBack() {
@@ -296,7 +310,6 @@ export default {
 
             } catch (err) {
                 if (err.response && err.response.status === 422) {
-                    // Mostrar los errores de validación
                     this.error = Object.values(err.response.data.errors).flat().join(" ");
                 } else {
                     this.error = "Error al actualizar el curso.";
@@ -317,6 +330,24 @@ export default {
                     alert('Hubo un error al intentar eliminar el curso.');
                 }
             }   
+        },
+        async deleteTrainerToCourse(trainerId){
+            const confirmed = confirm('¿Estás seguro de que deseas eliminar este capacitador del curso?');
+            if (confirmed) {
+                try {
+                    await TrainerService.deleteCourseToTrainer(trainerId,this.idcurso);
+                    this.removeTrainer(trainerId);
+                    this.getCourseDetails(); 
+                } catch (error) {
+                    alert('Hubo un error al intentar eliminar el capacitador.');
+                }
+            }   
+        },
+        removeTrainer(trainerId) {
+            const index = this.trainers.findIndex(trainer => trainer.id === trainerId);
+            if (index !== -1) {
+                this.trainers.splice(index, 1);
+            }
         },
         async deleteMaterialToCourse(materialId){
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este material del curso?');
@@ -341,19 +372,19 @@ export default {
             this.$router.push({ name: 'CursoDetalleVer', params: { idcurso: this.idcurso} });
         },
         handleImageUpload(event) {
-            const file = event.target.files[0];  // Obtener el primer archivo seleccionado
+            const file = event.target.files[0]; 
             if (file) {
-                this.course.image = file;  // Asignar el archivo al campo image
-                this.previewImage(file);  // Vista previa de la imagen
+                this.course.image = file;  
+                this.previewImage(file);  
             }
         },
         previewImage(file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                this.imagePreview = reader.result;  // Asignar la vista previa
+                this.imagePreview = reader.result;  
             };
             if (file) {
-                reader.readAsDataURL(file);  // Leer el archivo como Data URL
+                reader.readAsDataURL(file);  
             }
         },
         editmodule(id){

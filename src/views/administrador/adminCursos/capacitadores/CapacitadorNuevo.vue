@@ -11,23 +11,19 @@
                         </div>
                         <div class="form-group d-flex flex-column">
                             <label for="last_names">Apellidos</label>
-                            <input type="text" class="form-control p-2" id="last_names" placeholder="Apellidos" required/>
+                            <input type="text" class="form-control p-2" id="last_names" v-model="user.last_names" placeholder="Apellidos" required/>
                         </div>
                         <div class="form-group d-flex flex-column">
                             <label for="email">Correo</label>
-                            <input type="email" class="form-control p-2" id="email" placeholder="Correo" required/>
+                            <input type="email" class="form-control p-2" id="email" v-model="user.email" placeholder="Correo" required/>
                         </div>
                         <div class="form-group d-flex flex-column">
                             <label for="password">Contraseña</label>
-                            <input type="text" class="form-control p-2" id="password" placeholder="Contraseña" required/>
-                        </div>
-                        <div class="form-group">
-                        <label for="confirmPassword">Confirmar Contraseña</label>
-                            <input type="text" id="confirmPassword" class="form-control" v-model="confirmPassword" placeholder="Confirma tu contraseña" required/>
+                            <input type="text" class="form-control p-2" id="password" v-model="user.password" placeholder="Contraseña" required/>
                         </div>
                         <div class="form-group d-flex flex-column">
                             <label for="certifications">Certificaciones</label>
-                            <textarea id="certifications" class="form-control p-2" placeholder=""></textarea>
+                            <textarea id="certifications" class="form-control p-2" v-model="trainer.certifications" placeholder=""></textarea>
 
                         </div>
                         <div class="d-flex justify-content-center">
@@ -47,9 +43,7 @@ import UserService from '@/services/UsersService.js'
 export default{
     data(){
         return{
-            name:'Detalles del Capacitador',
-            password: '',
-            confirmPassword: '',
+            name:'Nuevo Capacitador',
             user:{
                 names: '',              
                 last_names: '',                         
@@ -65,37 +59,29 @@ export default{
             loading:false,
         };
     },
-    computed: {
-        passwordMismatch() {
-        return this.password !== this.confirmPassword || this.confirmPassword === '';
-    },
-    },
+
     methods:{
         goBack(){
             this.$router.push({name:'Capacitadores'});
         },
         async createUserTrainer(){
-            if (!this.passwordMismatch) {
-                alert("Las contraseñas no coinciden. Por favor, verifícalas.");
-                return;
-            }
-            this.user.password = this.password;
             try{
                 this.loading=true;
                 const response = await UserService.postUser(this.user);
-                console.log("respuesta user",response);
                 const userId = response.data.data.id;
                 this.trainer.user_id=userId;
                 const response1 = await TrainerService.postTrainer(this.trainer);
-                console.log("respuesta trainer",response1);
                 const trainerId = response1.data.data.id;
-                this.$router.push({name: 'CapacitadorDetallesEditar',params: { idcapacitador: trainerId },});
+                this.$router.push({name: 'CapacitadorDetallesVer',params: { idcapacitador: trainerId },});
             }catch(error){
-                console.log(error);
+                console.error('Error response:', error.response);
+                if (error.response && error.response.data) {
+                    console.log('Detalles del error:', error.response.data);
+                }
             }finally{
                 this.loading=false;
             }
-        }
+        },        
     },
 };
 </script>

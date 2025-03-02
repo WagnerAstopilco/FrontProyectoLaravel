@@ -21,7 +21,7 @@
                         <select name="lesson" v-model="newMaterial.lesson_id" class="form-control p-2" required>
                             <option value="" disabled selected>{{lessonList? "---Selecciona una lección---":"---No hay lecciones disponibles---"}}</option>
                             <option v-for="lesson in lessons" :key="lesson.id" :value="lesson.id">
-                                {{ lesson.name }}
+                                {{ lesson.title }}
                             </option>
                         </select>
                     </div>

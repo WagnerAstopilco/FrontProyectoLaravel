@@ -19,15 +19,15 @@
                 <div v-if="material" >
                     <form @submit.prevent="updateMaterial" class="w-50">
                         <div class="form-group">
-                        <label for="title">Título</label>
-                        <input type="text" class="form-control" id="title" v-model="material.title" :readonly="!isEditing">
+                            <label for="title">Título</label>
+                            <input type="text" class="form-control" id="title" v-model="material.title" :readonly="!isEditing">
                         <label for="grado">Grado</label>
                         <select name="grado" v-model="material.grado" class="form-control p-2" :readonly="!isEditing">
                             <option value="" disabled selected>---Selecciona un grado---</option>
                             <option value="lesson">Lección</option>
                             <option value="course">Curso</option>
                         </select>
-                        <div class="form-group" v-if="material.grado === 'lesson'">
+                        <div class="form-group" v-if="material.grado === 'lesson' && !material.lesson">
                             <label for="lesson">Selecciona una Lección</label>
                             <select name="lesson" v-model="material.lesson_id" class="form-control p-2" :readonly="!isEditing" required>
                                 <option value="" disabled selected>{{lessonList? "---Selecciona una lección---":"---No hay lecciones disponibles---"}}</option>
@@ -58,7 +58,7 @@
                     
                     <div class="materialLessons" v-if="material.grado==='lesson'">
                         <h3>Lección</h3>
-                        <div v-if="material.lessons && material.lessons.length > 0">
+                        <div v-if="material.lesson">
                             <table id="materialLessonsTable" class="table table-striped">
                                 <thead>
                                     <tr>
@@ -67,7 +67,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>{{ material.lesson.name }}</td>
+                                        <td>{{ material.lesson.title }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -123,8 +123,8 @@
                                 <tbody>
                                     <tr v-for="course in material.courses" :key="course.id">
                                         <td><img :src="getImagenUrl(course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
-                                        <td>{{ course.name_long }}</td>
-                                        <td >{{ course.category_id}}</td>
+                                        <td >{{ course.name}}</td>
+                                        <td>{{ course.category_id}}</td>
                                         <td><button type="button" class="btn btn-danger" @click="deleteCourseToMaterial(course.id)">Elinimar</button></td>
                                     </tr>
                                 </tbody>
@@ -165,6 +165,8 @@ export default {
             loading:"",
             inputFocus:false,
             selectedCourse: null,
+            isViewing: false,
+            isEditing: false,
         };
     },
     mounted() {
@@ -185,6 +187,7 @@ export default {
                 this.cargando=true;
                 const response = await MaterialService.getMaterialDetails(this.idmaterial);
                 this.material = response.data.data;
+                console.log("material",this.material);
                 this.$nextTick(() => {
                     if (this.material && this.material.courses && this.material.courses.length > 0) {
                             $('#materialCoursesTable').DataTable();  

@@ -100,8 +100,8 @@ const getRoute = () => {
 
       <li class="nav-item">
         <sidenav-item
-          to="/billing"
-          :class="getRoute() === 'billing' ? 'active' : ''"
+          to="/alumnos"
+          :class="getRoute() === 'alumnos' ? 'active' : ''"
           :navText="isRTL ? 'الفواتیر' : 'Alumnos'"
         >
           <template v-slot:icon>
@@ -114,8 +114,8 @@ const getRoute = () => {
 
       <li class="nav-item">
         <sidenav-item
-          to="/virtual-reality"
-          :class="getRoute() === 'virtual-reality' ? 'active' : ''"
+          to="/matriculas"
+          :class="getRoute() === 'matriculas' ? 'active' : ''"
           :navText="isRTL ? 'الواقع الافتراضي' : 'Matrículas'"
         >
           <template v-slot:icon>
@@ -128,8 +128,8 @@ const getRoute = () => {
 
       <li class="nav-item">
         <sidenav-item
-          to="/rtl-page"
-          :class="getRoute() === 'rtl-page' ? 'active' : ''"
+          to="/certificados"
+          :class="getRoute() === 'certificados' ? 'active' : ''"
           navText="Certificados"
         >
           <template v-slot:icon>
@@ -143,8 +143,8 @@ const getRoute = () => {
 
       <li class="nav-item">
         <sidenav-item
-          to="/virtual-reality"
-          :class="getRoute() === 'virtual-reality' ? 'active' : ''"
+          to="/pagos"
+          :class="getRoute() === 'pagos' ? 'active' : ''"
           :navText="isRTL ? 'الواقع الافتراضي' : 'Pagos'"
         >
           <template v-slot:icon>
@@ -157,9 +157,9 @@ const getRoute = () => {
       
       <li class="nav-item">
         <sidenav-item
-          to="/virtual-reality"
-          :class="getRoute() === 'virtual-reality' ? 'active' : ''"
-          :navText="isRTL ? 'الواقع الافتراضي' : 'Usuarios'"
+          to="/administradores"
+          :class="getRoute() === 'administradores' ? 'active' : ''"
+          :navText="isRTL ? 'الواقع الافتراضي' : 'Administradores'"
         >
           <template v-slot:icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-lock text-info" viewBox="0 0 16 16">
