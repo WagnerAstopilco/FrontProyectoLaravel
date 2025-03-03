@@ -16,15 +16,19 @@
             <table id="enrollmentsTable" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
+                        <th>Fecha</th>
+                        <th>Alumno</th>
+                        <th>Curso</th>
                         <th>Estado</th>
+
                     </tr>
                 </thead>
                 <tbody >
-                    <tr v-for="enroll in this.enrollments" :key="enroll.id" style="cursor:pointer"> 
-                        <td @click="enrollDetail(enroll.id)">{{ enroll.names }}</td>
-                        <td @click="enrollDetail(enroll.id)">{{ enroll.last_names }}</td>
+                    <tr v-for="enroll in this.enrollments" :key="enroll.id"  style="cursor:pointer"> 
+                        <td @click="enrollDetail(enroll.id)">{{ enroll.enrollment_date }}</td>
+                        <td @click="enrollDetail(enroll.id)">{{ enroll.user.names }} {{ enroll.user.last_names }}</td>
+                        <td @click="enrollDetail(enroll.id)">{{ enroll.course.name_long }}</td>
+                        <td>{{ enroll.status }}</td>
                         
                     </tr>
                 </tbody>
@@ -34,17 +38,26 @@
 </template>
 <script>
 import Preloader from '../../components/Preloader.vue';
-import EnrollmentService from '@/services/EnrollmentsService.js'
+import EnrollmentService from '@/services/EnrollmentsService.js';
+import $ from 'jquery';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
+import 'datatables.net-bs4';
 
 export default{
     data(){
         return{
             name:'Matrículas',
             enrollments:[],
+            cargando:false,
         }
     },
     created(){
         this.getEnrollments();
+    },
+    beforeUnmount() {
+        if ($.fn.dataTable.isDataTable('#categoryTable')) {
+            $('#categoryTable').DataTable().destroy();
+        }
     },
     components:{
         Preloader
@@ -53,12 +66,20 @@ export default{
         async getEnrollments(){
             try{
                 this.cargando=true;
-                await EnrollmentService.getEnrollments();
+                const response= await EnrollmentService.getEnrollments();
+                this.enrollments=response.data.data;
+                console.log("matriculas",this.enrollments);
+                this.$nextTick(() => {
+                    $('#enrollmentsTable').DataTable();
+                });
             }catch(error){
                 console.log(error);
             }finally{
                 this.cargando=false;
             }
+        },
+        newEnroll(){
+            this.$router.push({name: 'MatriculaNueva'});
         }
     },
 }
