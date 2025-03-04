@@ -265,8 +265,7 @@ export default {
             if (isCourseAlreadyAdded) {
                 alert("Este curso ya está vinculado a este modulo.");
                 return; 
-            }
-; 
+            };
             try {
                 this.loading = true;
                 await ModuleService.postCourseToModule(this.idmodulo,courseId);
@@ -277,56 +276,56 @@ export default {
                 this.loading = false;
                 this.showSearchBar = false;
             }          
-            },
-            showFormCourseModule() {
-                this.showSearchBar = !this.showSearchBar; 
-            },
-            showFormLessonModule() {
-                this.showFormLesson = !this.showFormLesson; 
-            },
-            async getCourses() {
-                const response = await CourseService.getCourses();
-                this.courses = response.data.data;  
-            },
-            filterCourses() {
-                if (this.searchQuery) {
-                    const results = this.courses.filter(course => 
-                        course.name_long.toLowerCase().includes(this.searchQuery.toLowerCase())
-                    );
-                    this.filteredCourses = results.length > 0 ? results : [];
-                } else {
-                    this.filteredCourses = this.courses;
+        },
+        showFormCourseModule() {
+            this.showSearchBar = !this.showSearchBar; 
+        },
+        showFormLessonModule() {
+            this.showFormLesson = !this.showFormLesson; 
+        },
+        async getCourses() {
+            const response = await CourseService.getCourses();
+            this.courses = response.data.data;  
+        },
+        filterCourses() {
+            if (this.searchQuery) {
+                const results = this.courses.filter(course => 
+                    course.name_long.toLowerCase().includes(this.searchQuery.toLowerCase())
+                );
+                this.filteredCourses = results.length > 0 ? results : [];
+            } else {
+                this.filteredCourses = this.courses;
+            }
+        },
+        reset(){
+            this.filteredCourses=[];
+            this.searchQuery="";
+        },
+        handleBlur() {
+            setTimeout(() => {
+                this.inputFocus = false;
+            }, 200); 
+        },
+        addCourseToInput(course){
+            this.selectedCourse = course; 
+            this.searchQuery = course.name_long;
+        },
+        async deleteModuleToCourse(courseId){
+            const confirmed = confirm('¿Estás seguro de que deseas eliminar este curso del módulo?');
+        if (confirmed) {
+                try {
+                    await ModuleService.deleteCourseToModule(this.idmodulo,courseId); 
+                    this.getModuleDetails(); 
+                } catch (error) {
+                    alert('Hubo un error al intentar eliminar el curso.');
                 }
-            },
-            reset(){
-                this.filteredCourses=[];
-                this.searchQuery="";
-            },
-            handleBlur() {
-                setTimeout(() => {
-                    this.inputFocus = false;
-                }, 200); 
-            },
-            addCourseToInput(course){
-                this.selectedCourse = course; 
-                this.searchQuery = course.name_long;
-            },
-            async deleteModuleToCourse(courseId){
-                const confirmed = confirm('¿Estás seguro de que deseas eliminar este curso del módulo?');
-            if (confirmed) {
-                    try {
-                        await ModuleService.deleteCourseToModule(this.idmodulo,courseId); 
-                        this.getModuleDetails(); 
-                    } catch (error) {
-                        alert('Hubo un error al intentar eliminar el curso.');
-                    }
-                }   
-            },
-            cancelEdit(){
-                this.isEditing = false;
-                this.$router.push({ name: 'ModuloDetalleVer', params: { idmodulo: this.idmodulo} });
-            },
-            async updateModule() {
+            }   
+        },
+        cancelEdit(){
+            this.isEditing = false;
+            this.$router.push({ name: 'ModuloDetalleVer', params: { idmodulo: this.idmodulo} });
+        },
+        async updateModule() {
             try
             {
                 this.loading = true;

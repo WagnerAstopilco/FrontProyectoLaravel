@@ -11,7 +11,7 @@
 export default{
     data(){
         return{
-            name:'Detalles de la matricula',
+            name:'Detalles de matrícula',
         }
     }
 }

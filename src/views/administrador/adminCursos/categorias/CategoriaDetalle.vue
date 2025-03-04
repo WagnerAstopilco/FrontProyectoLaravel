@@ -21,7 +21,6 @@
                         <input type="text" class="form-control" id="name" v-model="category.name" :readonly="!isEditing">
                         <label for="name">Descripción</label>
                         <input type="text" class="form-control" id="name" v-model="category.description" :readonly="!isEditing">
-                  
                     </div>
                     <div v-if="isEditing ">
                         <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
@@ -169,6 +168,3 @@ export default {
     }
 };
 </script>
-<style scoped>
-
-</style>

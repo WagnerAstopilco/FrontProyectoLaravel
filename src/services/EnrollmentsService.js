@@ -9,10 +9,10 @@ export default{
     postEnrollment(newEnrollment){
         return apiClient.post('/enrollments', newEnrollment);
     },
-    patchEnrollment(id,Enrollment){
-        return apiClient.patch(`/enrollments/${id}`,Enrollment);
-    },
-    deleteEnrollment(id){
-        return apiClient.delete(`/enrollments/${id}`);
-    }
+    // patchEnrollment(id,Enrollment){
+    //     return apiClient.patch(`/enrollments/${id}`,Enrollment);
+    // },
+    // deleteEnrollment(id){
+    //     return apiClient.delete(`/enrollments/${id}`);
+    // }
 }

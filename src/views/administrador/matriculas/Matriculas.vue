@@ -16,7 +16,8 @@
             <table id="enrollmentsTable" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Fecha</th>
+                        <th>Inicio matrícula</th>
+                        <th>Fin matrícula</th>
                         <th>Alumno</th>
                         <th>Curso</th>
                         <th>Estado</th>
@@ -26,6 +27,7 @@
                 <tbody >
                     <tr v-for="enroll in this.enrollments" :key="enroll.id"  style="cursor:pointer"> 
                         <td @click="enrollDetail(enroll.id)">{{ enroll.enrollment_date }}</td>
+                        <td @click="enrollDetail(enroll.id)">{{ enroll.end_enrollment_date }}</td>
                         <td @click="enrollDetail(enroll.id)">{{ enroll.user.names }} {{ enroll.user.last_names }}</td>
                         <td @click="enrollDetail(enroll.id)">{{ enroll.course.name_long }}</td>
                         <td>{{ enroll.status }}</td>
@@ -80,7 +82,11 @@ export default{
         },
         newEnroll(){
             this.$router.push({name: 'MatriculaNueva'});
+        },
+        enrollDetail(id){
+            this.$router.push({name:'MatriculaDetallesVer',params:{idmatricula:id}})
         }
     },
 }
 </script>
+

@@ -58,12 +58,12 @@
                     <table id="studentsEnrollmentTable" class="table table-striped">
                         <thead>
                             <tr>
-                                <!-- <th>Nombres</th> -->
+                                <th>Nombres</th>
                             </tr>
                         </thead>
                         <tbody >
                             <tr v-for="enroll in student.enrollments" :key="enroll.id" style="cursor:pointer"> 
-                                <!-- <td @click="studentDetail(student.id)">{{ student.names }}</td> -->
+                                <td @click="studentDetail(student.id)">{{ student.names }}</td>
                                 
                             </tr>
                         </tbody>
@@ -153,12 +153,12 @@ export default{
                 this.cargando=true;
                 const response=await UserService.getUserDetails(this.idstudent);
                 this.student=response.data.data;
+                console.log("estudiante",this.student);
             }catch(error){
                 console.log(error);
             }finally{
                 this.cargando=false;
             }
-
         },
         editStudent(){
             this.isEditing=true;
