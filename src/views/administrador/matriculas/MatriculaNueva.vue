@@ -94,14 +94,14 @@
                                         <label for="name_long">Nombre</label>
                                         <input type="text" class="form-control w-50" id="name_long" v-model="selectedCourse.name_long" readonly>
                                     </div>
-                                    <!-- <div class="form-group">
-                                        <label for="last_name">Apellidos</label>
-                                        <input type="text" class="form-control w-50" id="last_name" v-model="selectedCourse.last_names" readonly>
+                                    <div class="form-group">
+                                        <label for="price">Precio</label>
+                                        <input type="text" class="form-control w-50" id="price" v-model="selectedCourse.price" readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label for="email">Correo</label>
-                                        <input type="text" class="form-control w-50" id="email" v-model="selectedCourse.email" readonly>
-                                    </div> -->
+                                        <label for="description">Descripción</label>
+                                        <input type="text" class="form-control w-50" id="description" v-model="selectedCourse.description" readonly>
+                                    </div>
                                 </div>
                             </div>
                         </div>

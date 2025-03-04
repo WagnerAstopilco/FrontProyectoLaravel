@@ -48,7 +48,6 @@
                         <input type="text" id="link" v-model="material.url" class="form-control p-2" placeholder="Enlace al material" :readonly="!isEditing">
                         <label for="content">Contenido</label>
                         <input type="text" class="form-control" id="content" v-model="material.content" :readonly="!isEditing">
-                  
                     </div>
                     <div v-if="isEditing ">
                         <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
@@ -187,7 +186,6 @@ export default {
                 this.cargando=true;
                 const response = await MaterialService.getMaterialDetails(this.idmaterial);
                 this.material = response.data.data;
-                console.log("material",this.material);
                 this.$nextTick(() => {
                     if (this.material && this.material.courses && this.material.courses.length > 0) {
                             $('#materialCoursesTable').DataTable();  

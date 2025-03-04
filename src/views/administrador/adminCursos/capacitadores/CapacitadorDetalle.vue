@@ -156,10 +156,8 @@ export default{
         async getCoursesTrainer(){
             console.log("cursos generales",this.courses);
             this.coursesTrainer = this.courses.filter(course => 
-            course.trainers.some(trainer => trainer.id === this.idtrainer)
-        );
-
-        console.log("Cursos obtenidos y filtrados para el capacitador:", this.coursesTrainer)
+            course.trainers.some(trainer => trainer.id === this.idtrainer));
+            console.log("Cursos obtenidos y filtrados para el capacitador:", this.coursesTrainer)
         },
         async deleteTrainer(){
             this.user.role='comercial';
@@ -187,8 +185,8 @@ export default{
             }
             try {
                 this.loading = true;
-                 await TrainerService.postCourseToTrainer(this.idtrainer,courseId);
-                 this.getTrainerDetails(); 
+                await TrainerService.postCourseToTrainer(this.idtrainer,courseId);
+                this.getTrainerDetails(); 
             } catch (error) {
                 alert("Hubo un error al agregar el curso.");
             } finally {
@@ -206,7 +204,7 @@ export default{
                 this.filteredCourses = this.courses;
             }
         },
-
+        
         reset(){
             this.filteredCourses=[];
             this.searchQuery="";
@@ -243,6 +241,20 @@ export default{
         editTrainer(){
             this.isEditing = true;
             this.$router.push({ name: 'CapacitadorDetallesEditar', params: { idcapacitador: this.idtrainer } });
+        },
+        async updateTrainer(){
+            try{
+                this.loading=true;
+                this.cargando=true;
+                await TrainerService.patchTrainer(this.idtrainer,this.trainer);
+                this.$router.replace({name:'CapacitadorDetallesVer',params:{idcapacitador:this.idtrainer}})
+            }catch(error){
+                console.log(error);
+            }finally{
+                this.loading=false;
+                this.cargando=false;
+                this.isEditing = false;
+            }
         },
         
     }

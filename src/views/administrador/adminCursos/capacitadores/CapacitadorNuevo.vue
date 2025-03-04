@@ -19,7 +19,7 @@
                         </div>
                         <div class="form-group d-flex flex-column">
                             <label for="password">Contraseña</label>
-                            <input type="text" class="form-control p-2" id="password" v-model="user.password" placeholder="Contraseña" required/>
+                            <input type="password" class="form-control p-2" id="password" v-model="user.password" placeholder="Contraseña" required/>
                         </div>
                         <div class="form-group d-flex flex-column">
                             <label for="certifications">Certificaciones</label>
