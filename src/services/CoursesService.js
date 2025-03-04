@@ -10,14 +10,14 @@ export default {
         return apiClient.post('/courses', newCourse,{
             headers: {
                 "Content-Type": "multipart/form-data",
-              },
+            },
         });
     },
     patchCourse(id,Course){
         return apiClient.patch(`/courses/${id}`,Course,{
             headers: {
                 "Content-Type": "multipart/form-data",
-              },
+            },
         });
     },
     deleteCourse(id){

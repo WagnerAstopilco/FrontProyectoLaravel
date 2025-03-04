@@ -1,7 +1,7 @@
 import apiClient from '@/axios'
 export default{
     getEvaluations(){
-        return apiClient.getEvaluations('/evaluations');
+        return apiClient.get('/evaluations');
     },
     getEvaluationDetails(id){
         return apiClient.get(`/evaluations/${id}`);

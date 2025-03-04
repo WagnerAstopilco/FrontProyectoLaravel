@@ -1,7 +1,7 @@
 import apiClient from '@/axios'
 export default{
     getOptions(){
-        return apiClient.getOptions('/options');
+        return apiClient.get('/options');
     },
     getOptionDetails(id){
         return apiClient.get(`/options/${id}`);

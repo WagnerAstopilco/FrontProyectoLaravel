@@ -1,7 +1,7 @@
 import apiClient from '@/axios'
 export default{
     getPayments(){
-        return apiClient.getPayments('/payments');
+        return apiClient.get('/payments');
     },
     getPaymentDetails(id){
         return apiClient.get(`/payments/${id}`);

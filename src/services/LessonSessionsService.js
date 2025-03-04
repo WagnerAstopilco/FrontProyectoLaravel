@@ -1,7 +1,7 @@
 import apiClient from '@/axios'
 export default{
     getLessonSessions(){
-        return apiClient.getLessonSessions('/lessonSessions');
+        return apiClient.get('/lessonSessions');
     },
     getLessonSessionDetails(id){
         return apiClient.get(`/lessonSessions/${id}`);

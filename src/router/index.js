@@ -275,7 +275,7 @@ const routes = [
     name: 'AdministradorDetallesEditar',
     component:AdministradorDetalles,
   },
-  //routes administradores
+  //routes pagos
   {
     path:'/pagos',
     name:'Pagos',

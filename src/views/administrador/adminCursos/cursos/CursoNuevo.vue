@@ -63,13 +63,13 @@ export default {
                 name_long: "",
                 name_short: "",
                 price: "",
-                image: "",  // Aquí guardaremos el archivo de imagen
+                image: "",
                 description: "",
                 store_id: "",
                 category_id: "",
             },
             categories: [],
-            imagePreview: null,  // Vista previa de la imagen seleccionada
+            imagePreview: null,
             error: "",
             loading: false,
         };

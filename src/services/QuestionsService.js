@@ -1,7 +1,7 @@
 import apiClient from '@/axios'
 export default{
     getQuestions(){
-        return apiClient.getQuestions('/questions');
+        return apiClient.get('/questions');
     },
     getQuestionDetails(id){
         return apiClient.get(`/questions/${id}`);

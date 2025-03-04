@@ -1,7 +1,7 @@
 import apiClient from '@/axios'
 export default{
     getCertificates(){
-        return apiClient.getCertificates('/certificates');
+        return apiClient.get('/certificates');
     },
     getCertificateDetails(id){
         return apiClient.get(`/certificates/${id}`);
