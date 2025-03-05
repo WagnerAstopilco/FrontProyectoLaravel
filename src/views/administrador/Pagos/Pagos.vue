@@ -12,31 +12,33 @@
                         Nuevo</button>            
                 </div>
             </div>
+            <div class="table-responsive mt-3">
 
-            <table id="paymentsTable" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Fecha de pago</th>
-                        <th>Código de TRX</th>
-                        <th>Tipo</th>
-                        <th>Monto</th>
-                        <th>Estudiante</th>
-                        <th>Curso</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    <tr v-for="pay in this.payments" :key="pay.id" @click="payDetail(pay.id)" style="cursor:pointer"> 
-                        <td >{{ pay.payment_date }}</td>
-                        <td >{{ pay.transaction_code }}</td>
-                        <td >{{ pay.type }}</td>
-                        <td >{{ pay.amount }}</td>
-                        <td >{{ pay.enrrolement_id }}</td>
-                        <td >{{ pay.enrrolement_id }}</td>
-                        <td >{{ pay.status }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                <table id="paymentsTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha de pago</th>
+                            <th>Código de TRX</th>
+                            <th>Tipo</th>
+                            <th>Monto</th>
+                            <th>Estudiante</th>
+                            <th>Curso</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr v-for="pay in this.payments" :key="pay.id" @click="payDetail(pay.id)" style="cursor:pointer"> 
+                            <td >{{ pay.payment_date }}</td>
+                            <td >{{ pay.transaction_code }}</td>
+                            <td >{{ pay.type }}</td>
+                            <td >{{ pay.amount }}</td>
+                            <td >{{ pay.enrrolement_id }}</td>
+                            <td >{{ pay.enrrolement_id }}</td>
+                            <td >{{ pay.status }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
@@ -88,6 +90,7 @@ export default{
         },
         payDetail(id){
             this.$router.push({name:'PagoDetallesVer',params:{idpago:id}})
+            console.log("idenviado",id)
         }
     },
 }

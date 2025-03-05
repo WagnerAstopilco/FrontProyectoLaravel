@@ -45,7 +45,7 @@
                                         <input type="text" class="form-control w-50" id="email" v-model="certificate.user.email" readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label for="email">Correo</label>
+                                        <label for="email">Rol</label>
                                         <input type="text" class="form-control w-50" id="email" v-model="certificate.user.role" readonly>
                                     </div>
                                 </div>
