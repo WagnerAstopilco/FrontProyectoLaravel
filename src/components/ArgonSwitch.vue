@@ -23,16 +23,16 @@ defineProps({
 });
 </script>
 <template>
-  <div class="form-check form-switch ps-0">
+  <div class="form-check form-switch ps-0 ">
     <input
       :id="id"
-      class="form-check-input ms-0"
+      class="form-check-input ms-0 "
       :class="inputClass"
       type="checkbox"
       :name="name"
       :checked="checked"
     />
-    <label class="form-check-label" :class="labelClass" :for="id">
+    <label class="form-check-label " :class="labelClass" :for="id">
       <slot />
     </label>
   </div>

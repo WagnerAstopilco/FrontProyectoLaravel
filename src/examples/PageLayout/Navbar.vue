@@ -22,12 +22,12 @@ defineProps({
     :class="isBlur ? isBlur : 'shadow-none my-2 navbar-transparent w-100'"
   >
     <div class="container ps-2 pe-0">
-      <router-link
+      <!-- <router-link
         class="navbar-brand font-weight-bolder ms-lg-0 ms-3"
         :class="darkMode ? 'text-black' : 'text-white'"
         to="/"
         >Argon Dashboard 2</router-link
-      >
+      > -->
       <button
         class="shadow-none navbar-toggler ms-2"
         type="button"
@@ -46,7 +46,7 @@ defineProps({
       <div class="collapse navbar-collapse" id="navigation">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <router-link
+            <!-- <router-link
               class="nav-link d-flex align-items-center me-2 active"
               aria-current="page"
               to="/dashboard-default"
@@ -57,17 +57,17 @@ defineProps({
                 :class="isBlur ? 'text-dark' : 'text-white'"
               ></i>
               Dashboard
-            </router-link>
+            </router-link> -->
           </li>
           <li class="nav-item">
-            <router-link class="nav-link me-2" to="/profile">
+            <!-- <router-link class="nav-link me-2" to="/profile">
               <i
                 class="fa fa-user opacity-6 me-1"
                 aria-hidden="true"
                 :class="isBlur ? 'text-dark' : 'text-white'"
               ></i>
               Profile
-            </router-link>
+            </router-link> -->
           </li>
           <li class="nav-item">
             <router-link class="nav-link me-2" to="/signup">

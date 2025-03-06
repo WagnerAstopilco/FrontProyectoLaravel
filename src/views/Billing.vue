@@ -20,7 +20,7 @@ import TransactionCard from "./components/TransactionCard.vue";
                 <default-info-card
                   :icon="{
                     component: 'fas fa-landmark',
-                    background: 'bg-gradient-success',
+                    background: 'bg-gradient-primary',
                   }"
                   title="Salary"
                   description="Belong Interactive"

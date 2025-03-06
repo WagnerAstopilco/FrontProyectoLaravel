@@ -5,13 +5,14 @@
                 <h1 class="fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="ms-auto">                    
-                    <button type="button" class="btn btn-info ms-auto" @click="newCourse"><i class="bi bi-plus"></i>
+                    <button type="button" class="btn ms-auto" style="background-color:rgb(88,176,49);color:white;" @click="newCourse"><i class="bi bi-plus" ></i>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                            
                         </svg> Nuevo</button>            
                 </div>
             </div>
-            <table id="coursesTable" class="table table-striped">
+            <table id="coursesTable" class="table ">
                 <thead>
                     <tr>
                         <th>Imagen</th>
@@ -107,3 +108,10 @@ export default {
     }
 };
 </script>
+<style scoped>
+table tbody tr:hover {
+  background-color: rgb(0, 87, 163);
+  color: white;
+  cursor:pointer;
+}
+</style>

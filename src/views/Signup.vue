@@ -2,7 +2,7 @@
 import { onBeforeUnmount, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 
-import Navbar from "@/examples/PageLayout/Navbar.vue";
+// import Navbar from "@/examples/PageLayout/Navbar.vue";
 import AppFooter from "@/examples/PageLayout/Footer.vue";
 import ArgonInput from "@/components/ArgonInput.vue";
 import ArgonCheckbox from "@/components/ArgonCheckbox.vue";
@@ -28,16 +28,14 @@ onBeforeUnmount(() => {
 <template>
   <div class="container top-0 position-sticky z-index-sticky">
     <div class="row">
-      <div class="col-12">
-        <navbar isBtn="bg-gradient-light" />
-      </div>
+      
     </div>
   </div>
   <main class="main-content mt-0">
     <div
       class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg"
       style="
-        background-image: url(&quot;https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signup-cover.jpg&quot;);
+        background-color:rgb(0,87,163) ;
         background-position: top;
       "
     >
@@ -45,7 +43,7 @@ onBeforeUnmount(() => {
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-5 text-center mx-auto">
-            <h1 class="text-white mb-2 mt-5">Welcome!</h1>
+            <h1 class="text-white mb-2 mt-5">Bienvenido!</h1>
             <p class="text-lead text-white">
               Use these awesome forms to login or create new account in your
               project for free.
@@ -59,7 +57,7 @@ onBeforeUnmount(() => {
         <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
           <div class="card z-index-0">
             <div class="card-header text-center pt-4">
-              <h5>Register with</h5>
+              <h5>Registrate usando</h5>
             </div>
             <div class="row px-xl-5 px-sm-4 px-3">
               <div class="col-3 ms-auto px-1">
@@ -165,7 +163,7 @@ onBeforeUnmount(() => {
                 <p
                   class="text-sm font-weight-bold mb-2 text-secondary text-border d-inline z-index-2 bg-white px-3"
                 >
-                  or
+                  o
                 </p>
               </div>
             </div>
@@ -174,26 +172,32 @@ onBeforeUnmount(() => {
                 <argon-input
                   id="name"
                   type="text"
-                  placeholder="Name"
+                  placeholder="Nombres"
+                  aria-label="Name"
+                />
+                <argon-input
+                  id="name"
+                  type="text"
+                  placeholder="Apellidos"
                   aria-label="Name"
                 />
                 <argon-input
                   id="email"
                   type="email"
-                  placeholder="Email"
+                  placeholder="Correo"
                   aria-label="Email"
                 />
                 <argon-input
                   id="password"
                   type="password"
-                  placeholder="Password"
+                  placeholder="Contraseña"
                   aria-label="Password"
                 />
                 <argon-checkbox checked>
                   <label class="form-check-label" for="flexCheckDefault">
-                    I agree the
+                    Acepto los
                     <a href="javascript:;" class="text-dark font-weight-bolder"
-                      >Terms and Conditions</a
+                      >Términos y condiciones</a
                     >
                   </label>
                 </argon-checkbox>
@@ -201,15 +205,16 @@ onBeforeUnmount(() => {
                   <argon-button
                     fullWidth
                     color="dark"
-                    variant="gradient"
                     class="my-4 mb-2"
-                    >Sign up</argon-button
+                    style="background-color: rgb(88, 176, 49);
+                    color:white;"
+                    >Registrar</argon-button
                   >
                 </div>
                 <p class="text-sm mt-3 mb-0">
-                  Already have an account?
-                  <a href="javascript:;" class="text-dark font-weight-bolder"
-                    >Sign in</a
+                  Ya tienes una cuenta?
+                  <a href="Signin" class=" font-weight-bolder"  style="color: rgb(0, 87, 163)"
+                    >Inicia sesión</a
                   >
                 </p>
               </form>

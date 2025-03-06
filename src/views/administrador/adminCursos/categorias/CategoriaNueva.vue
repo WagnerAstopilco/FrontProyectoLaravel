@@ -14,8 +14,8 @@
                         <p v-if="error" class="error">{{ error }}</p> 
                     </div>
                     <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                    <button type="button" class="btn btn-primary m-2" @click="goBack">Volver</button>
+                    <button type="submit" class="btn btn-info m-2" style="background-color:rgb(88,176,49);color:white;">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                    <button type="button" class="btn btn-primary m-2" style="background-color:rgb(0,87,163);color:white;"  @click="goBack">Volver</button>
                     </div>
                 </form>
             </div>

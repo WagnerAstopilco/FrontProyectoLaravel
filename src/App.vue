@@ -47,6 +47,7 @@ const navClasses = computed(() => {
   <div
     v-show="layout === 'landing'"
     class="landing-bg h-100 bg-gradient-primary position-fixed w-100"
+    style="background-color: rgb(0, 87, 163);"
   ></div>
 
   <sidenav v-if="showSidenav" />

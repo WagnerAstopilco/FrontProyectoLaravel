@@ -5,7 +5,7 @@
                 <h1 class="fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="dropdown ms-auto">
-                    <button class="btn btn-info dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-secondary dropdown-toggle " style="background-color:rgb(29,29,27);color:white;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Opciones
                     </button>
                     <ul class="dropdown-menu">
@@ -49,8 +49,8 @@
                                     </div>
                                 </div>
                                 <div v-if="isEditing ">
-                                    <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
-                                    <button type="button" class="btn btn-outline-secondary m-2" @click="cancelEdit">Cancelar</button>
+                                    <button type="submit" class="btn btn m-2" style="background-color:rgb(88,176,49);color:white">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
+                                    <button type="button" class="btn btn m-2" style="background-color:rgb(0,87,163);color:white;" @click="cancelEdit">Cancelar</button>
                                 </div>
                             </form>
                             
@@ -62,7 +62,7 @@
                     <div class="CourseTrainers">
                         <h3>Capacitadores</h3>
                         <div v-if="trainers.length > 0">
-                            <table id="courseTrainersTable" class="table table-striped">
+                            <table id="courseTrainersTable" class="table">
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
@@ -74,7 +74,7 @@
                                     <tr v-for="trainer in trainers" :key="trainer.id">
                                         <td>{{ trainer.user.names }}</td>
                                         <td>{{ trainer.user.last_names }}</td>
-                                        <td><button type="button" class="btn btn-danger" @click="deleteTrainerToCourse(trainer.id)">Elinimar</button></td>
+                                        <td><button type="button" class="btn btn-outline-danger" @click="deleteTrainerToCourse(trainer.id)">Elinimar</button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -86,7 +86,7 @@
                     <div class="CourseModules">
                         <h3>Modulos</h3>
                         <div v-if="course.modules && course.modules.length > 0">
-                            <table id="courseModulesTable" class="table table-striped">
+                            <table id="courseModulesTable" class="table">
                                 <thead>
                                     <tr>
                                         <th>Órden</th>
@@ -113,7 +113,7 @@
                                             </svg>
                                             Bajar uno
                                         </button> -->
-                                            <button type="button" class="btn btn-danger m-1" @click="editmodule(module.id)">Editar</button>
+                                            <button type="button" class="btn btn-outline-danger m-1" @click="editmodule(module.id)">Editar</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -126,7 +126,7 @@
                     <div class="CourseEvaluations">
                         <h3>Evaluaciones</h3>
                         <div v-if="course.evaluations && course.evaluations.length > 0">
-                            <table id="courseEvaluationsTable" class="table table-striped">
+                            <table id="courseEvaluationsTable" class="table ">
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
@@ -146,7 +146,7 @@
                     <div class="CourseMaterials">
                         <h3>Materiales</h3>
                         <div v-if="course.materials && course.materials.length > 0">
-                            <table id="coursematerialsTable" class="table table-striped">
+                            <table id="coursematerialsTable" class="table">
                                 <thead>
                                     <tr>
                                         <th>Órden</th>
@@ -160,7 +160,7 @@
                                         <td>{{ material.order }}</td>
                                         <td>{{ material.title }}</td>
                                         <td>{{ material.type }}</td>
-                                        <td><button type="button" class="btn btn-danger" @click="deleteMaterialToCourse(material.id)">Elinimar</button></td>
+                                        <td><button type="button" class="btn btn-outline-danger" @click="deleteMaterialToCourse(material.id)">Elinimar</button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -174,7 +174,7 @@
                     <p>Cargando...</p>
                 </div>
             <div class="d-flex">
-                <button type="button" class="btn btn-primary mx-auto" @click="goBack">Volver</button>
+                <button type="button" class="btn btn-primary mx-auto" style="background-color:rgb(0,87,163);color:white;" @click="goBack">Volver</button>
             </div>
         </div>
     </div>
@@ -398,3 +398,10 @@ export default {
     }
 };
 </script>
+<style scoped>
+table tbody tr:hover {
+  background-color: rgb(29, 176, 215);
+  color: white;
+  cursor:pointer;
+}
+</style>

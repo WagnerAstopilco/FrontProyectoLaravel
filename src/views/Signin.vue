@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeUnmount, onBeforeMount } from "vue";
 import { useStore } from "vuex";
-import Navbar from "@/examples/PageLayout/Navbar.vue";
+// import Navbar from "@/examples/PageLayout/Navbar.vue";
 import ArgonInput from "@/components/ArgonInput.vue";
 import ArgonSwitch from "@/components/ArgonSwitch.vue";
 import ArgonButton from "@/components/ArgonButton.vue";
@@ -27,11 +27,11 @@ onBeforeUnmount(() => {
   <div class="container top-0 position-sticky z-index-sticky">
     <div class="row">
       <div class="col-12">
-        <navbar
+        <!-- <navbar
           isBlur="blur  border-radius-lg my-3 py-2 start-0 end-0 mx-4 shadow"
           v-bind:darkMode="true"
           isBtn="bg-gradient-success"
-        />
+        /> -->
       </div>
     </div>
   </div>
@@ -45,8 +45,8 @@ onBeforeUnmount(() => {
             >
               <div class="card card-plain">
                 <div class="pb-0 card-header text-start">
-                  <h4 class="font-weight-bolder">Sign In</h4>
-                  <p class="mb-0">Enter your email and password to sign in</p>
+                  <h4 class="font-weight-bolder">Inicio de Sesión</h4>
+                  <p class="mb-0">Ingresa tu correo y contraseña para iniciar sesión</p>
                 </div>
                 <div class="card-body">
                   <form role="form">
@@ -69,28 +69,28 @@ onBeforeUnmount(() => {
                       />
                     </div>
                     <argon-switch id="rememberMe" name="remember-me"
-                      >Remember me</argon-switch
+                      >Recuerdame</argon-switch
                     >
 
                     <div class="text-center">
                       <argon-button
                         class="mt-4"
-                        variant="gradient"
-                        color="success"
                         fullWidth
                         size="lg"
-                        >Sign in</argon-button
+                        style="background-color: rgb(0, 87, 163)"
+                        >Iniciar Sesión</argon-button
                       >
                     </div>
                   </form>
                 </div>
                 <div class="px-1 pt-0 text-center card-footer px-lg-2">
                   <p class="mx-auto mb-4 text-sm">
-                    Don't have an account?
+                    No tienes una cuenta?
                     <a
-                      href="javascript:;"
-                      class="text-success text-gradient font-weight-bold"
-                      >Sign up</a
+                      href="Signup"
+                      class="font-weight-bold"
+                      style="color: rgb(88, 176, 49);"
+                      >Registrate</a
                     >
                   </p>
                 </div>
@@ -102,19 +102,28 @@ onBeforeUnmount(() => {
               <div
                 class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
                 style="
-                  background-image: url(&quot;https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg&quot;);
+                  background-image: url(&quot;https://drive.google.com/file/d/1X_fKLds2YsyayE7cEKQNCtWChiXNOUOc/view?usp=sharing&quot;);
                   background-size: cover;
+
                 "
               >
-                <span class="mask bg-gradient-success opacity-6"></span>
+                <span class="mask  opacity-6"><img src="/gradient login_op5.png"/></span>
+                <img
+                src="/JEAN_PIAGET.png" 
+                alt="logo jean piaget"
+                class="img-fluid position-absolute start-0 top-0 w-100 h-100 p-5" 
+                style="object-fit:contain; filter:drop-shadow(0 0 10px rgba(0,0,0,.5))" 
+              />
                 <h4
-                  class="mt-5 text-white font-weight-bolder position-relative"
+                  class="mt-5 fs-1 text-white font-weight-bolder position-relative"
+                  style="text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);"
                 >
-                  "Attention is the new currency"
+                  JEAN PIAGET
                 </h4>
-                <p class="text-white position-relative">
-                  The more effortless the writing looks, the more effort the
-                  writer actually put into the process.
+                <p class="text-white position-relative"  style="text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);">
+                  CENTRO DE CAPACITACIÓN,
+                  INVESTIGACIÓN Y PROMOCIÓN
+                  CULTURAL
                 </p>
               </div>
             </div>
