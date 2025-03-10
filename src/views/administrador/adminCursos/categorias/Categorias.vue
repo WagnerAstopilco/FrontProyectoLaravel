@@ -1,41 +1,44 @@
 <template> 
-<div class="container">
-        <div class="card p-4">
-            <div class="head d-flex">
-                <h1 class="fs-4">{{ name }}</h1>
+    <div class="container">
+        <section class="card p-4">
+            <header class="d-flex">
+                <h1 class="card-title fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="ms-auto">
-                    <button type="button" class="btn " style="background-color:rgb(88,176,49);color:white;" @click="newCategory">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <button type="button" class="btn py-1" style="background-color:rgb(88,176,49);color:white;" @click="redirNewCategory" aria-label="add new category">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                        </svg>
-                        Nuevo</button>            
+                        </svg><span>Nuevo</span>
+                        </button>            
                 </div>
+            </header>
+            <div class="card-body table-responsive">
+                <table id="categoryTable" class="table table-striped table-hover" >
+                    <caption>Lista de categorias</caption>
+                    <thead >
+                        <tr >
+                            <th class="text-center" scope="col">Nombre</th>
+                            <th class="text-center" scope="col">Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr v-for="category in categories" :key="category.id" @click="redirCategoryDetail(category.id)" style="cursor:pointer;" > 
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.description }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <table id="categoryTable" class="table ">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    <tr v-for="category in categories" :key="category.id" @click="categoryDetail(category.id)" > 
-                        <td>{{ category.name }}</td>
-                        <td>{{ category.description }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        </section>
     </div>
 </template>
 
 <script>
+import Preloader from '../../../components/Preloader.vue';
 import CategoryService from '@/services/CategoryService.js'
-import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 import $ from 'jquery';
 import 'datatables.net-bs4';
-import Preloader from '../../../components/Preloader.vue';
+import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 
 export default {
     data() {
@@ -72,10 +75,10 @@ export default {
                 this.cargando=false
             }
         },
-        categoryDetail(id) {
+        redirCategoryDetail(id) {
         this.$router.push({ name: 'CategoriaDetalleVer', params: { idcategoria: id } });
         },
-        newCategory(){
+        redirNewCategory(){
             this.$router.push({name:'NuevaCategoria'});
         }
     }
@@ -83,9 +86,9 @@ export default {
 </script>
 
 <style scoped>
-table tbody tr:hover {
+/* table tbody tr:hover {
   background-color: rgb(0, 87, 163);
   color: white;
   cursor:pointer;
-}
+} */
 </style>

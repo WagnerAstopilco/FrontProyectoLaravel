@@ -20,23 +20,23 @@
                 <form @submit.prevent="updateStudent" class="w-50">
                     <div class="form-group">
                         <label for="names">Nombres</label>
-                        <input type="text" class="form-control" id="names" v-model="student.names" readonly>
+                        <input type="text" class="form-control" id="names" v-model="student.names" :readonly="!isEditing">
                     </div>
                     <div class="form-group">
                         <label for="last_names">Apellidos</label>
-                        <input type="text" class="form-control" id="last_names" v-model="student.last_names" readonly>
+                        <input type="text" class="form-control" id="last_names" v-model="student.last_names" :readonly="!isEditing">
                     </div>
                     <div class="form-group">
                         <label for="email">Correo</label>
-                        <input type="email" class="form-control" id="email" v-model="student.email" readonly>
+                        <input type="email" class="form-control" id="email" v-model="student.email" :readonly="!isEditing">
                     </div>
                     <div class="form-group">
                         <label for="phone_number">Celular</label>
-                        <input type="text" class="form-control" id="phone_number" v-model="student.phone_number" readonly>
+                        <input type="text" class="form-control" id="phone_number" v-model="student.phone_number" :readonly="!isEditing">
                     </div>
                     <div class="form-group">
                         <label for="speciality">Especialidad</label>
-                        <input type="text" class="form-control" id="speciality" v-model="student.speciality" readonly>
+                        <input type="text" class="form-control" id="speciality" v-model="student.speciality" :readonly="!isEditing">
                     </div>
                     <div class="form-group">
                         <label for="status">Estado</label>

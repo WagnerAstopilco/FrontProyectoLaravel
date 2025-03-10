@@ -38,6 +38,7 @@ export default{
     data(){
         return{
             name:'Nuevo Administrador',
+            idNewAdmin:'',
             user:{
                 names: '',              
                 last_names: '',                         
@@ -47,7 +48,6 @@ export default{
                 status: 'active',    
             },
             loading:false,
-            idadmin:this.$route.params.idadministrador
         };
     },
 
@@ -58,8 +58,9 @@ export default{
         async createAdministrator(){
             try{
                 this.loading=true;
-                await UserService.postUser(this.user);
-                this.$router.push({name: 'AdministradorDetallesVer',params: { idadministrador: this.idadmin },});
+                const response =await UserService.postUser(this.user);
+                this.idNewAdmin=response.data.data.id;
+                this.$router.push({name: 'AdministradorDetallesVer',params: { idadministrador: this.idNewAdmin },});
             }catch(error){
                 console.error('Error response:', error.response);
                 if (error.response && error.response.data) {

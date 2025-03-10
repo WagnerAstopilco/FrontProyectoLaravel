@@ -1,25 +1,32 @@
 <template>
     <div class="container">
-        <div class="card p-4">
-            <h1 class="card-title fs-4">{{ name }}</h1>
-            <div class="card-body col-8 mx-auto">
+        <section class="card p-4">
+            <header>
+                <h1 class="card-title fs-4">{{ name }}</h1>
+            </header>
+            <div class="card-body col-md-8 col-12 mx-auto">
                 <form @submit.prevent="addCategory">
-                    <div class="form-group d-flex flex-column">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control p-2" id="nombre" v-model="newCategory.name" placeholder="Nombre de la categoría" required/>
-                    </div>
-                    <div class="form-group d-flex flex-column">
-                        <label for="descripcion">Descripción</label>
-                        <textarea id="descripcion" class="form-control p-2" v-model="newCategory.description" placeholder="Descripción de la categoría"></textarea>
-                        <p v-if="error" class="error">{{ error }}</p> 
-                    </div>
-                    <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-info m-2" style="background-color:rgb(88,176,49);color:white;">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                    <button type="button" class="btn btn-primary m-2" style="background-color:rgb(0,87,163);color:white;"  @click="goBack">Volver</button>
-                    </div>
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" class="form-control p-2" id="nombre" v-model="newCategory.name" placeholder="Nombre de la categoría"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Descripción</label>
+                            <textarea id="descripcion" class="form-control p-2" v-model="newCategory.description" placeholder="Descripción de la categoría"></textarea>
+                            <p v-if="error" class="error">{{ error }}</p> 
+                        </div>
+                        <div v-if="error" class="error text-danger mt-2" role="alert">
+                            <small>{{ error }}</small>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex col-md-6 col-8 mx-auto">
+                            <button type="submit" class="btn m-2 py-1" style="background-color:rgb(88,176,49);color:white;"  aria-label="Agregar nueva categoría">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                            <button type="button" class="btn m-2 py-1" style="background-color:rgb(0,87,163);color:white;"  @click="goBack" aria-label="Volver a la página anterior">Volver</button>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
-        </div>
+        </section>
     </div>
 </template>
 <script>

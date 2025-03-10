@@ -10,6 +10,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css';
 import "./assets/css/main.css";
+import '@/config/datatable-config.js';
 
 
 const appInstance = createApp(App);

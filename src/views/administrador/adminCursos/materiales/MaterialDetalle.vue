@@ -101,7 +101,7 @@
                                             </li>
                                             <li v-if="searchQuery && filteredCourses.length ===0">Sin resultados.</li>
                                         </ul>
-                                  </div> 
+                                </div> 
                                 </div>
                                 <div class="">
                                     <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
