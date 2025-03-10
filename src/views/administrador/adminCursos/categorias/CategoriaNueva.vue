@@ -13,8 +13,7 @@
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción</label>
-                            <textarea id="descripcion" class="form-control p-2" v-model="newCategory.description" placeholder="Descripción de la categoría"></textarea>
-                            <p v-if="error" class="error">{{ error }}</p> 
+                            <textarea id="descripcion" class="form-control p-2" v-model="newCategory.description" placeholder="Descripción de la categoría"></textarea> 
                         </div>
                         <div v-if="error" class="error text-danger mt-2" role="alert">
                             <small>{{ error }}</small>
@@ -37,36 +36,59 @@ export default {
         return {
             name: 'Nueva Categoría',
             newCategory: {
-            name: "",
-            description: "",
+                name: "",
+                description: "",
+                color: "",
             },
             error: "",
             loading: false,
+            categories: [],
         };
+    },
+
+    async created() {
+        await this.getCategories();
     },
 
     methods: {
         goBack() {
             this.$router.push({ name: 'Categorias' }); 
         },
+
         async addCategory() {
             this.error = "";
             this.loading = true;
             try {
+                this.newCategory.color = this.getUniqueColor();
                 const response = await CategoryService.postCategory(this.newCategory);
                 const categoryId = response.data.data.id;
-                this.$router.push({name: 'CategoriaDetalleVer',params: { idcategoria: categoryId },});
+                this.$router.push({ name: 'CategoriaDetalleVer', params: { idcategoria: categoryId } });
             } catch (err) {
-                console.log(err);
-                if (err.response && err.response.status === 422) {
                 this.error = Object.values(err.response.data.errors).flat().join(" ");
-                } else {
-                this.error = "Error al agregar la categoría.";
-                }
             } finally {
                 this.loading = false;
             }
         },
+
+        async getCategories() {
+            try {
+                const response = await CategoryService.getCategories();
+                console.log("Categorías obtenidas:", response);
+                this.categories = response.data.data || response.data;
+            } catch (err) {
+                console.error("Error al obtener categorías:", err);
+            }
+        },
+
+        getUniqueColor() {
+            let color;
+            do {
+                color = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+                console.log("Color generado:", color);
+            } while (this.categories.some(cat => cat.color === color));
+            return color;
+        },
     }
 };
 </script>
+

@@ -4,13 +4,27 @@
             <h1 class="card-title fs-4">{{ name }}</h1>
             <div class="card-body col-8 mx-auto">
                 <form @submit.prevent="addCourse">
-                    <div class="form-group d-flex flex-column">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control p-2" id="nombre" v-model="newCourse.name_long" placeholder="Nombre del curso"/>
+                    <div class="d-flex justify-content-space-between">
+                        <div class="form-group d-flex flex-column">
+                            <label for="start_date">Fecha de inicio</label>
+                            <input type="date" class="form-control p-2" id="start_date" v-model="newCourse.start_date" placeholder="Nombre del curso"/>
+                        </div>
+                        <div class="form-group d-flex flex-column">
+                            <label for="end_date">Fecha de fin</label>
+                            <input type="date" class="form-control p-2" id="end_date" v-model="newCourse.end_date" placeholder="Nombre del curso"/>
+                        </div>
                     </div>
                     <div class="form-group d-flex flex-column">
-                        <label for="abrv">Abreviación</label>
-                        <input type="text" class="form-control p-2" id="abrv" v-model="newCourse.name_short" placeholder="Abreviatura del curso"/>
+                        <label for="name_long">Nombre</label>
+                        <input type="text" class="form-control p-2" id="name_long" v-model="newCourse.name_long" placeholder="Nombre del curso"/>
+                    </div>
+                    <div class="form-group d-flex flex-column">
+                        <label for="name_short">Abreviación</label>
+                        <input type="text" class="form-control p-2" id="name_short" v-model="newCourse.name_short" placeholder="Abreviatura del curso"/>
+                    </div>
+                    <div class="form-group d-flex flex-column">
+                        <label for="duration_in_hours">Duración</label>
+                        <input type="number" class="form-control p-2" id="duration_in_hours" v-model="newCourse.duration_in_hours" placeholder="Abreviatura del curso"/>
                     </div>
                     <div class="form-group d-flex flex-column">
                         <label for="category">Categoria</label>
@@ -64,6 +78,9 @@ export default {
                 name_short: "",
                 price: "",
                 image: "",
+                start_date:'',
+                end_date:'',
+                duration_in_hours:'',
                 description: "",
                 store_id: "",
                 category_id: "",
@@ -126,7 +143,6 @@ export default {
 
             } catch (err) {
                 if (err.response && err.response.status === 422) {
-                    // Mostrar los errores de validación
                     this.error = Object.values(err.response.data.errors).flat().join(" ");
                 } else {
                     this.error = "Error al agregar el curso.";

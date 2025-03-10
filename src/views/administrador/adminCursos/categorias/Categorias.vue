@@ -17,12 +17,16 @@
                     <caption>Lista de categorias</caption>
                     <thead >
                         <tr >
+                            <th class="text-center" scope="col">Color</th>
                             <th class="text-center" scope="col">Nombre</th>
                             <th class="text-center" scope="col">Descripción</th>
                         </tr>
                     </thead>
                     <tbody >
                         <tr v-for="category in categories" :key="category.id" @click="redirCategoryDetail(category.id)" style="cursor:pointer;" > 
+                            <td >
+                                <div class="form-control w-30 mx-auto" :style="{ backgroundColor: category.color }"></div>
+                            </td>
                             <td>{{ category.name }}</td>
                             <td>{{ category.description }}</td>
                         </tr>
