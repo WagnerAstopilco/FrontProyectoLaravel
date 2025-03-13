@@ -19,8 +19,8 @@
                             <small>{{ error }}</small>
                         </div>
                         <div class="d-grid gap-2 d-md-flex col-md-6 col-8 mx-auto">
-                            <button type="submit" class="btn m-2 py-1" style="background-color:rgb(88,176,49);color:white;"  aria-label="Agregar nueva categoría">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                            <button type="button" class="btn m-2 py-1" style="background-color:rgb(0,87,163);color:white;"  @click="goBack" aria-label="Volver a la página anterior">Volver</button>
+                            <button type="submit" class="btn m-2 py-1 btn-green" aria-label="Agregar nueva categoría">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                            <button type="button" class="btn m-2 py-1 btn-blue" @click="goBack" aria-label="Volver a la página anterior">Volver</button>
                         </div>
                     </fieldset>
                 </form>
@@ -36,11 +36,11 @@ export default {
         return {
             name: 'Nueva Categoría',
             newCategory: {
-                name: "",
-                description: "",
-                color: "",
+                name: '',
+                description: '',
+                color: '',
             },
-            error: "",
+            error: '',
             loading: false,
             categories: [],
         };
@@ -56,10 +56,10 @@ export default {
         },
 
         async addCategory() {
-            this.error = "";
-            this.loading = true;
             try {
-                this.newCategory.color = this.getUniqueColor();
+                this.error = "";
+                this.loading = true;
+                this.newCategory.color = this.createUniqueColor();
                 const response = await CategoryService.postCategory(this.newCategory);
                 const categoryId = response.data.data.id;
                 this.$router.push({ name: 'CategoriaDetalleVer', params: { idcategoria: categoryId } });
@@ -80,7 +80,7 @@ export default {
             }
         },
 
-        getUniqueColor() {
+        createUniqueColor() {
             let color;
             do {
                 color = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;

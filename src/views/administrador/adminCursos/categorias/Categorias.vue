@@ -5,7 +5,7 @@
                 <h1 class="card-title fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="ms-auto">
-                    <button type="button" class="btn py-1" style="background-color:rgb(88,176,49);color:white;" @click="redirNewCategory" aria-label="add new category">
+                    <button type="button" class="btn btn-green py-1" @click="redirNewCategory" aria-label="add new category">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                         </svg><span>Nuevo</span>
@@ -23,9 +23,9 @@
                         </tr>
                     </thead>
                     <tbody >
-                        <tr v-for="category in categories" :key="category.id" @click="redirCategoryDetail(category.id)" style="cursor:pointer;" > 
+                        <tr v-for="category in categories" :key="category.id" class="table-pointer" @click="redirCategoryDetail(category.id)"> 
                             <td >
-                                <div class="form-control w-30 mx-auto" :style="{ backgroundColor: category.color }"></div>
+                                <div class="form-control w-lg-30 w-md-50 w-60 mx-auto" :style="{ backgroundColor: category.color }"></div>
                             </td>
                             <td>{{ category.name }}</td>
                             <td>{{ category.description }}</td>

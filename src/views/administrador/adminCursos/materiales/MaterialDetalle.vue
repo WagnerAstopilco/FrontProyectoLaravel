@@ -24,8 +24,8 @@
                         <label for="grado">Grado</label>
                         <select name="grado" v-model="material.grado" class="form-control p-2" :readonly="!isEditing">
                             <option value="" disabled selected>---Selecciona un grado---</option>
-                            <option value="lesson">Lección</option>
-                            <option value="course">Curso</option>
+                            <option value="leccion">Lección</option>
+                            <option value="curso">Curso</option>
                         </select>
                         <div class="form-group" v-if="material.grado === 'lesson' && !material.lesson">
                             <label for="lesson">Selecciona una Lección</label>
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                     
-                    <div class="materialCourses" v-if="material.grado==='course'">
+                    <div class="materialCourses" v-if="material.grado==='curso'">
                         <div class="d-flex align-items-center">
                             <h2 class="fs-5">Cursos</h2>
                             <button type="button" class="btn btn-info m-4" @click="showFormCourseMaterial">Vincular Curso</button>

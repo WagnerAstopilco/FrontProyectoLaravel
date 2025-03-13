@@ -5,7 +5,7 @@
             <h1 class="fs-4">{{ name }}</h1>
             <Preloader :visible="cargando"></Preloader>
             <div class="dropdown ms-auto" >
-                <button class="btn btn-secondary dropdown-toggle ms auto p-2 m-2" style="background-color: rgb(29,29,27); color: white;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn dropdown-toggle ms auto p-2 m-2 btn-black" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Opciones 
                 </button>
                 <ul class="dropdown-menu" v-if="category">
@@ -26,17 +26,48 @@
                     </div>
                     <div class="form-group">
                         <label for="color">Color</label>
-                        <input type="color" class="form-control w-20 h-20 p-0" id="color" v-model="category.color" :disabled="!isEditing">
+                        <input type="color" class="form-control w-lg-30 w-md-40 w-20 p-0" id="color" v-model="category.color" :disabled="!isEditing">
                     </div>
+                    <div v-if="error" class="error text-danger mt-2" role="alert">
+                            <small>{{ error }}</small>
+                        </div>
                     <div v-if="isEditing ">
-                        <button type="submit" class="btn m-2 p-2" style="background-color:rgb(88,176,49);color:white">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
-                        <button type="button" class="btn m-2 p-2" style="background-color:rgb(0,87,163);color:white;" @click="cancelEditCategory">Cancelar</button>
+                        <button type="submit" class="btn m-2 p-2 btn-green">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
+                        <button type="button" class="btn m-2 p-2 btn-blue" @click="cancelEditCategory">Cancelar</button>
                     </div>
                 </form>
                 <div class="courses" >
-                    <h2 class="fs-5">Cursos</h2>
+                    <div class="d-flex align-items-center">
+                        <h2 class="fs-5">Cursos</h2>
+                        <button class="btn btn-green m-4" @click="showCourses">Agregar Cursos</button>
+                    </div>
+                    <form v-if="addCourses" class="w-lg-50 w-md-60 w-100 mb-4" @submit="addCoursesToCategory" >
+                        <multiselect 
+                            v-model="selectedCourses" 
+                            :options="availableCourses" 
+                            :multiple="true"
+                            :searchable="true" 
+                            :allow-empty="false"
+                            placeholder="Selecciona cursos para agregar"
+                            label="name_long"
+                            selectLabel="Presiona enter para seleccionar"
+                            selectedLabel="Seleccionado"
+                            deselectLabel="Presiona enter para quitar"
+                            track-by="id" class="mb-3">
+                            <template #noOptions>
+                                <span class="text-gray-500">No hay cursos disponibles</span>
+                            </template>
+                            <template #noResult>
+                                <span class="text-gray-500"> No se encontraron coincidencias. </span>
+                            </template>
+                        </multiselect>
+                        <div>
+                            <button type="submit" class="btn me-2" >Agregar</button>
+                            <button type="button" class="btn ms-2" @click="showCourses">Cancelar</button>
+                        </div>
+                    </form>
                     <div class="table-responsive" v-if="category.courses && category.courses.length>0" >
-                        <table id="courseCategoryTable" class="table table-bordered">
+                        <table id="courseCategoryTable" class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
@@ -75,11 +106,12 @@
 </template>
 <script>
 import CategoryService from '@/services/CategoryService.js';
+import CourseService from '@/services/CoursesService.js';
 import Preloader from '../../../components/Preloader.vue';
 import $ from 'jquery';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 import 'datatables.net-bs4';
-
+import Multiselect from "vue-multiselect";
 
 
 export default {
@@ -92,6 +124,10 @@ export default {
             cargando: false,
             isViewing: false,
             isEditing: false,
+            error:'',
+            addCourses:false,
+            availableCourses: [],
+            selectedCourses:[],
         };
     },
     mounted() {
@@ -105,12 +141,13 @@ export default {
         this.getCategoryDetails();
     },
     beforeUnmount() {
-        if ($.fn.dataTable.isDataTable('#categoryTable')) {
-            $('#categoryTable').DataTable().destroy();
+        if ($.fn.dataTable && $.fn.dataTable.isDataTable('#courseCategoryTable')) {
+            $('#courseCategoryTable').DataTable().destroy();
         }
     },
     components: {
-        Preloader
+        Preloader,
+        Multiselect
     },
     methods: {
         async getCategoryDetails() {
@@ -118,10 +155,14 @@ export default {
                 this.cargando=true;
                 const id = this.$route.params.idcategoria; 
                 const response = await CategoryService.getCategoryDetails(id);
-                this.category = response.data.data;
+                this.category = response.data.data;                
+                this.getCourses();
                 this.$nextTick(() => {
-                if (this.category && this.category.courses && this.category.courses.length > 0) {
-                        $('#courseCategoryTable').DataTable();  
+                    if ($.fn.dataTable.isDataTable('#courseCategoryTable')) {
+                        $('#courseCategoryTable').DataTable().destroy();
+                    }
+                    if (this.category && this.category.courses.length > 0) {
+                        $('#courseCategoryTable').DataTable();
                     }
                 });
             } catch (error) {
@@ -142,14 +183,14 @@ export default {
             this.$router.push({ name: 'CategoriaDetalleEditar', params: { idcategoria: id } });
         },
         async updateCategory() {
-            try
-            {
+            try {
+                this.error = "";
                 this.loading = true;
                 await CategoryService.patchCategory(this.category.id, this.category);
                 this.isEditing = false;
                 this.$router.replace({name: 'CategoriaDetalleVer',params: { idcategoria: this.category.id },});
-            }catch(error){
-                console.log(error);
+            }catch(err){
+                this.error = Object.values(err.response.data.errors).flat().join(" ");
             }     
             finally{
                 this.loading=false;
@@ -169,76 +210,82 @@ export default {
         cancelEditCategory(){
             this.isEditing = false;
             this.$router.push({ name: 'CategoriaDetalleVer', params: { idcategoria: this.category.id } });
-        }
+            this.getCategoryDetails();
+            this.error='';
+        },
+        async getCourses() {
+            try {
+                const response = await CourseService.getCourses();
+                const allCourses = response.data.data;
+                if (this.category && this.category.courses) {
+                    const categoryCourseIds = this.category.courses.map(course => course.id);
+                    this.availableCourses = allCourses.filter(course => !categoryCourseIds.includes(course.id));
+                } else {
+                    this.availableCourses = allCourses;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        showCourses() {
+            this.addCourses = !this.addCourses;
+        },
+        // async addCoursesToCategory(){
+        //     console.log("cursos seleccionados", this.selectedCourses);
+        //     try{
+        //         for(let course of this.selectedCourses){
+        //             course.category_id=this.idcategoria;
+        //             await CourseService.patchCourse(course.id,course);
+        //         }
+        //         if ($.fn.dataTable.isDataTable('#categoryTable')) {
+        //             $('#categoryTable').DataTable().destroy();
+        //         }
+        //         this.getCategoryDetails();
+        //     }catch(error){
+        //         console.log(error);
+        //     }
+        // }
+        async addCoursesToCategory(event){
+    event.preventDefault(); // No es necesario si usas @submit.prevent en la plantilla
+    
+    if (!this.selectedCourses || this.selectedCourses.length === 0) {
+        alert("Debe seleccionar al menos un curso.");
+        return;
     }
-};
+
+    console.log("Cursos seleccionados:", this.selectedCourses);
+    console.log("ID de la categoría:", this.idcategoria);
+
+    this.loading = true; // Evitar múltiples envíos
+    try {
+        for (let course of this.selectedCourses) {
+            console.log("Procesando curso:", course);
+            if (!course.id) {
+                console.error("Error: Curso sin ID", course);
+                continue;
+            }
+
+            course.category_id = this.idcategoria;
+            await CourseService.patchCourse(course.id, course);
+        }
+
+        alert("Cursos agregados con éxito.");
+        this.selectedCourses = []; // Limpiar selección después de agregar
+
+
+        // Recargar los datos
+        await this.getCategoryDetails();
+
+    } catch (error) {
+        console.error("Error en addCoursesToCategory:", error);
+        alert("Hubo un error al agregar los cursos.");
+    } finally {
+        this.loading = false;
+    }
+}
+
+
+    }
+}
 </script>
-<style scoped>
-table tbody tr:hover {
-    background-color: rgb(29, 176, 215);
-    color: white;
-}
-
-.search-bar{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border:3px solid rgb(19, 136, 103);
-    border-radius: 10px;
-    padding:5px;
-}
-.search-bar-input {
-    background-color: transparent; 
-    border: none; 
-    outline: none; 
-    padding: 8px 12px; 
-    font-size: 16px;  
-    color: #333;
-    width: 100%;
-}
-.search-bar-input:focus {
-    outline: none; 
-}
-
-
-.form-group {
-    flex: 1;
-    min-width: 250px;
-    position: relative;
-}
-
-.search-bar {
-    display: flex;
-    align-items: center;
-    border: 3px solid rgb(19, 136, 103);
-    border-radius: 10px;
-    padding: 5px;
-    width: 100%;
-}
-
-.courses-container {
-    position: absolute;
-    top: 100%; 
-    left: 0;
-    width: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    max-height: 200px; 
-}
-
-.coursesList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.coursesList li {
-    padding: 8px;
-    cursor: pointer;
-}
-
-.coursesList li:hover {
-    background-color: #f1f1f1;
-}
-
-</style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

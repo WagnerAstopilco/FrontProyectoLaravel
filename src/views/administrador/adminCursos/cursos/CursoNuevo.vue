@@ -4,14 +4,14 @@
             <h1 class="card-title fs-4">{{ name }}</h1>
             <div class="card-body col-8 mx-auto">
                 <form @submit.prevent="addCourse">
-                    <div class="d-flex justify-content-space-between">
-                        <div class="form-group d-flex flex-column">
+                    <div class="d-flex col-12 justify-content-between">
+                        <div class="form-group d-flex flex-column col-5">
                             <label for="start_date">Fecha de inicio</label>
-                            <input type="date" class="form-control p-2" id="start_date" v-model="newCourse.start_date" placeholder="Nombre del curso"/>
+                            <input type="date" class="form-control" id="start_date" v-model="newCourse.start_date"/>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group d-flex flex-column col-5">
                             <label for="end_date">Fecha de fin</label>
-                            <input type="date" class="form-control p-2" id="end_date" v-model="newCourse.end_date" placeholder="Nombre del curso"/>
+                            <input type="date" class="form-control p-2" id="end_date" v-model="newCourse.end_date"/>
                         </div>
                     </div>
                     <div class="form-group d-flex flex-column">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="form-group d-flex flex-column">
                         <label for="duration_in_hours">Duración</label>
-                        <input type="number" class="form-control p-2" id="duration_in_hours" v-model="newCourse.duration_in_hours" placeholder="Abreviatura del curso"/>
+                        <input type="number" class="form-control p-2" id="duration_in_hours" v-model="newCourse.duration_in_hours" placeholder="Duración del curso"/>
                     </div>
                     <div class="form-group d-flex flex-column">
                         <label for="category">Categoria</label>
@@ -38,6 +38,10 @@
                     <div class="form-group d-flex flex-column">
                         <label for="price">Precio</label>
                         <input type="number" class="form-control p-2" id="price" v-model="newCourse.price" placeholder="Precio del curso"/>
+                    </div>
+                    <div class="form-group d-flex flex-column">
+                        <label for="discount">Descuento</label>
+                        <input type="number" class="form-control p-2" id="discount" v-model="newCourse.discount" placeholder="Descuento en el curso" @blur="setDefaultDiscount"/>
                     </div>
                     <div class="form-group d-flex flex-column">
                         <label for="descripcion">Descripción</label>
@@ -74,20 +78,21 @@ export default {
         return {
             name: 'Nuevo Curso',
             newCourse: {
-                name_long: "",
-                name_short: "",
-                price: "",
-                image: "",
+                name_long: '',
+                name_short: '',
+                price: '',
+                image: '',
+                discount:0,
                 start_date:'',
                 end_date:'',
                 duration_in_hours:'',
-                description: "",
-                store_id: "",
-                category_id: "",
+                description: '',
+                store_id: '',
+                category_id: '',
             },
             categories: [],
             imagePreview: null,
-            error: "",
+            error: '',
             loading: false,
         };
     },
@@ -123,25 +128,27 @@ export default {
             this.loading = true;
 
             const formData = new FormData();
-            // Agregar los datos del curso al FormData
             formData.append("name_long", this.newCourse.name_long);
             formData.append("name_short", this.newCourse.name_short);
             formData.append("price", this.newCourse.price);
             formData.append("description", this.newCourse.description);
+            formData.append("discount", this.newCourse.discount);
+            formData.append("start_date", this.newCourse.start_date);
+            formData.append("end_date", this.newCourse.end_date);
+            formData.append("duration_in_hours", this.newCourse.duration_in_hours);
             formData.append("store_id", this.newCourse.store_id);
             formData.append("category_id", this.newCourse.category_id);
-
-            // Agregar la imagen si está seleccionada
             if (this.newCourse.image) {
                 formData.append("image", this.newCourse.image);
             }
 
             try {
-                const response = await CourseService.postCourse(formData);  // Usar FormData aquí
+                const response = await CourseService.postCourse(formData);
                 const courseId = response.data.data.id;
             this.$router.push({ name: 'CursoDetalleVer', params: { idcurso: courseId } });
 
             } catch (err) {
+                console.log(err);
                 if (err.response && err.response.status === 422) {
                     this.error = Object.values(err.response.data.errors).flat().join(" ");
                 } else {
@@ -149,6 +156,11 @@ export default {
                 }
             } finally {
                 this.loading = false;
+            }
+        },
+        setDefaultDiscount() {
+            if (this.newCourse.discount === '' || this.newCourse.discount === null || this.newCourse.discount === undefined) {
+            this.newCourse.discount = 0;
             }
         },
     },

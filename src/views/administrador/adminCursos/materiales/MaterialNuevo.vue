@@ -12,8 +12,8 @@
                         <label for="grado">Grado</label>
                         <select name="grado" v-model="newMaterial.grado" class="form-control p-2">
                             <option value="" disabled selected>---Selecciona un grado---</option>
-                            <option value="lesson">Lección</option>
-                            <option value="course">Curso</option>
+                            <option value="leccion">Lección</option>
+                            <option value="curso">Curso</option>
                         </select>
                     </div>
                     <div class="form-group" v-if="newMaterial.grado === 'lesson'">
@@ -32,7 +32,6 @@
                             <option value="file">Archivo</option>
                             <option value="link">Enlace</option>
                             <option value="video">Video</option>
-                            <option value="pdf">PDF</option>
                         </select>
                     </div>
                     <div class="form-group">

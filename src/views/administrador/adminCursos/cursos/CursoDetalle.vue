@@ -21,10 +21,20 @@
                         <div class="w-50">
                             <form @submit.prevent="updateCourse">
                                 <div class="form-group">
+                                    <label for="start_date">Fecha de inicio</label>
+                                    <input type="date" class="form-control" id="start_date" v-model="course.start_date" :readonly="!isEditing"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="end_date">Fecha de fin</label>
+                                    <input type="date" class="form-control p-2" id="end_date" v-model="course.end_date" :readonly="!isEditing"/>
+                                </div>
+                                <div class="form-group">
                                     <label for="name_long">Nombre</label>
                                     <input type="text" class="form-control" id="name_long" v-model="course.name_long" :readonly="!isEditing">
                                     <label for="name_short">Abreviación</label>
                                     <input type="text" class="form-control" id="name_short" v-model="course.name_short" :readonly="!isEditing">
+                                    <label for="duration_in_hours">Duración</label>
+                                    <input type="text" class="form-control" id="duration_in_hours" v-model="course.duration_in_hours" :readonly="!isEditing">
                                     <label for="category">Categoria</label>
                                     <select name="category" class="form-control p-2" v-model="course.category_id" :readonly="!isEditing">
                                         <option value="" disabled selected>---Selecciona una Categoría---</option>
@@ -47,6 +57,9 @@
                                             <img :src="imagePreview" alt="Vista previa" class="img-fluid mt-2" />
                                         </div>
                                     </div>
+                                </div>
+                                <div v-if="error" class="error text-danger mt-2" role="alert">
+                                    <small>{{ error }}</small>
                                 </div>
                                 <div v-if="isEditing ">
                                     <button type="submit" class="btn btn m-2" style="background-color:rgb(88,176,49);color:white">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
@@ -203,6 +216,7 @@ export default {
             isEditing: false,
             loading: false,
             imagePreview: null,
+            error:'',
         };
     },
     mounted() {
@@ -292,13 +306,16 @@ export default {
             this.error = "";
             this.loading = true;
             const formData = new FormData();
-            formData.append("name_long", this.course.name_long);
-            formData.append("name_short", this.course.name_short);
-            formData.append("price", this.course.price);
-            formData.append("description", this.course.description);
-            formData.append("store_id", this.course.store_id);
-            formData.append("discount", this.course.discount);
-            formData.append("category_id", this.course.category_id);
+            formData.append('name_long', this.course.name_long);
+            formData.append('name_short', this.course.name_short);
+            formData.append('price', this.course.price);
+            formData.append('discount', this.course.discount);
+            formData.append('description', this.course.description);
+            formData.append('start_date', this.course.start_date);
+            formData.append('end_date', this.course.end_date)
+            formData.append('duration_in_hours', this.course.duration_in_hours)
+            formData.append('store_id', this.course.store_id);
+            formData.append('category_id', this.course.category_id);
             if (this.course.image) {
             formData.append("image", this.course.image);        
             }
@@ -310,15 +327,13 @@ export default {
 
             try {
                 const response=await CourseService.patchCourse(this.idcurso, formData);
-                console.log("respuesta",response);
+                console.log("respuesta",response.data.data);
                 this.$router.replace({ name: 'CursoDetalleVer', params: { idcurso: this.idcurso } });
 
             } catch (err) {
-                if (err.response && err.response.status === 422) {
-                    this.error = Object.values(err.response.data.errors).flat().join(" ");
-                } else {
-                    this.error = "Error al actualizar el curso.";
-                }
+                console.log(err);
+                    // this.error = Object.values(err.response.data.errors).flat().join(" ");
+
             } finally {
                 this.isEditing = false;
                 this.isViewing = true;
@@ -400,8 +415,8 @@ export default {
 </script>
 <style scoped>
 table tbody tr:hover {
-  background-color: rgb(29, 176, 215);
-  color: white;
-  cursor:pointer;
+    background-color: rgb(29, 176, 215);
+    color: white;
+    cursor:pointer;
 }
 </style>

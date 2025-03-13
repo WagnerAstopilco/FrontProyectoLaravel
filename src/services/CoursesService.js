@@ -13,11 +13,12 @@ export default {
             },
         });
     },
-    patchCourse(id,Course){
-        return apiClient.patch(`/courses/${id}`,Course,{
-            headers: {
+    patchCourse(id, formData) {
+        return apiClient.post(`/courses/${id}`, formData, {
+            headers: { 
                 "Content-Type": "multipart/form-data",
-            },
+                "X-HTTP-Method-Override": "PATCH",
+            }
         });
     },
     deleteCourse(id){

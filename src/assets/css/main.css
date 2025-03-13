@@ -1,0 +1,58 @@
+:root {
+    --primary-color: rgb(0, 87, 163);
+    --success-color: rgb(88, 176, 49);
+    --dark-color: rgb(29, 29, 27);
+    --white-color: white;
+}
+
+.table-pointer{
+    cursor:pointer;
+}
+
+.btn-blue {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.btn-blue:hover {
+    background-color: rgba(0, 87, 163, 0.6); 
+    color: var(--white-color);
+}
+
+.btn-green {
+    background-color: var(--success-color);
+    color: var(--white-color);
+}
+
+.btn-green:hover {
+    background-color: rgba(88, 176, 49, 0.6); 
+    color: var(--white-color);
+}
+
+.btn-black {
+    background-color: var(--dark-color);
+    color: var(--white-color);
+}
+
+.btn-black:hover {
+    background-color: rgba(29, 29, 27, 0.6);
+    color: var(--white-color);
+}
+
+.btn-blue:focus,
+.btn-blue:active {
+    background-color: rgb(0, 87, 163);
+    color: var(--white-color);
+}
+
+.btn-green:focus,
+.btn-green:active {
+    background-color: rgb(88, 176, 49);    
+    color: var(--white-color);
+}
+
+.btn-black:focus,
+.btn-black:active {
+    background-color: rgb(29, 29, 27);    
+    color: var(--white-color);
+}

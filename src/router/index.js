@@ -38,7 +38,7 @@ const routes = [
   {
     path: "/",
     name: "/",
-    redirect: "/dashboard-default",
+    redirect: "/signin",
   },
   {
     path: "/dashboard-default",
@@ -58,8 +58,14 @@ const routes = [
   {
     path: "/signup",
     name: "Signup",
+    component: Signin,
+  },
+  {
+    path: "/forgotPass",
+    name: "ForgotPass",
     component: Signup,
   },
+
   //routes categorias
   {
     path:"/admincursos/categorias",
