@@ -1,9 +1,9 @@
 <template>
     <div class="container">
-        <section class="card p-4">
-            <header>
-                <h1 class="card-title fs-4">{{ name }}</h1>
-            </header>
+        <div class="card p-4">
+            <div class="card-header">
+                <h1 class="fs-4">{{ name }}</h1>
+            </div>
             <div class="card-body col-md-8 col-12 mx-auto">
                 <form @submit.prevent="addCategory">
                     <fieldset>
@@ -15,17 +15,17 @@
                             <label for="descripcion">Descripción</label>
                             <textarea id="descripcion" class="form-control p-2" v-model="newCategory.description" placeholder="Descripción de la categoría"></textarea> 
                         </div>
-                        <div v-if="error" class="error text-danger mt-2" role="alert">
+                        <div v-show="error" class="error text-danger mt-2" role="alert">
                             <small>{{ error }}</small>
                         </div>
-                        <div class="d-grid gap-2 d-md-flex col-md-6 col-8 mx-auto">
-                            <button type="submit" class="btn m-2 py-1 btn-green" aria-label="Agregar nueva categoría">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                            <button type="button" class="btn m-2 py-1 btn-blue" @click="goBack" aria-label="Volver a la página anterior">Volver</button>
-                        </div>
                     </fieldset>
+                    <div class="d-grid gap-2 d-md-flex col-md-6 col-8 mx-auto">
+                        <button type="submit" class="btn m-2 btn-green" aria-label="Agregar nueva categoría">{{ loading ? "Creando..." : "Crear" }}</button>
+                        <button type="button" class="btn m-2 btn-blue" @click="goBack" aria-label="Volver a la página anterior">Volver</button>
+                    </div>
                 </form>
             </div>
-        </section>
+        </div>
     </div>
 </template>
 <script>
@@ -51,8 +51,22 @@ export default {
     },
 
     methods: {
-        goBack() {
-            this.$router.push({ name: 'Categorias' }); 
+        async getCategories() {
+            try {
+                const response = await CategoryService.getCategories();
+                this.categories = response.data.data || response.data;
+            } catch (err) {
+                console.error("Error al obtener categorías:", err);
+            }
+        },
+
+        createUniqueColor() {
+            let color;
+            do {
+                color = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+                console.log("Color generado:", color);
+            } while (this.categories.some(cat => cat.color === color));
+            return color;
         },
 
         async addCategory() {
@@ -70,24 +84,9 @@ export default {
             }
         },
 
-        async getCategories() {
-            try {
-                const response = await CategoryService.getCategories();
-                console.log("Categorías obtenidas:", response);
-                this.categories = response.data.data || response.data;
-            } catch (err) {
-                console.error("Error al obtener categorías:", err);
-            }
-        },
-
-        createUniqueColor() {
-            let color;
-            do {
-                color = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
-                console.log("Color generado:", color);
-            } while (this.categories.some(cat => cat.color === color));
-            return color;
-        },
+        goBack() {
+            this.$router.push({ name: 'Categorias' }); 
+        }        
     }
 };
 </script>

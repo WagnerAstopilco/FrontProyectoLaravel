@@ -70,7 +70,6 @@ export default{
                 this.cargando=true;
                 const response= await EnrollmentService.getEnrollments();
                 this.enrollments=response.data.data;
-                console.log("matriculas",this.enrollments);
                 this.$nextTick(() => {
                     $('#enrollmentsTable').DataTable();
                 });

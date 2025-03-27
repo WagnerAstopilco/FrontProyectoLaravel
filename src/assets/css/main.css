@@ -1,5 +1,6 @@
 :root {
     --primary-color: rgb(0, 87, 163);
+    --secondary-color: rgb(29, 176, 215);
     --success-color: rgb(88, 176, 49);
     --dark-color: rgb(29, 29, 27);
     --white-color: white;
@@ -16,6 +17,16 @@
 
 .btn-blue:hover {
     background-color: rgba(0, 87, 163, 0.6); 
+    color: var(--white-color);
+}
+
+.btn-cyan {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+}
+
+.btn-cyan:hover {
+    background-color: rgba(29, 176, 215, 0.6); 
     color: var(--white-color);
 }
 
@@ -42,6 +53,12 @@
 .btn-blue:focus,
 .btn-blue:active {
     background-color: rgb(0, 87, 163);
+    color: var(--white-color);
+}
+
+.btn-cyan:focus,
+.btn-cyan:active {
+    background-color: rgb(29, 176, 215);
     color: var(--white-color);
 }
 

@@ -1,40 +1,38 @@
 <template>
-  <div class="container">
+    <div class="container">
         <div class="card p-4">
-            <div class="head d-flex">
-                <h1 class="fs-4">{{ name }}</h1>
-                <Preloader :visible="cargando"></Preloader>
-                <div class="ms-auto">                    
-                    <button type="button" class="btn ms-auto" style="background-color:rgb(88,176,49);color:white;" @click="newCourse"><i class="bi bi-plus" ></i>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                            
-                        </svg> Nuevo</button>            
-                </div>
+            <Preloader :visible="cargando"></Preloader>
+            <div class=" d-flex">
+                <h1 class="fs-4">{{ name }}</h1>                   
+                <button type="button" class="btn ms-auto btn-green" @click="redirToNewCourse"><i class="bi bi-plus" ></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/></svg>
+                    Nuevo
+                </button>            
             </div>
-            <table id="coursesTable" class="table ">
-                <thead>
-                    <tr>
-                        <th>Imagen</th>
-                        <th>Nombre</th>
-                        <th>Abreviación</th>
-                        <th>Categoría</th>
-                        <th>Precio</th>
-                        <th>Descripción</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    <tr v-for="course in courses" :key="course.id" @click="courseDetail(course.id)" style="cursor:pointer"> 
-                        <td><img :src="getImagenUrl(course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
-                        <!-- <td>{{ course.image }}</td> -->
-                        <td>{{ course.name_long }}</td>
-                        <td>{{ course.name_short }}</td>
-                        <td>{{ course.category.name }}</td>
-                        <td>{{ course.price }}</td>
-                        <td>{{ course.description }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="coursesTable" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Abreviación</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr v-for="course in courses" :key="course.id" @click="redirToCourseDetail(course.id)" style="cursor:pointer"> 
+                            <td><img :src="getImagenUrl(course.image)" class="card-img img-fluid" style="max-width: 120px; max-height: 80;" alt="CursoImagen"/></td>
+                            <td>{{ course.name_long }}</td>
+                            <td>{{ course.name_short }}</td>
+                            <td>{{ course.category.name }}</td>
+                            <td>{{ course.price }}</td>
+                            <td>{{ course.description }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
@@ -72,32 +70,19 @@ export default {
                 const response = await CourseService.getCourses();
                 this.courses = response.data.data;
                 this.$nextTick(() => {
-                    $('#coursesTable').DataTable({
-                        responsive: true,
-                        columnDefs: [
-                            {
-                                targets: [2], // Índice de la columna que quieres ocultar (por ejemplo, la columna "Descripción")
-                                responsivePriority: 1, // Establece la prioridad de la columna cuando la pantalla se hace pequeña
-                                className: 'd-none d-md-table-cell',
-                            },
-                            {
-                                targets: [5], // Índice de la columna "Precio"
-                                className: 'd-none d-lg-table-cell',
-                                responsivePriority: 2, // Establece otra prioridad para que se oculte después
-                            }
-                        ]
-                    });
+                    $('#coursesTable').DataTable();
                 });
+
             } catch (error) {
                 console.log(error);
             } finally {
                 this.cargando = false;
             }
         },
-        courseDetail(id) {
+        redirToCourseDetail(id) {
             this.$router.push({ name: 'CursoDetalleVer', params: { idcurso: id } });
         },
-        newCourse(){
+        redirToNewCourse(){
             this.$router.push({name:'CursoNuevo'});
         },
         getImagenUrl(imagen) {
@@ -108,10 +93,3 @@ export default {
     }
 };
 </script>
-<style scoped>
-table tbody tr:hover {
-  background-color: rgb(0, 87, 163);
-  color: white;
-  cursor:pointer;
-}
-</style>

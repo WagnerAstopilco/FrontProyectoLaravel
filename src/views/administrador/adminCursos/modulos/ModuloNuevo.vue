@@ -4,13 +4,35 @@
         <h1 class="fs-4">{{ name }}</h1>
         <div class="card-body col-8 mx-auto">
             <form @submit.prevent="addModule">
-            <div class="form-group d-flex flex-column">
+            <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" class="form-control" v-model="newModule.name" placeholder="Nombre del módulo"/>
             </div>
-            <div class="form-group d-flex flex-column">
+            <div class="form-group ">
                 <label for="description">Descripción</label>
                 <textarea id="descripcion" class="form-control" v-model="newModule.description" placeholder="Descripción del módulo"></textarea>
+            </div>
+            <div class="form-group ">
+                <label for="cursos">Cursos</label>
+                <Multiselect id="cursos"
+                    v-model="selectedCourses" 
+                    :options="availableCourses" 
+                    :multiple="true"
+                    :searchable="true" 
+                    openDirection="bottom"
+                    placeholder="Selecciona cursos para agregar"
+                    label="name_long"
+                    selectLabel="Presiona enter para seleccionar"
+                    selectedLabel="Seleccionado"
+                    deselectLabel="Presiona enter para quitar"
+                    track-by="id">
+                    <template #noOptions>
+                        <span class="text-gray-500">No hay cursos disponibles</span>
+                    </template>
+                    <template #noResult>
+                        <span class="text-gray-500"> No se encontraron coincidencias. </span>
+                    </template>
+                </Multiselect>
             </div>
             <p v-if="error" class="error">{{ error }}</p> 
             <div class="d-flex justify-content-center">
@@ -24,6 +46,11 @@
 </template>
 <script>
 import ModuleService from '@/services/ModulesService.js';
+import CourseService from '@/services/CoursesService.js';
+import CourseModuleService from '@/services/CourseModuleService.js';
+
+import Multiselect from "vue-multiselect";
+
 export default {
     data(){
         return{
@@ -31,20 +58,68 @@ export default {
         newModule: {
             name: "",
             description: "",
-            order:"",
+        },
+        newCourseModule:{
+            course_id:'',
+            module_id:'',
+            order:'',
         },
         error: "",
         loading: false,
+
+        selectedCourses:[],
+        availableCourses:[],
         }  
     },
+    created(){
+        this.getAvailableCourses();
+    },
+    components:{
+        Multiselect
+    },
     methods:{
+        async getAvailableCourses() {
+            try {
+                const response = await CourseService.getCourses();
+                const allCourses = response.data.data;
+                if (this.module && this.module.courses) {
+                    const moduleCourseIds = this.module.courses.map(course => course.id);
+                    this.availableCourses = allCourses.filter(course => !moduleCourseIds.includes(course.id));
+                } else {
+                    this.availableCourses = allCourses;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async addModule() {
+            if (this.selectedCourses.length === 0) {
+                alert("Debe seleccionar al menos un curso.");
+                return;
+            }
             this.error = "";
             this.loading = true;
             try {
-                this.newModule.order = 0;
-                const response = await ModuleService.postModule(this.newModule);
+                const response=await ModuleService.postModule(this.newModule);
                 const moduleId = response.data.data.id;
+                console.log("moduleId", moduleId);
+                // const requestData = {
+                //     courses_ids: this.selectedCourses.map(course => course.id)
+                // };
+                // console.log("requestData", requestData);
+                // const response1=await ModuleService.postCoursesToModule(moduleId, requestData);
+                // console.log("response1", response1);
+                for(let course of this.selectedCourses){
+                    let newCurriculum = {
+                        module_id:moduleId,
+                        course_id:course.id,
+                        order:course.modules.length+1
+                    }
+                    console.log("newCurriculum",newCurriculum);
+                    const response=await CourseModuleService.postCourseModule(newCurriculum);
+                    console.log("response",response);
+                }
+                this.selectedCourses = [];
                 this.$router.push({name: 'ModuloDetalleVer',params: { idmodulo: moduleId },});
             } catch (err) {
                 if (err.response && err.response.status === 422) {

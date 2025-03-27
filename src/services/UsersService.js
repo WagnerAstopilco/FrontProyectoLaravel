@@ -6,11 +6,20 @@ export default {
     getUserDetails(id){
         return apiClient.get(`/users/${id}`);
     },
-    postUser(newUser){
-        return apiClient.post('/users', newUser);
+    postUser(formDataAdmin){
+        return apiClient.post('/users', formDataAdmin,{
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
     },
-    patchUser(id,User){
-        return apiClient.patch(`/users/${id}`,User);
+    patchUser(id,formDataAdmin){
+        return apiClient.post(`/users/${id}`,formDataAdmin,{
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                "X-HTTP-Method-Override": "PATCH",
+            }
+        });
     },
     deleteUser(id){
         return apiClient.delete(`/users/${id}`);

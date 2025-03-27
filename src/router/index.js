@@ -30,9 +30,12 @@ import MatriculaDetalles from "../views/administrador/matriculas/MatriculaDetall
 import Administradores from "../views/administrador/administradores/Administradores.vue";
 import AdministradorNuevo from "../views/administrador/administradores/AdministradorNuevo.vue";
 import AdministradorDetalles from "../views/administrador/administradores/AdministradorDetalles.vue";
-import Pagos from "../views/administrador/Pagos/Pagos.vue";
-import PagoNuevo from "../views/administrador/Pagos/PagoNuevo.vue";
-import PagoDetalles from "../views/administrador/Pagos/PagoDetalles.vue";
+import Pagos from "../views/administrador/pagos/Pagos.vue";
+import PagoNuevo from "../views/administrador/pagos/PagoNuevo.vue";
+import PagoDetalles from "../views/administrador/pagos/PagoDetalles.vue";
+import Usuarios from "../views/administrador/usuarios/Usuarios.vue";
+import UsuarioNuevo from "../views/administrador/usuarios/UsuarioNuevo.vue";
+import UsuarioDetalles from "../views/administrador/usuarios/UsuarioDetalles.vue"
 
 const routes = [
   {
@@ -277,6 +280,27 @@ const routes = [
     path:'/pagos/:idpago?/editar',
     name: 'PagoDetallesEditar',
     component:PagoDetalles,
+  },
+  //routes usuarios
+  {
+    path:'/usuarios',
+    name:'Usuarios',
+    component:Usuarios,
+  },
+  {
+    path:'/usuarios/nuevo',
+    name:'UsuarioNuevo',
+    component: UsuarioNuevo,
+  },
+  {
+    path:'/usuarios/:idusuario?/ver',
+    name: 'UsuarioDetallesVer',
+    component:UsuarioDetalles,
+  },
+  {
+    path:'/usuarios/:idusuario?/editar',
+    name: 'UsuarioDetallesEditar',
+    component:UsuarioDetalles,
   },
 ];
 

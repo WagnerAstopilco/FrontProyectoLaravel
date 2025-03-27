@@ -22,8 +22,6 @@
                         <div class="form-group">
                             <label for="name">Nombre</label>
                             <input type="text" class="form-control" id="name" v-model="module.name" :readonly="!isEditing">
-                            <label for="order">Órden</label>
-                            <input type="text" class="form-control" id="order" v-model="module.order" :readonly="!isEditing">
                             <label for="description">Descripción</label>
                             <input type="text" class="form-control" id="description" v-model="module.description" :readonly="!isEditing">
                         </div>
