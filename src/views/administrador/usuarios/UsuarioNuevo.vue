@@ -5,7 +5,7 @@
                 <h1 class="fs-4">{{ name }}</h1>                
             </div>
             <div class="card-body w-lg-80 w-md-90 w-100 mx-auto">
-                <form @submit.prevent="createAdministrator" >
+                <form @submit.prevent="createUser" >
                     <div class="form-group">
                         <label for="names">Nombres</label>
                         <input type="text" class="form-control" id="names" v-model="user.names" placeholder="Nombres"/>
@@ -26,6 +26,16 @@
                         <label for="password">Confirmar Contraseña</label>
                         <input type="password" class="form-control" id="confirm_password" v-model="password_confirm" placeholder="Confirmar contraseña"/>
                         <small v-show="passwordMismatch" class="text-danger p-1" >Las contraseñas no coinciden</small>
+                    </div>
+                    <div class="form-group flex-grow-1">
+                        <label for="role">Rol</label>
+                        <select name="role" class="form-control" v-model="user.role">
+                            <option value="admin">Administrador</option>
+                            <option value="comercial">Comercial</option>
+                            <option value="supervisor">Supervisor</option>
+                            <option value="alumno">Alumno</option>
+                            <option value="capacitador">Capacitador</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="phone_number">Teléfono</label>
@@ -119,13 +129,13 @@ import UserService from '@/services/UsersService.js'
 export default{
     data(){
         return{
-            name:'Nuevo Administrador',
+            name:'Nuevo Usuario',
             user:{
                 names:'',
                 last_names:'',
                 email:'',
                 password: '',               
-                role: 'admin',              
+                role: 'alumno',              
                 status: 'activo',   
                 phone_number:'',
                 birthday_date:'',
@@ -170,7 +180,7 @@ export default{
                 reader.readAsDataURL(file); 
             }
         },
-        async createAdministrator(){
+        async createUser(){
             if (this.passwordMismatch) {
                 return;
             }
@@ -181,20 +191,20 @@ export default{
                 const formDataAdmin = new FormData();
                 Object.entries(this.user).map(([key, value]) => formDataAdmin.append(key, value));
                 const response =await UserService.postUser(formDataAdmin);
-                const idNewAdmin=response.data.data.id;
-                this.$router.push({name: 'AdministradorDetallesVer',params: { idadministrador: idNewAdmin },});
+                const idNewUser=response.data.data.id;
+                this.$router.push({name: 'UsuarioDetallesVer',params: { idusuario: idNewUser },});
             }catch (err) {
                 if (err.response && err.response.data && err.response.data.errors) {
                     this.error = Object.values(err.response.data.errors).flat().join(" ");
                 } else {
-                    this.error = "Ocurrió un error inesperado al crear el administrador.";
+                    this.error = "Ocurrió un error inesperado al crear el usuario.";
                 }
             }finally{
                 this.loading=false;
             }
         },   
         goBack(){
-            this.$router.push({name:'Administradores'});
+            this.$router.push({name:'Usuarios'});
         },    
     },
 };

@@ -27,16 +27,7 @@ export default {
     postTrainersToCourse(courseId, trainerIds) {
         return apiClient.post(`/courses/${courseId}/trainers`, trainerIds);
     },
-    // postModulesToCourse(courseId, moduleIds) {
-    //     return apiClient.post(`/courses/${courseId}/modules`, moduleIds);
-    // },
-    postModulesToCourse(courseId, moduleIds) {
-        return apiClient.post(`/courses/${courseId}/modules`, moduleIds);
-    },
     deleteTrainerToCourse(trainerId,courseId){
         return  apiClient.delete(`/courses/${courseId}/${trainerId}/`);
-    },
-    deleteModuleToCourse(moduleId,courseId){
-        return  apiClient.delete(`/courses/${courseId}/${moduleId}/`);
     },
 }

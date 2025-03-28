@@ -5,7 +5,7 @@
                 <h1 class="fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="dropdown ms-auto" >
-                    <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-black dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Opciones
                     </button>
                     <ul class="dropdown-menu">
@@ -18,7 +18,7 @@
             </div>
             <div v-if="module">
                 <div>
-                    <form @submit.prevent="updateModule" class="w-50">
+                    <form @submit.prevent="updateModule()" class="w-50">
                         <div class="form-group">
                             <label for="name">Nombre</label>
                             <input type="text" class="form-control" id="name" v-model="module.name" :readonly="!isEditing">
@@ -26,20 +26,38 @@
                             <input type="text" class="form-control" id="description" v-model="module.description" :readonly="!isEditing">
                         </div>
                         <div v-if="isEditing ">
-                        <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
-                        <button type="button" class="btn btn-outline-secondary m-2" @click="cancelEdit">Cancelar</button>
+                        <button type="submit" class="btn btn-cyan m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
+                        <button type="button" class="btn btn-black m-2" @click="cancelEdit">Cancelar</button>
                     </div>
                     </form>
                 </div>
                 <div class="moduleLessons">
                     <div class="d-flex align-items-center">
                         <h3 class="fs-4">Lecciones</h3>
-                        <button type="button" class="btn btn-info m-4" @click="showFormLessonModule">
+                        <button type="button" class="btn btn-green m-4" @click="showFormLessonModule" data-bs-toggle="modal" data-bs-target="#newLessonModal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                             </svg>
                             Nueva
-                        </button>                        
+                        </button> 
+                        <!-- Modal -->
+                        <div class="modal fade" id="newLessonModal" tabindex="-1" aria-labelledby="newLessonModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="newLessonModalLabel">Nueva Lección</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                ...
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="createLesson()">Crear</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>                       
                     </div>
                     <div>
                         <form v-if="showFormLesson" @submit.prevent="addLessonToModule" class="w-50">
@@ -94,52 +112,55 @@
                 <div class="moduleCourses">
                     <div class="d-flex align-items-center">
                         <h3 class="fs-4">Cursos</h3>
-                        <button type="button" class="btn btn-info m-4" @click="showFormCourseModule">Vincular Curso</button>
+                        <button type="button" class="btn btn-blue m-4" @click="showSearchCourse=!showSearchCourse">Vincular Curso</button>
                     </div>
-                    <form class="courses-form d-flex w-60" v-if="showSearchBar" @submit.prevent="addModuleToCourse(selectedCourse?.id)">
-                        <div class="form-group">
-                            <div class="search-bar">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                </svg>
-                                <input v-model="searchQuery" type="text" class=" search-bar-input" placeholder="Buscar cursos..." @click="filterCourses" @input="filterCourses" @focus="inputFocus = true" @blur="handleBlur"/>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16" @click="reset">
-                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                                </svg>
+                    <form v-show="showSearchCourse" class="w-lg-50 w-md-60 w-100 mb-4" @submit.prevent="addCourseToModule()" >
+                            <fieldset>
+                                <multiselect 
+                                    v-model="selectedCourses" 
+                                    :options="availableCourses" 
+                                    :multiple="true"
+                                    :searchable="true" 
+                                    openDirection="bottom"
+                                    placeholder="Seleccionar cursos"
+                                    label="name_long"
+                                    selectLabel="Presiona enter para seleccionar"
+                                    selectedLabel="Seleccionado"
+                                    deselectLabel="Presiona enter para quitar"
+                                    track-by="id" class="mb-3">
+                                    <template #noOptions>
+                                        <span class="text-gray-500">No hay cursos disponibles</span>
+                                    </template>
+                                    <template #noResult>
+                                        <span class="text-gray-500"> No se encontraron coincidencias. </span>
+                                    </template>
+                                </multiselect>
+                            </fieldset>
+                            <div>
+                                <button type="submit" class="btn m-2 btn-cyan" >{{this.loadingMaterial?'Agregando...':'Agregar'}}</button>
+                                <button type="button" class="btn m-2 btn-black" @click="showSearchCourse=false">Cancelar</button>
                             </div>
-                            <div class="courses-container"  v-if="inputFocus && (filteredCourses.length > 0 || searchQuery)" >
-                                <ul class="coursesList">
-                                    <li v-for="course in filteredCourses" :key="course.id" 
-                                    @click="addCourseToInput(course)">
-                                    {{ course.name_long }}
-                                    </li>
-                                    <li v-if="searchQuery && filteredCourses.length ===0">Sin resultados.</li>
-                                </ul>
-                            </div> 
-                        </div>
-                        <div class="">
-                            <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                            <button type="button" id="button-cancel" class="btn btn-warring m-2" @click="showFormCourseModule">Cancelar</button>
-                        </div>
-                    </form>
+                        </form>
                     
-                    <div v-if="module.courses && module.courses.length > 0">
+                    <div v-if="coursesToModule && coursesToModule.length > 0">
                         <table id="moduleCoursesTable" class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Imágen</th>
-                                    <th>Nombre</th>
-                                    <th>Descripción</th>
-                                    <th>Opciones</th>
+                                    <th class="text-center">Orden</th>
+                                    <th class="text-center">Imágen</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">Descripción</th>
+                                    <th class="text-center">Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="course in module.courses" :key="course.id">
-                                    <td><img :src="getImagenUrl(course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
-                                    <td>{{ course.name_long }}</td>
-                                    <td>{{ course.description}}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger" @click="deleteModuleToCourse(course.id)">Elinimar</button>
+                                <tr v-for="courseModule in coursesToModule" :key="courseModule.id">
+                                    <td class="text-center">{{ courseModule.order }}</td>
+                                    <td class="text-center"><img :src="getImagenUrl(courseModule.course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
+                                    <td>{{ courseModule.course.name_long }}</td>
+                                    <td>{{ courseModule.course.description}}</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger" @click="deleteCourseToModule(course.id)">Desvincular</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -154,7 +175,7 @@
                 <p>Cargando...</p>
             </div>
             <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-primary" @click="goBack">Ver Módulos</button>
+                <button type="button" class="btn btn-blue" @click="goBack()">Ver Módulos</button>
             </div>
         </div>  
     </div>
@@ -162,11 +183,13 @@
 <script>
 import ModuleService from '@/services/ModulesService.js';
 import CourseService from '@/services/CoursesService.js';
+import CourseModuleService from '@/services/CourseModuleService.js'
 import Preloader from '../../../components/Preloader.vue';
 import LessonService from '@/services/LessonsService.js';
 import $ from 'jquery';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 import 'datatables.net-bs4';
+import Multiselect from "vue-multiselect";
 
 
 export default {
@@ -176,28 +199,25 @@ export default {
             cargando:false,
             idmodulo: this.$route.params.idmodulo,
             module: null,
-            showSearchBar: false,
-            showFormLesson: false,
-            searchQuery: '', 
-            courses: [], 
-            filteredCourses: [],
+            availableCourses: [], 
+            selectedCourses:[],
+            showSearchCourse:false,
             lesson:{
                 title: '',
                 description: '',
                 order:'',
                 course_id: '',
             },
-            inputFocus:false,
-            selectedCourse: null,
             isViewing: false,
             isEditing: false,
             loading:false,
+            coursesToModule:[],
         }
     },
     mounted() {        
-        if (this.$route.name === 'CategoriaDetalleVer') {
+        if (this.$route.name === 'ModuloDetalleVer') {
             this.isViewing = true;
-        } else if (this.$route.name === 'CategoriaDetalleEditar') {
+        } else if (this.$route.name === 'ModuloDetalleEditar') {
             this.isEditing = true;
         }
     },
@@ -214,7 +234,8 @@ export default {
         }
     },
     components:{
-        Preloader
+        Preloader,
+        Multiselect 
     },
     methods:{
         goBack(){
@@ -225,7 +246,7 @@ export default {
                 this.cargando=true;
                 const response = await ModuleService.getModuleDetails(this.idmodulo);
                 this.module = response.data.data;
-                console.log(module);
+                this.getCoursesToModule();
                 this.$nextTick(() => {
                     $('#moduleLessonsTable').DataTable({  
                     });
@@ -236,6 +257,10 @@ export default {
             }finally{
                 this.cargando=false;
             }            
+        },
+        async getCoursesToModule(){
+            const allCourseModule=await CourseModuleService.getCourseModules();
+            this.coursesToModule = allCourseModule.data.data.filter(courseModule => courseModule.module_id === this.module.id);
         },
         async deleteModule(id){
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este módulo?');
@@ -274,38 +299,12 @@ export default {
                 this.showSearchBar = false;
             }          
         },
-        showFormCourseModule() {
-            this.showSearchBar = !this.showSearchBar; 
-        },
         showFormLessonModule() {
             this.showFormLesson = !this.showFormLesson; 
         },
         async getCourses() {
             const response = await CourseService.getCourses();
-            this.courses = response.data.data;  
-        },
-        filterCourses() {
-            if (this.searchQuery) {
-                const results = this.courses.filter(course => 
-                    course.name_long.toLowerCase().includes(this.searchQuery.toLowerCase())
-                );
-                this.filteredCourses = results.length > 0 ? results : [];
-            } else {
-                this.filteredCourses = this.courses;
-            }
-        },
-        reset(){
-            this.filteredCourses=[];
-            this.searchQuery="";
-        },
-        handleBlur() {
-            setTimeout(() => {
-                this.inputFocus = false;
-            }, 200); 
-        },
-        addCourseToInput(course){
-            this.selectedCourse = course; 
-            this.searchQuery = course.name_long;
+            this.availableCourses = response.data.data;  
         },
         async deleteModuleToCourse(courseId){
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este curso del módulo?');
@@ -343,7 +342,6 @@ export default {
         },
         async addLessonToModule(){
             const isDuplicate = this.module.lessons.some(lesson => lesson.title === this.lesson.title);
-            console.log(isDuplicate);
             if (isDuplicate) {
                 alert('Ya existe una lección con este nombre. Por favor, elige otro.');
                 return; 
@@ -387,70 +385,7 @@ export default {
                 }
             }   
         }
-
     }
 };
 </script>
-<style scoped>
-.search-bar{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border:3px solid rgb(19, 136, 103);
-    border-radius: 10px;
-    padding:5px;
-}
-.search-bar-input {
-    background-color: transparent; 
-    border: none; 
-    outline: none; 
-    padding: 8px 12px; 
-    font-size: 16px;  
-    color: #333;
-    width: 100%;
-}
-.search-bar-input:focus {
-    outline: none; 
-}
-
-
-.form-group {
-    flex: 1;
-    min-width: 250px;
-    position: relative;
-}
-
-.search-bar {
-    display: flex;
-    align-items: center;
-    border: 3px solid rgb(19, 136, 103);
-    border-radius: 10px;
-    padding: 5px;
-    width: 100%;
-}
-
-.courses-container {
-    position: absolute;
-    top: 100%; 
-    left: 0;
-    width: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    max-height: 200px; 
-}
-
-.coursesList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.coursesList li {
-    padding: 8px;
-    cursor: pointer;
-}
-
-.coursesList li:hover {
-    background-color: #f1f1f1;
-}
-</style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

@@ -15,12 +15,6 @@ export default {
     deleteModule(id){
         return apiClient.delete(`/modules/${id}`);
     },
-    // postCoursesToModule(moduleId,coursesIds){
-    //     return  apiClient.post(`/modules/${moduleId}/courses/`,coursesIds);
-    // },
-    deleteCourseToModule(moduleId,courseId){
-        return  apiClient.delete(`/modules/${moduleId}/${courseId}/`);
-    },
     postLessonToModule(moduleId,lessonId){
         return  apiClient.post(`/modules/${moduleId}/${lessonId}/`);
     },

@@ -26,8 +26,9 @@
     "@fullcalendar/vue3": "^6.1.15",
     "@jambonn/vue-carousel": "^0.1.1",
     "@popperjs/core": "2.11.8",
+    "@vueform/multiselect": "^2.4.0",
     "axios": "^1.7.7",
-    "bootstrap": "5.3.3",
+    "bootstrap": "^5.3.3",
     "chart.js": "^4.4.1",
     "core-js": "3.36.0",
     "datatables.net": "^2.0.8",
@@ -47,8 +48,7 @@
     "vue-select": "^3.20.4",
     "vue-sweetalert2": "^5.0.11",
     "vue-template-compiler": "2.5.17",
-    "vuex": "4.1.0",
-    "@vueform/multiselect": "^2.4.0"
+    "vuex": "4.1.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.23.10",

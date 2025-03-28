@@ -36,8 +36,8 @@
             </div>
             <p v-if="error" class="error">{{ error }}</p> 
             <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-            <button type="button" class="btn btn-primary m-2" @click="goBack">Volver</button>
+            <button type="submit" class="btn btn-green m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
+            <button type="button" class="btn btn-blue m-2" @click="goBack">Volver</button>
             </div>
         </form>
         </div>
@@ -102,22 +102,13 @@ export default {
             try {
                 const response=await ModuleService.postModule(this.newModule);
                 const moduleId = response.data.data.id;
-                console.log("moduleId", moduleId);
-                // const requestData = {
-                //     courses_ids: this.selectedCourses.map(course => course.id)
-                // };
-                // console.log("requestData", requestData);
-                // const response1=await ModuleService.postCoursesToModule(moduleId, requestData);
-                // console.log("response1", response1);
                 for(let course of this.selectedCourses){
-                    let newCurriculum = {
+                    let newCourseModule = {
                         module_id:moduleId,
                         course_id:course.id,
                         order:course.modules.length+1
                     }
-                    console.log("newCurriculum",newCurriculum);
-                    const response=await CourseModuleService.postCourseModule(newCurriculum);
-                    console.log("response",response);
+                    await CourseModuleService.postCourseModule(newCourseModule);
                 }
                 this.selectedCourses = [];
                 this.$router.push({name: 'ModuloDetalleVer',params: { idmodulo: moduleId },});

@@ -9,28 +9,28 @@
                         Opciones
                     </button>
                     <ul class="dropdown-menu">
-                        <div v-if="administrator">
-                        <li><a class="dropdown-item" href="#" @click="editAdministrator()">Editar</a></li>
-                        <li><a class="dropdown-item" href="#" @click="deleteAdministrator">Eliminar</a></li>
+                        <div v-if="user">
+                        <li><a class="dropdown-item" href="#" @click="edituser()">Editar</a></li>
+                        <li><a class="dropdown-item" href="#" @click="deleteUser()">Eliminar</a></li>
                         </div>
                     </ul>
                 </div>            
             </div>
-            <div v-if="administrator" class="card-body pb-0">
+            <div v-if="user" class="card-body pb-0">
                 <div class="d-flex flex-lg-row flex-column gap-3 mx-auto">
                     <div class="w-lg-60 w-md-90 w-100">
-                        <form @submit.prevent="updateAdministrator">
+                        <form @submit.prevent="updateUser">
                             <div class="form-group">
                                 <label for="names">Nombres</label>
-                                <input type="text" class="form-control" id="names" v-model="administrator.names" placeholder="Nombres" :readonly="!isEditing"/>
+                                <input type="text" class="form-control" id="names" v-model="user.names" placeholder="Nombres" :readonly="!isEditing"/>
                             </div>
                             <div class="form-group">
                                 <label for="last_names">Apellidos</label>
-                                <input type="text" class="form-control" id="last_names" v-model="administrator.last_names" placeholder="Apellidos" :readonly="!isEditing"/>
+                                <input type="text" class="form-control" id="last_names" v-model="user.last_names" placeholder="Apellidos" :readonly="!isEditing"/>
                             </div>
                             <div class="form-group">
                                 <label for="email">Correo</label>
-                                <input type="email" class="form-control" id="email" v-model="administrator.email" placeholder="Correo" :readonly="!isEditing"/>
+                                <input type="email" class="form-control" id="email" v-model="user.email" placeholder="Correo" :readonly="!isEditing"/>
                             </div>
                             <div class="form-group" v-if="isEditing ">
                                 <label for="password">Contraseña</label>
@@ -41,13 +41,23 @@
                                 <input type="password" class="form-control" id="confirm_password" v-model="password_confirm" placeholder="Confirmar contraseña"/>
                                 <small v-show="passwordMismatch" class="text-danger">Las contraseñas no coinciden</small>
                             </div>
+                            <div class="form-group flex-grow-1">
+                                <label for="role">Rol</label>
+                                <select name="role" class="form-control" v-model="user.role" :disabled="!isEditing">
+                                    <option value="admin">Administrador</option>
+                                    <option value="comercial">Comercial</option>
+                                    <option value="supervisor">Supervisor</option>
+                                    <option value="alumno">Alumno</option>
+                                    <option value="capacitador">Capacitador</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="phone_number">Teléfono</label>
-                                <input type="text" class="form-control" id="phone_number" v-model="administrator.phone_number" placeholder="Teléfono" :readonly="!isEditing"/>
+                                <input type="text" class="form-control" id="phone_number" v-model="user.phone_number" placeholder="Teléfono" :readonly="!isEditing"/>
                             </div>
                             <div class="form-group">
                                 <label for="status">Estado</label>
-                                <select name="status" class="form-control" v-model="administrator.status" :disabled="!isEditing">
+                                <select name="status" class="form-control" v-model="user.status" :disabled="!isEditing">
                                     <option value="activo">Activo</option>
                                     <option value="inactivo">Inactivo</option>
                                 </select>
@@ -55,21 +65,21 @@
                             <div class="d-flex flex-column flex-md-row gap-md-3 w-100">
                                 <div class="form-group flex-grow-1">
                                     <label for="birthday_date">Fecha de nacimiento</label>
-                                    <input type="date" class="form-control" id="birthday_date" v-model="administrator.birthday_date" :readonly="!isEditing"/>
+                                    <input type="date" class="form-control" id="birthday_date" v-model="user.birthday_date" :readonly="!isEditing"/>
                                 </div>
                                 <div class="form-group flex-grow-1">
                                     <label for="country">País</label>
-                                    <input type="text" class="form-control" id="country" v-model="administrator.country" placeholder="País" :readonly="!isEditing"/>
+                                    <input type="text" class="form-control" id="country" v-model="user.country" placeholder="País" :readonly="!isEditing"/>
                                 </div>
                                 <div class="form-group flex-grow-1">
                                     <label for="city">Ciudad</label>
-                                    <input type="text" class="form-control" id="city" v-model="administrator.city" placeholder="Ciudad" :readonly="!isEditing"/>
+                                    <input type="text" class="form-control" id="city" v-model="user.city" placeholder="Ciudad" :readonly="!isEditing"/>
                                 </div>
                             </div>
                         <div class="d-flex flex-column flex-md-row gap-md-3 w-100">
                             <div class="form-group flex-grow-1">
                                 <label for="address_type">Tipo</label>
-                                <select name="address_type" class="form-control" v-model="administrator.address_type" :disabled="!isEditing">
+                                <select name="address_type" class="form-control" v-model="user.address_type" :disabled="!isEditing">
                                     <option value="jiron">Jr.</option>
                                     <option value="avenida">Av.</option>
                                     <option value="pasaje">Psj.</option>
@@ -79,17 +89,17 @@
                             </div>
                             <div class="form-group flex-grow-1">
                                 <label for="address">Dirección</label>
-                                <input type="text" class="form-control" id="address" v-model="administrator.address" placeholder="Calle" :readonly="!isEditing"/>
+                                <input type="text" class="form-control" id="address" v-model="user.address" placeholder="Calle" :readonly="!isEditing"/>
                             </div>
                             <div class="form-group flex-grow-1">
                                 <label for="address_number">N°/Mzn/Lt</label>
-                                <input type="text" class="form-control" id="address_number" v-model="administrator.address_number" placeholder="Número" :readonly="!isEditing"/>
+                                <input type="text" class="form-control" id="address_number" v-model="user.address_number" placeholder="Número" :readonly="!isEditing"/>
                             </div>
                         </div>
                         <div class="d-flex flex-column flex-md-row gap-md-3 w-100">
                             <div class="form-group flex-grow-1">
                                 <label for="document_type">Tipo</label>
-                                <select name="document_type" class="form-control" v-model="administrator.document_type" :disabled="!isEditing">
+                                <select name="document_type" class="form-control" v-model="user.document_type" :disabled="!isEditing">
                                     <option value="pasaporte">Pasaporte</option>
                                     <option value="dni">DNI</option>
                                     <option value="cedula">Cédula de identidad</option>
@@ -97,11 +107,11 @@
                             </div>
                             <div class="form-group flex-grow-1">
                                 <label for="document_number">Número</label>
-                                <input type="text" class="form-control" id="document_number" v-model="administrator.document_number" placeholder="Número de documento" :readonly="!isEditing"/>
+                                <input type="text" class="form-control" id="document_number" v-model="user.document_number" placeholder="Número de documento" :readonly="!isEditing"/>
                             </div>
                             <div class="form-group flex-grow-1">
                                 <label for="gender">Género</label>
-                                <select name="gender" class="form-control" v-model="administrator.gender" :disabled="!isEditing">
+                                <select name="gender" class="form-control" v-model="user.gender" :disabled="!isEditing">
                                     <option value="M">Masculino</option>
                                     <option value="F">Femenino</option>
                                 </select>
@@ -109,11 +119,11 @@
                         </div>
                         <div class="form-group">
                             <label for="speciality">Especialidad</label>
-                            <input type="text" class="form-control" id="speciality" v-model="administrator.speciality" placeholder="Especialidad" :readonly="!isEditing"/>
+                            <input type="text" class="form-control" id="speciality" v-model="user.speciality" placeholder="Especialidad" :readonly="!isEditing"/>
                         </div>
                         <div class="form-group">
                             <label for="biography">Biografía</label>
-                            <textarea id="biography" class="form-control" v-model="administrator.biography" placeholder="Biografía del usuario" :readonly="!isEditing"></textarea> 
+                            <textarea id="biography" class="form-control" v-model="user.biography" placeholder="Biografía del usuario" :readonly="!isEditing"></textarea> 
                         </div>
                         <div class="form-group" v-if="isEditing">
                             <label for="image">Imagen</label>
@@ -127,18 +137,18 @@
                             </div>
                             <div v-if="isEditing" class="d-flex gap-3 mt-3">
                                 <button type="submit" class="btn btn-cyan">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
-                                <button type="button" class="btn btn-blue" @click="cancelEdit">Cancelar</button>
+                                <button type="button" class="btn btn-black" @click="cancelEdit()">Cancelar</button>
                             </div>
                         </form>
                     </div>
                     <div class="w-lg-50 w-md-70 w-100" v-if="isViewing">
                         <label>Imagen de perfil</label>
-                        <img :src="getImagenUrl(administrator.photo)" class="card-img mb-3" alt="Foto perfil"/>
+                        <img :src="getImagenUrl(user.photo)" class="card-img mb-3" alt="Foto perfil"/>
                     </div>
                 </div>
             </div>           
             <div class="card-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-blue" @click="goBack">Volver</button>
+                <button type="button" class="btn btn-blue" @click="goBack()">Volver</button>
             </div>
         </div>
     </div>
@@ -150,9 +160,9 @@ import Preloader from '../../components/Preloader.vue';
 export default{
     data(){
         return{
-            name:'Detalles del Administrador',
-            idadmin: this.$route.params.idadministrador,
-            administrator: null,
+            name:'Detalles del Usuario',
+            iduser: this.$route.params.idusuario,
+            user: null,
             cargando:false,
             loading:false,
             isViewing: false,
@@ -165,14 +175,14 @@ export default{
         };
     },
     mounted() {
-        if (this.$route.name === 'AdministradorDetallesVer') {
+        if (this.$route.name === 'UsuarioDetallesVer') {
             this.isViewing = true;
-        } else if (this.$route.name === 'AdministradorDetallesEditar') {
+        } else if (this.$route.name === 'UsuarioDetallesEditar') {
             this.isEditing = true;
         }
     },
     created(){
-        this.getAdministratorDetails();
+        this.getUserDetails();
     },  
     computed: {
         passwordMismatch() {
@@ -183,11 +193,11 @@ export default{
         Preloader
     },
     methods:{        
-        async getAdministratorDetails(){
+        async getUserDetails(){
             try{
                 this.cargando=true;
-                const response=await UserService.getUserDetails(this.idadmin);
-                this.administrator=response.data.data;
+                const response=await UserService.getUserDetails(this.iduser);
+                this.user=response.data.data;
             }catch(error){
                 console.log(error);
             }finally{
@@ -195,37 +205,37 @@ export default{
             }
         },
                 
-        async deleteAdministrator(){
-            const confirmed = confirm('¿Estás seguro de que deseas eliminar este administrador?');
+        async deleteUser(){
+            const confirmed = confirm('¿Estás seguro de que deseas eliminar este usuario?');
             if (confirmed) {
                 try {
-                    await UserService.deleteUser(this.idadmin);
-                    this.$router.push({name:'Administradores'});
+                    await UserService.deleteUser(this.iduser);
+                    this.$router.push({name:'Usuarios'});
                 } catch (error) {
-                    alert('Hubo un error al intentar eliminar el administrador.');
+                    alert('Hubo un error al intentar eliminar el usuario.');
                 }
             }
         },
-        async updateAdministrator(){
+        async updateUser(){
             if (this.passwordMismatch) {
                 return;
             }
             try{
                 this.error='';
                 this.loading=true;
-                const formDataAdmin = new FormData();
-                Object.entries(this.administrator).forEach(([key, value]) => {
+                const formDataUser = new FormData();
+                Object.entries(this.user).forEach(([key, value]) => {
                     if (key === 'photo' && value instanceof File) {
-                        formDataAdmin.append(key, value);
+                        formDataUser.append(key, value);
                     } else if (key !== 'photo') {
-                        formDataAdmin.append(key, value);
+                        formDataUser.append(key, value);
                     }
                 });
-                await UserService.patchUser(this.idadmin,formDataAdmin);
+                await UserService.patchUser(this.idadmin,formDataUser);
                 this.isEditing = false;
                 this.isViewing=true;
-                this.$router.replace({name:'AdministradorDetallesVer',params:{idadministrador:this.idadmin}})
-                this.getAdministratorDetails();
+                this.$router.replace({name:'UsuarioDetallesVer',params:{idusuario:this.iduser}})
+                this.getUserDetails();
             }catch(err){
                 this.error = Object.values(err.response.data.errors).flat().join(" ");
             }finally{
@@ -233,25 +243,24 @@ export default{
             }
         },
         goBack(){
-            this.$router.push({name: 'Administradores'});
+            this.$router.push({name: 'Usuarios'});
         },
-
         cancelEdit(){
             this.isEditing = false;
             this.isViewing = true;
-            this.getAdministratorDetails();
+            this.getUserDetails();
             this.error='';
-            this.$router.push({ name: 'AdministradorDetallesVer', params: { idadministrador: this.idadmin } });
+            this.$router.push({ name: 'UsuarioDetallesVer', params: { idusuario: this.iduser } });
         },
         getImagenUrl(image) {
             if (image) {
                 return process.env.VUE_APP_API_URL + "/storage/" + image; 
             }
         },
-        editAdministrator(){
+        edituser(){
             this.isEditing = true;
             this.isViewing = false;
-            this.$router.push({ name: 'AdministradorDetallesEditar', params: { idadministrador: this.idadmin } });
+            this.$router.push({ name: 'UsuarioDetallesEditar', params: { idusuario: this.iduser } });
         },
         handleImageUpload(event) {
             const file = event.target.files[0]; 
