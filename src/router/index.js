@@ -130,7 +130,7 @@ const routes = [
     props:true
   },
   {
-    path: '/admincursos/materailes/nuevo',
+    path: '/admincursos/materiales/nuevo',
     name: 'MaterialNuevo',
     component: MaterialNuevo,
   },

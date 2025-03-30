@@ -59,7 +59,7 @@
                                 <th class="text-center">Nombre</th>
                                 <th class="text-center">Apellidos</th>
                                 <th class="text-center d-none d-md-table-cell">Correo</th>
-                                <th class="text-center d-none d-md-table-cell">Estado</th>
+                                <th class="text-center">Estado</th>
                             </tr>
                         </thead>
                         <tbody >
@@ -68,7 +68,7 @@
                                 <td @click="goToAdminDetail(administrator.id)">{{ administrator.names}}</td>
                                 <td @click="goToAdminDetail(administrator.id)">{{ administrator.last_names}}</td>
                                 <td @click="goToAdminDetail(administrator.id)" class="d-none d-md-table-cell">{{ administrator.email}}</td>
-                                <td class="d-none d-md-table-cell">
+                                <td>
                                     <button type="button" :class="administrator.status === 'activo' ? 'btn btn-success' : 'btn btn-danger'" @click="changeStatus(administrator.id)">
                                         <svg v-if="administrator.status === 'activo'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
                                             <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zM7.646 10.854a.5.5 0 0 1-.708 0L4 7.707 5.207 6.5l2.439 2.438 4.708-4.707 1.414 1.414-5.854 5.854z"/>

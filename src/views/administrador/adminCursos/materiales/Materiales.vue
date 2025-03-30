@@ -19,15 +19,13 @@
                         <th>Título</th>
                         <th>Tipo</th>
                         <th>Grado</th>
-                        <th>Contenido</th>
                     </tr>
                 </thead>
                 <tbody >
                     <tr v-for="material in materials" :key="material.id" @click="materialDetail(material.id)" style="cursor:pointer"> 
                         <td>{{ material.title }}</td>
                         <td>{{ material.type }}</td>
-                        <td>{{ material.grado }}</td>
-                        <td>{{ material.content }}</td>
+                        <td>{{ material.grade }}</td>
                     </tr>
                 </tbody>
             </table>

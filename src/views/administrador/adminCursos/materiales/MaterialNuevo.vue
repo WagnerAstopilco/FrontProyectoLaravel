@@ -3,27 +3,83 @@
         <div class="card p-4">
             <h1 class="card-title fs-4">{{ name }}</h1>
             <div class="card-body col-8 mx-auto">
-                <form @submit.prevent="addMaterial">
+                <form @submit.prevent="createMaterial()">
                     <div class="form-group d-flex flex-column">
                         <label for="title">Titulo</label>
                         <input type="text" id="title" class="form-control p-2" v-model="newMaterial.title" placeholder="Titulo del material"/>
                     </div>
                     <div class="form-group">
                         <label for="grado">Grado</label>
-                        <select name="grado" v-model="newMaterial.grado" class="form-control p-2">
+                        <select name="grado" v-model="newMaterial.grade" class="form-control p-2">
                             <option value="" disabled selected>---Selecciona un grado---</option>
                             <option value="leccion">Lección</option>
                             <option value="curso">Curso</option>
                         </select>
                     </div>
-                    <div class="form-group" v-if="newMaterial.grado === 'lesson'">
-                        <label for="lesson">Selecciona una Lección</label>
-                        <select name="lesson" v-model="newMaterial.lesson_id" class="form-control p-2" required>
-                            <option value="" disabled selected>{{lessonList? "---Selecciona una lección---":"---No hay lecciones disponibles---"}}</option>
-                            <option v-for="lesson in lessons" :key="lesson.id" :value="lesson.id">
-                                {{ lesson.title }}
-                            </option>
-                        </select>
+                    <div class="form-group d-flex flex-column" v-if="newMaterial.grade==='curso'">
+                        <label for="title">Cursos</label>
+                        <Multiselect 
+                            v-model="selectedCourses" 
+                            :options="availableCourses" 
+                            :multiple="true"
+                            :searchable="true" 
+                            openDirection="bottom"
+                            placeholder="Selecciona cursos para agregar"
+                            label="name_long"
+                            selectLabel="Presiona enter para seleccionar"
+                            selectedLabel="Seleccionado"
+                            deselectLabel="Presiona enter para quitar"
+                            track-by="id" class="">
+                            <template #noOptions>
+                                <span class="text-gray-500">No hay cursos disponibles</span>
+                            </template>
+                            <template #noResult>
+                                <span class="text-gray-500"> No se encontraron coincidencias. </span>
+                            </template>
+                        </Multiselect>
+                    </div>
+                    <div class="form-group d-flex flex-column" v-if="newMaterial.grade==='leccion'">
+                        <label for="title">Curso</label>
+                        <Multiselect 
+                            v-model="course" 
+                            :options="availableCourses" 
+                            :searchable="true" 
+                            openDirection="bottom"
+                            placeholder="Selecciona el curso"
+                            label="name_long"
+                            selectLabel="Presiona enter para seleccionar"
+                            selectedLabel="Seleccionado"
+                            deselectLabel="Presiona enter para quitar"
+                            track-by="id" 
+                            @change="getAvailableLessons()">
+                            <template #noOptions>
+                                <span class="text-gray-500">No hay cursos disponibles</span>
+                            </template>
+                            <template #noResult>
+                                <span class="text-gray-500"> No se encontraron coincidencias. </span>
+                            </template>
+                        </Multiselect>
+                    </div>
+                    <div class="form-group d-flex flex-column" v-if="newMaterial.grade==='leccion'&&course">
+                        <label for="title">Lecciones del curso</label>
+                        <Multiselect 
+                            v-model="selectedLesson" 
+                            :options="availableLessons" 
+                            :searchable="true"                             
+                            openDirection="bottom"
+                            placeholder="Selecciona lección para agregar"
+                            label="title"
+                            selectLabel="Presiona enter para seleccionar"
+                            selectedLabel="Seleccionado"
+                            deselectLabel="Presiona enter para quitar"
+                            track-by="id" class="">
+                            <template #noOptions>
+                                <span class="text-gray-500">No hay lecciones disponibles</span>
+                            </template>
+                            <template #noResult>
+                                <span class="text-gray-500"> No se encontraron coincidencias. </span>
+                            </template>
+                        </Multiselect>
                     </div>
                     <div class="form-group">
                         <label for="type">Tipo</label>
@@ -54,45 +110,92 @@
 </template>
 <script>
 import MaterialService from '@/services/MaterialsService.js';
+import ModuleService from '@/services/ModulesService.js';
+import CourseService from '@/services/CoursesService.js';
 import LessonService from '@/services/LessonsService.js';
+import CourseMaterialService from '@/services/CourseMaterialService.js';
+import Multiselect from "vue-multiselect";
 
 export default {
 data() {
     return {
         name: 'Nuevo Material',
         newMaterial: {
-            title:"",
-            grado: "",
-            type: "",
-            url: "",
-            content: ""
+            title:'',
+            grade:'curso',
+            type: '',
+            url: '',
+            content: '',
+            order_in_lesson:'',
+            lesson_id:'',
         },
-        lessons:[],
-        courses:[],
-        error: "",
+        newCourseMaterial:{
+            order:'',
+            material_id:'',
+            course_id:'',
+        },
+        availableCourses:[],
+        selectedCourses:[],
+        course:null,
+        modulesToCourse:[],
+        availableLessons:[],
+        selectedLesson:null,
+        error: '',
         loading: false,
-        lessonList:false,
-        courseList:false,
     };
 },
-created(){
-    // this.listCourses();
-    this.listLessons();
+watch: {
+    course(newCourse) {
+        if (newCourse) {
+            this.getAvailableLessons();
+        }
+    }
+},
+
+mounted(){
+    this.getAvailableCourses();
+},
+components:{
+    Multiselect,
 },
 methods: {
     goBack() {
         this.$router.push({ name: 'Materiales' }); 
     },
-    async addMaterial() {
+    async createMaterial() {
         this.error = "";
         this.loading = true;
         try {
-            const response = await MaterialService.postMaterial(this.newMaterial);
-            const materialId = response.data.data.id;
-            this.$router.push({name: 'MaterialDetalleVer',params: { idmaterial: materialId },});
+            if(this.newMaterial.grade==='curso'){
+                console.log("dentro de curso");
+                const response=await MaterialService.postMaterial(this.newMaterial);
+                const materialId=response.data.data.id;
+                console.log(response);
+                for(let course of this.selectedCourses){
+                    this.newCourseMaterial.material_id=materialId;
+                    this.newCourseMaterial.course_id=course.id;
+                    this.order=course.materials.length+1;
+                    await CourseMaterialService.postCourseMaterial(this.newCourseMaterial);
+                }
+                this.$router.push({name: 'MaterialDetalleVer',params: { idmaterial: materialId },});
+            }
+            else if(this.newMaterial.grade==='leccion'){
+                console.log("dentro de leccion");
+                let response=await LessonService.getLessonDetails(this.selectedLesson.id);
+                const leccion=response.data.data;
+                this.newMaterial.order_in_lesson=leccion.materials.length+1;
+                this.newMaterial.lesson_id=leccion.id;
+                console.log(this.newMaterial);
+                response=await MaterialService.postMaterial(this.newMaterial);
+                
+                this.$router.push({name: 'MaterialDetalleVer',params: { idmaterial: response.data.data.id },});
+            }  
+            else{
+                console.log("no entron ningun if")
+            }          
         } catch (err) {
+            console.log(err);
             if (err.response && err.response.status === 422) {
-            // Mostrar los errores de validación
             this.error = Object.values(err.response.data.errors).flat().join(" ");
             } else {
             this.error = "Error al agregar el material.";
@@ -101,16 +204,31 @@ methods: {
             this.loading = false;
         }
     },
-    async listLessons() {
-            const response = await LessonService.getLessons(); 
-            this.lessons = response.data.data;             
-            this.lessonList=true;
+    async getAvailableCourses(){
+        const response=await CourseService.getCourses();
+        this.availableCourses=response.data.data;
     },
-    // async listCourses() {
-    //         const response = await CourseService.getCourses(); 
-    //         this.courses = response.data.data;
-    //         this.courseList=true;
-    // },
+    async getAvailableLessons(){
+        if(!this.course){
+            alert("No se ha seleccionado ningun curso")
+            return
+        }
+        try {
+        let response = await CourseService.getCourseDetails(this.course.id);
+        this.modulesToCourse = response.data.data.modules;
+        console.log("modulos del curso sel.",this.modulesToCourse);
+        for (let module of this.modulesToCourse) {
+            response = await ModuleService.getModuleDetails(module.module_id);
+            if (response.data.data.lessons) {
+                this.availableLessons.push(...response.data.data.lessons);
+            }
+        }
+        } catch (error) {
+            console.error("Error al obtener las lecciones:", error);
+        }
+    }
 }
 };
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+

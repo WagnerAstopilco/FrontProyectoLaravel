@@ -17,7 +17,7 @@
             <div v-if="student" class="card-body pb-0">
                 <!-- datos del estudiante -->
                 <div class="d-flex flex-lg-row flex-column gap-3 mx-auto">
-                    <div class="w-lg-60 w-md-90 w-100 mb-3">
+                    <div class="w-lg-60 w-md-90 w-100">
                         <form @submit.prevent="updateStudent">
                             <fieldset>
                                 <div class="form-group">
@@ -132,14 +132,14 @@
                             </div>
                         </form>
                     </div>
-                    <div class="w-lg-50 w-md-70 w-100" v-if="isViewing">
+                    <div class="d-flex flex-column w-lg-50 w-md-70 w-100" v-if="isViewing">
                         <label>Imagen de perfil</label>
                         <img :src="getImagenUrl(student.photo)" class="card-img mb-3" alt="Foto perfil"/>
                     </div>
                 </div>
                 <!-- datos de matriculas -->
                 <div >
-                    <div class="d-flex gap-3" >
+                    <div class="d-flex align-items-center gap-3" >
                         <h2 class="fs-5">Matrículas</h2>
                         <button type="button" class="btn btn-green" data-bs-toggle="modal" data-bs-target="#newEnrollment">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -233,7 +233,7 @@
                 </div>
                 <!-- datos de certificados -->
                 <div>
-                    <div class="d-flex gap-3 alg-items-center">
+                    <div class="d-flex align-items-center gap-3 ">
                         <h2 class="fs-5">Certificados</h2>
                         <button type="button" class="btn btn-green" data-bs-toggle="modal" data-bs-target="#newCertificate">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
@@ -330,7 +330,7 @@
                     </div>
                 </div>
             </div>           
-            <div class="card-footer d-flex justify-content-center">                
+            <div class="card-footer d-flex justify-content-center pb-0">                
                 <button type="button" class="btn btn-blue" @click="goBack">Volver</button>
             </div>
         </div>

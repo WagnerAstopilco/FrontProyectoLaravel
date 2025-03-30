@@ -2,8 +2,8 @@
 <div class="container">
     <div class="card p-4">
         <h1 class="fs-4">{{ name }}</h1>
-        <div class="card-body col-8 mx-auto">
-            <form @submit.prevent="addModule">
+        <div class="card-body w-lg-80 w-md-90 w-100 mx-auto">
+            <form @submit.prevent="addCourseToModule()">
             <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" class="form-control" v-model="newModule.name" placeholder="Nombre del módulo"/>
@@ -19,6 +19,7 @@
                     :options="availableCourses" 
                     :multiple="true"
                     :searchable="true" 
+                    :show-labels="false"
                     openDirection="bottom"
                     placeholder="Selecciona cursos para agregar"
                     label="name_long"
@@ -92,7 +93,7 @@ export default {
                 console.log(error);
             }
         },
-        async addModule() {
+        async addCourseToModule() {
             if (this.selectedCourses.length === 0) {
                 alert("Debe seleccionar al menos un curso.");
                 return;

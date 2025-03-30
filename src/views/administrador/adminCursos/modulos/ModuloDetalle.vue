@@ -10,15 +10,15 @@
                     </button>
                     <ul class="dropdown-menu">
                         <div v-if="module">
-                        <li><a class="dropdown-item" href="#" @click="editModule()">Editar</a></li>
+                        <li><a class="dropdown-item" href="#" @click="goToEditModule()">Editar</a></li>
                         <li><a class="dropdown-item" href="#" @click="deleteModule(module.id)">Eliminar</a></li>
                         </div>
                     </ul>
                 </div>            
             </div>
             <div v-if="module">
-                <div>
-                    <form @submit.prevent="updateModule()" class="w-50">
+                <div >
+                    <form @submit.prevent="updateModule()" class="w-lg-50 w-md-70 w-100">
                         <div class="form-group">
                             <label for="name">Nombre</label>
                             <input type="text" class="form-control" id="name" v-model="module.name" :readonly="!isEditing">
@@ -26,9 +26,9 @@
                             <input type="text" class="form-control" id="description" v-model="module.description" :readonly="!isEditing">
                         </div>
                         <div v-if="isEditing ">
-                        <button type="submit" class="btn btn-cyan m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
-                        <button type="button" class="btn btn-black m-2" @click="cancelEdit">Cancelar</button>
-                    </div>
+                            <button type="submit" class="btn btn-cyan m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
+                            <button type="button" class="btn btn-black m-2" @click="cancelEditModule">Cancelar</button>
+                        </div>
                     </form>
                 </div>
                 <div class="moduleLessons">
@@ -42,68 +42,68 @@
                         </button> 
                         <!-- Modal -->
                         <div class="modal fade" id="newLessonModal" tabindex="-1" aria-labelledby="newLessonModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="newLessonModalLabel">Nueva Lección</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                ...
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="createLesson()">Crear</button>
+                                <form @submit.prevent="addLessonToModule()">
+                                    <div class="form-group">
+                                        <label for="title">Título</label>
+                                        <input type="text" class="form-control" id="title" v-model="lesson.title" placeholder="título de la lección">
+                                        <label for="description">Descripción</label>
+                                        <textarea id="description" class="form-control" v-model="lesson.description" placeholder="Descripción de la lección"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-blue" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-green" data-bs-dismiss="modal">Crear</button>
+                                    </div>
+                                </form>
                             </div>
                             </div>
                         </div>
                         </div>                       
                     </div>
-                    <div>
-                        <form v-if="showFormLesson" @submit.prevent="addLessonToModule" class="w-50">
-                            <div class="form-group ">
-                                <label for="lessonTitle">Título</label>
-                                <input type="text" class="form-control" id="lessonTitle" v-model="lesson.title">
-                                <label for="description">Descripción</label>
-                                <input type="text" class="form-control" id="description" v-model="lesson.description">
-                            </div>
-                            <div class="d-flex">
-                                <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                                <button type="button" class="btn btn-warring m-2" @click="showFormLessonModule">Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
                     <div v-if="module.lessons && module.lessons.length > 0">
-                        <table id="moduleLessonsTable" class="table table-striped">
-                            <thead>
-                                <tr> 
-                                    <th>Órden</th>
-                                    <th>Título</th>
-                                    <th>Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="lesson in module.lessons" :key="lesson.id">
-                                    <td>{{ lesson.order }}</td>
-                                    <td>{{ lesson.title }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-succes" @click="lessonUp(module.lesson.order)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
-                                                <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
-                                            </svg>
-                                            Subir uno
-                                        </button>
-                                        <button type="button" class="btn btn-danger" @click="lessonDown(module.lesson.order)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
-                                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
-                                            </svg>
-                                            Bajar uno
-                                        </button>
-                                        <button type="button" class="btn btn-info" @click="deleteLesson(lesson.id)">Eliminar</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="moduleLessonsTable" class="table table-striped">
+                                <thead>
+                                    <tr> 
+                                        <th class="text-center">Órden</th>
+                                        <th class="text-center">Título</th>
+                                        <th class="text-center">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="lesson in module.lessons" class="table-pointer" :key="lesson.id">
+                                        <td @click="goToLessonDetails()" class="text-center">{{ lesson.order }}</td>
+                                        <td @click="goToLessonDetails()">{{ lesson.title }}</td>
+                                        <td class="d-flex justify-content-center gap-2">
+                                            <button type="button" class="btn btn-success" @click="lessonUp(lesson.id)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
+                                                </svg>
+                                                Subir
+                                            </button>
+                                            <button type="button" class="btn btn-info" @click="lessonDown(lesson.id)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
+                                                </svg>
+                                                Bajar
+                                            </button>
+                                            <button type="button" class="btn btn-danger" @click="deleteLesson(lesson.id)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                                </svg>
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div> 
                     <div v-else>
                         <p>Sin lecciones vinculadas</p>
@@ -112,7 +112,7 @@
                 <div class="moduleCourses">
                     <div class="d-flex align-items-center">
                         <h3 class="fs-4">Cursos</h3>
-                        <button type="button" class="btn btn-blue m-4" @click="showSearchCourse=!showSearchCourse">Vincular Curso</button>
+                        <button type="button" class="btn btn-blue m-4" @click="showSearchCourse=!showSearchCourse">Vincular</button>
                     </div>
                     <form v-show="showSearchCourse" class="w-lg-50 w-md-60 w-100 mb-4" @submit.prevent="addCourseToModule()" >
                             <fieldset>
@@ -137,34 +137,36 @@
                                 </multiselect>
                             </fieldset>
                             <div>
-                                <button type="submit" class="btn m-2 btn-cyan" >{{this.loadingMaterial?'Agregando...':'Agregar'}}</button>
+                                <button type="submit" class="btn m-2 btn-cyan" >{{this.loading?'Agregando...':'Agregar'}}</button>
                                 <button type="button" class="btn m-2 btn-black" @click="showSearchCourse=false">Cancelar</button>
                             </div>
                         </form>
                     
                     <div v-if="coursesToModule && coursesToModule.length > 0">
-                        <table id="moduleCoursesTable" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">Orden</th>
-                                    <th class="text-center">Imágen</th>
-                                    <th class="text-center">Nombre</th>
-                                    <th class="text-center">Descripción</th>
-                                    <th class="text-center">Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="courseModule in coursesToModule" :key="courseModule.id">
-                                    <td class="text-center">{{ courseModule.order }}</td>
-                                    <td class="text-center"><img :src="getImagenUrl(courseModule.course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
-                                    <td>{{ courseModule.course.name_long }}</td>
-                                    <td>{{ courseModule.course.description}}</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-danger" @click="deleteCourseToModule(course.id)">Desvincular</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="moduleCoursesTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Orden</th>
+                                        <th class="text-center d-none d-md-table-cell">Imágen</th>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center d-none d-md-table-cell">Descripción</th>
+                                        <th class="text-center">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="courseModule in coursesToModule"  class="table-pointer" :key="courseModule.id">
+                                        <td class="text-center">{{ courseModule.order }}</td>
+                                        <td class="text-center d-none d-md-table-cell"><img :src="getImagenUrl(courseModule.course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
+                                        <td>{{ courseModule.course.name_long }}</td>
+                                        <td class="d-none d-md-table-cell">{{ courseModule.course.description}}</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-danger" @click="deleteCourseToModule(courseModule.id)">Desvincular</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div> 
                     <div v-else>
                         <p>Sin cursos vinculados</p>
@@ -174,7 +176,7 @@
             <div v-else>
                 <p>Cargando...</p>
             </div>
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center p-3">
                 <button type="button" class="btn btn-blue" @click="goBack()">Ver Módulos</button>
             </div>
         </div>  
@@ -206,7 +208,8 @@ export default {
                 title: '',
                 description: '',
                 order:'',
-                course_id: '',
+                state:'activo',
+                module_id: '',
             },
             isViewing: false,
             isEditing: false,
@@ -223,7 +226,6 @@ export default {
     },
     created(){
         this.getModuleDetails();
-        this.getCourses();
     },
     beforeUnmount() {
         if ($.fn.dataTable.isDataTable('#moduleLessonsTable')) {
@@ -238,15 +240,13 @@ export default {
         Multiselect 
     },
     methods:{
-        goBack(){
-            this.$router.push({name:'Modulos'});
-        },
         async getModuleDetails(){
             try{
                 this.cargando=true;
                 const response = await ModuleService.getModuleDetails(this.idmodulo);
                 this.module = response.data.data;
                 this.getCoursesToModule();
+                this.getAvailableCourses();
                 this.$nextTick(() => {
                     $('#moduleLessonsTable').DataTable({  
                     });
@@ -258,9 +258,33 @@ export default {
                 this.cargando=false;
             }            
         },
+        async getAvailableCourses() {
+            const response = await CourseService.getCourses();
+            const allCourses = response.data.data;
+            this.availableCourses = allCourses.filter(course => 
+                !this.coursesToModule.some(courseModule => courseModule.course_id === course.id)
+            );
+
+            console.log("Cursos disponibles:", this.availableCourses);
+        },
         async getCoursesToModule(){
             const allCourseModule=await CourseModuleService.getCourseModules();
             this.coursesToModule = allCourseModule.data.data.filter(courseModule => courseModule.module_id === this.module.id);
+            console.log("cursos del modulo",this.coursesToModule);
+        },
+        async updateModule() {
+            try                                                                                                                                               
+            {
+                this.loading = true;
+                await ModuleService.patchModule(this.idmodulo, this.module);
+                this.$router.replace({name: 'ModuloDetalleVer',params: { idmodulo: this.idmodulo },});
+            }catch(error){
+                console.log(error);
+            }     
+            finally{
+                this.loading=false;
+                this.isEditing = false;
+            }
         },
         async deleteModule(id){
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este módulo?');
@@ -273,7 +297,10 @@ export default {
                 }
             }   
         },
-        editModule(){
+        goBack(){
+            this.$router.push({name:'Modulos'});
+        },
+        goToEditModule(){
             this.isEditing = true;
             this.$router.push({ name: 'ModuloDetalleEditar', params: { idmodulo: this.idmodulo } });
         },
@@ -299,42 +326,35 @@ export default {
                 this.showSearchBar = false;
             }          
         },
-        showFormLessonModule() {
-            this.showFormLesson = !this.showFormLesson; 
+        async addCourseToModule(){
+                for(let course of this.selectedCourses){
+                    let newCourseModule = {
+                        module_id:this.module.id,
+                        course_id:course.id,
+                        order:course.modules.length+1
+                    }
+                    console.log("curso", newCourseModule);
+                    await CourseModuleService.postCourseModule(newCourseModule);
+                }
+                this.selectedCourses = [];
+                this.$router.push({name: 'ModuloDetalleVer',params: { idmodulo: this.idmodulo },});
         },
-        async getCourses() {
-            const response = await CourseService.getCourses();
-            this.availableCourses = response.data.data;  
-        },
-        async deleteModuleToCourse(courseId){
+        async deleteCourseToModule(courseId){
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este curso del módulo?');
         if (confirmed) {
                 try {
-                    await ModuleService.deleteCourseToModule(this.idmodulo,courseId); 
+                    await CourseModuleService.deleteCourseToModule(this.module.id,courseId); 
                     this.getModuleDetails(); 
                 } catch (error) {
                     alert('Hubo un error al intentar eliminar el curso.');
                 }
             }   
         },
-        cancelEdit(){
+        cancelEditModule(){
             this.isEditing = false;
             this.$router.push({ name: 'ModuloDetalleVer', params: { idmodulo: this.idmodulo} });
         },
-        async updateModule() {
-            try
-            {
-                this.loading = true;
-                await ModuleService.patchModule(this.idmodulo, this.module);
-                this.$router.replace({name: 'ModuloDetalleVer',params: { idmodulo: this.idmodulo },});
-            }catch(error){
-                console.log(error);
-            }     
-            finally{
-                this.loading=false;
-                this.isEditing = false;
-            }
-        },
+        
         getImagenUrl(imagen) {
             if (imagen) {
                 return process.env.VUE_APP_API_URL + "/storage/" + imagen; 
@@ -351,9 +371,10 @@ export default {
             }else{
                 this.lesson.order = 1;
             }  
-            this.lesson.module_id = this.idmodulo;
+            this.lesson.module_id = this.module.id;
             try{
                 this.loading = true;
+                console.log(this.lesson);
                 await LessonService.postLesson(this.lesson);
                 this.getModuleDetails();
             }catch(error){
@@ -384,6 +405,54 @@ export default {
                     this.cargando=false;
                 }
             }   
+        },
+        async lessonUp(lessonId) {
+            try {
+                this.cargando=true;
+                const { data } = await LessonService.getLessonDetails(lessonId);
+                const lessonToUp = data.data;
+
+                if (lessonToUp.order === 1) {
+                    alert("Esta lección ya tiene N° de orden 1");
+                    return;
+                }
+                const { data: lessonsData } = await LessonService.getLessons();
+                const lessonToDown = lessonsData.data.find(lesson => lesson.order === (lessonToUp.order - 1));
+                await LessonService.patchLesson(lessonToDown.id, { order: lessonToUp.order });
+                await LessonService.patchLesson(lessonToUp.id, { order: lessonToUp.order - 1 });
+
+                this.getModuleDetails();
+            } catch (error) {
+                console.error("Error en lessonUp:", error);
+            }finally{
+                this.cargando=false;
+            }
+        },
+        async lessonDown(lessonId) {
+            try {
+                this.cargando = true;
+                const { data } = await LessonService.getLessonDetails(lessonId);
+                const lessonToDown = data.data;
+                const { data: lessonsData } = await LessonService.getLessons();
+                const allLessons = lessonsData.data;
+                const maxOrder = Math.max(...allLessons.map(l => l.order));
+                if (lessonToDown.order === maxOrder) {
+                    alert("Esta lección ya tiene el último N° de orden");
+                    return;
+                }
+                const lessonToUp = allLessons.find(lesson => lesson.order === (lessonToDown.order + 1));
+                await LessonService.patchLesson(lessonToUp.id, { order: lessonToDown.order });
+                await LessonService.patchLesson(lessonToDown.id, { order: lessonToDown.order + 1 });
+
+                this.getModuleDetails();
+            } catch (error) {
+                console.error("Error en lessonDown:", error);
+            } finally {
+                this.cargando = false;
+            }
+        },
+        goToLessonDetails(){
+
         }
     }
 };

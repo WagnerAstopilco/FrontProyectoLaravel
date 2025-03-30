@@ -19,7 +19,7 @@
                         <tr >
                             <th class="text-center" scope="col">Color</th>
                             <th class="text-center" scope="col">Nombre</th>
-                            <th class="text-center d-none d-md-table-cell" scope="col">Descripción</th>
+                            <th class="text-center" scope="col">Descripción</th>
                         </tr>
                     </thead>
                     <tbody >
@@ -28,7 +28,7 @@
                                 <div class="form-control w-lg-30 w-md-50 w-60 mx-auto" :style="{ backgroundColor: category.color }"></div>
                             </td>
                             <td>{{ category.name }}</td>
-                            <td class="d-none d-md-table-cell">{{ category.description }}</td>
+                            <td>{{ category.description }}</td>
                         </tr>
                     </tbody>
                 </table>

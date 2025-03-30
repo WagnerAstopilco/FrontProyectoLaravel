@@ -9,8 +9,8 @@ export default {
     postCourseModule(newCourseModule){
         return apiClient.post('/courseModules', newCourseModule);
     },
-    patchCourseModule(id, coursemodule) {
-        return apiClient.post(`/courseModules/${id}`, coursemodule);
+    patchCourseModule(id, courseModule) {
+        return apiClient.patch(`/courseModules/${id}`, courseModule);
     },
     deleteCourseModule(id){
         return apiClient.delete(`/courseModules/${id}`);

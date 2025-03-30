@@ -4,32 +4,32 @@
             <div class="card-header pb-0">
                 <h1 class="fs-4">{{ name }}</h1>
             </div>
-            <div class="card-body col-lg-8 col-md-10 col-12 mx-auto">
+            <div class="card-body w-lg-80 w-md-90 w-100 mx-auto">
                 <form @submit.prevent="addCourse">
                     <fieldset>
-                        <div class="d-flex col-12 justify-content-between">
-                            <div class="form-group d-flex flex-column col-5">
+                        <div class="d-flex flex-column flex-md-row gap-md-3 w-100">
+                            <div class="form-group flex-grow-1">
                                 <label for="start_date">Fecha de inicio</label>
                                 <input type="date" class="form-control" id="start_date" v-model="newCourse.start_date"/>
                             </div>
-                            <div class="form-group d-flex flex-column col-5">
+                            <div class="form-group flex-grow-1">
                                 <label for="end_date">Fecha de fin</label>
                                 <input type="date" class="form-control p-2" id="end_date" v-model="newCourse.end_date"/>
                             </div>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="name_long">Nombre</label>
                             <input type="text" class="form-control p-2" id="name_long" v-model="newCourse.name_long" placeholder="Nombre del curso"/>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="name_short">Abreviación</label>
                             <input type="text" class="form-control p-2" id="name_short" v-model="newCourse.name_short" placeholder="Abreviatura del curso"/>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="duration_in_hours">Duración</label>
                             <input type="number" class="form-control p-2" id="duration_in_hours" v-model="newCourse.duration_in_hours" placeholder="Duración del curso"/>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="category">Categoria</label>
                             <select name="category" class="form-control p-2" v-model="newCourse.category_id">
                                 <option value="" disabled selected>---Selecciona una Categoría---</option>
@@ -38,23 +38,23 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="price">Precio</label>
                             <input type="number" class="form-control p-2" id="price" v-model="newCourse.price" placeholder="Precio del curso"/>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="discount">Descuento</label>
                             <input type="number" class="form-control p-2" id="discount" v-model="newCourse.discount" placeholder="Descuento en el curso" @blur="setDefaultDiscount"/>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="descripcion">Descripción</label>
                             <textarea class="form-control p-2" id="descripcion" v-model="newCourse.description" placeholder="Descripción del curso"></textarea>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="store">Tienda</label>
                             <input type="text" class="form-control p-2" id="store" v-model="newCourse.store_id" placeholder="Tienda"/>
                         </div>
-                        <div class="form-group d-flex flex-column">
+                        <div class="form-group">
                             <label for="image">Imagen</label>
                             <input type="file" class="form-control" id="image" @change="handleImageUpload">
                             <div v-if="imagePreview">

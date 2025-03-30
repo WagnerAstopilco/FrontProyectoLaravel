@@ -131,13 +131,13 @@
                             </div>
                         </form>
                     </div>
-                    <div class="w-lg-50 w-md-70 w-100" v-if="isViewing">
+                    <div class="d-flex flex-column w-lg-50 w-md-70 w-100" v-if="isViewing">
                         <label>Imagen de perfil</label>
                         <img :src="getImagenUrl(administrator.photo)" class="card-img mb-3" alt="Foto perfil"/>
                     </div>
                 </div>
             </div>           
-            <div class="card-footer d-flex justify-content-center">
+            <div class="card-footer d-flex justify-content-center pb-0">
                 <button type="button" class="btn btn-blue" @click="goBack">Volver</button>
             </div>
         </div>

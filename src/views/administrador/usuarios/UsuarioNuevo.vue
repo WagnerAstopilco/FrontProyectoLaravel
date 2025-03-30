@@ -27,7 +27,7 @@
                         <input type="password" class="form-control" id="confirm_password" v-model="password_confirm" placeholder="Confirmar contraseña"/>
                         <small v-show="passwordMismatch" class="text-danger p-1" >Las contraseñas no coinciden</small>
                     </div>
-                    <div class="form-group flex-grow-1">
+                    <div class="form-group">
                         <label for="role">Rol</label>
                         <select name="role" class="form-control" v-model="user.role">
                             <option value="admin">Administrador</option>

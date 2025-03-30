@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="card p-4">
-            <div>
+            <div class="card-header pb-0">
                 <h1 class="fs-4">{{ name }}</h1>                
             </div>
             <div class="card-body w-lg-80 w-md-90 w-100 mx-auto">
