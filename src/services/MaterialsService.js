@@ -7,10 +7,19 @@ export default {
         return apiClient.get(`/materials/${id}`);
     },
     postMaterial(newMaterial){
-        return apiClient.post('/materials', newMaterial);
+        return apiClient.post('/materials', newMaterial,{
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
     },
     patchMaterial(id,Material){
-        return apiClient.patch(`/materials/${id}`,Material);
+        return apiClient.post(`/materials/${id}`, Material, {
+                    headers: { 
+                        "Content-Type": "multipart/form-data",
+                        "X-HTTP-Method-Override": "PATCH",
+                    }
+                });
     },
     deleteMaterial(id){
         return apiClient.delete(`/materials/${id}`);

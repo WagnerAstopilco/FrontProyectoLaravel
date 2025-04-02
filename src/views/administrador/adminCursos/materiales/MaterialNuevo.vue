@@ -88,20 +88,25 @@
                             <option value="file">Archivo</option>
                             <option value="link">Enlace</option>
                             <option value="video">Video</option>
+                            <option value="text">Texto</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-if="newMaterial.type==='file'">
+                        <label for="file">Archivo</label>
+                        <input type="file" class="form-control" id="file" @change="handleFileUpload">
+                    </div>
+                    <div class="form-group" v-if="newMaterial.type==='link'||newMaterial.type==='video'">
                         <label for="link">Link</label>
                         <input type="text" id="link" v-model="newMaterial.url" class="form-control p-2" placeholder="Enlace al material"/>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-if="newMaterial.type==='text'">
                         <label for="content">Contenido</label>
                         <textarea id="content" v-model="newMaterial.content" class="form-control p-2" placeholder="Contenido del material"></textarea>
                     </div>
                     <p v-if="error" class="error">{{ error }}</p>     
-                    <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                    <button type="button" class="btn btn-primary m-2" @click="goBack">Volver</button>
+                    <div class="d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-green">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                    <button type="button" class="btn btn-blue" @click="goBack">Volver</button>
                     </div>
                 </form>
             </div>
@@ -123,7 +128,8 @@ data() {
         newMaterial: {
             title:'',
             grade:'curso',
-            type: '',
+            type: 'file ',
+            file:'',
             url: '',
             content: '',
             order_in_lesson:'',
@@ -165,33 +171,37 @@ methods: {
     async createMaterial() {
         this.error = "";
         this.loading = true;
+        const formData = new FormData();
+            formData.append("title", this.newMaterial.title);
+            formData.append("grade", this.newMaterial.grade);
+            formData.append("type", this.newMaterial.type);
+            formData.append("url", this.newMaterial.url);
+            formData.append("content", this.newMaterial.content);            
+            if (this.newMaterial.file) {
+                formData.append("file", this.newMaterial.file);
+            }
         try {
             if(this.newMaterial.grade==='curso'){
-                console.log("dentro de curso");
-                const response=await MaterialService.postMaterial(this.newMaterial);
+                const response=await MaterialService.postMaterial(formData);
                 const materialId=response.data.data.id;
-                console.log(response);
                 for(let course of this.selectedCourses){
                     this.newCourseMaterial.material_id=materialId;
                     this.newCourseMaterial.course_id=course.id;
-                    this.order=course.materials.length+1;
+                    this.newCourseMaterial.order=course.materials.length+1;
                     await CourseMaterialService.postCourseMaterial(this.newCourseMaterial);
                 }
                 this.$router.push({name: 'MaterialDetalleVer',params: { idmaterial: materialId },});
             }
-            else if(this.newMaterial.grade==='leccion'){
-                console.log("dentro de leccion");
+            if(this.newMaterial.grade==='leccion'){
                 let response=await LessonService.getLessonDetails(this.selectedLesson.id);
                 const leccion=response.data.data;
                 this.newMaterial.order_in_lesson=leccion.materials.length+1;
                 this.newMaterial.lesson_id=leccion.id;
-                console.log(this.newMaterial);
-                response=await MaterialService.postMaterial(this.newMaterial);
+                formData.append("order_in_lesson", this.newMaterial.order_in_lesson);
+                formData.append("lesson_id", this.newMaterial.lesson_id);
+                response=await MaterialService.postMaterial(formData);
                 
                 this.$router.push({name: 'MaterialDetalleVer',params: { idmaterial: response.data.data.id },});
-            }  
-            else{
-                console.log("no entron ningun if")
             }          
         } catch (err) {
             console.log(err);
@@ -226,7 +236,13 @@ methods: {
         } catch (error) {
             console.error("Error al obtener las lecciones:", error);
         }
-    }
+    },
+    handleFileUpload(event) {
+        const file = event.target.files[0];  
+        if (file) {
+            this.newMaterial.file=file; 
+        }
+    },
 }
 };
 </script>
