@@ -116,7 +116,7 @@
                             </div>
                             <div class="form-group" v-if="material.type==='text'">
                                 <label for="content">Contenido</label>
-                                <div v-if="isEditing" class="editor-toolbar mb-2">
+                                <!-- <div v-if="isEditing" class="editor-toolbar mb-2">
                                 <button type="button" @click="toggleBold" :class="{ active: editor.isActive('bold') }"><strong>B</strong></button>
                                 <button type="button" @click="toggleItalic" :class="{ active: editor.isActive('italic') }"><em>I</em></button>
                                 <button type="button" @click="toggleUnderline" :class="{ active: editor.isActive('underline') }"><u>U</u></button>
@@ -128,12 +128,12 @@
                                 <button @click="toggleAlign('center')">Centro</button>
                                 <button @click="toggleAlign('right')">Derecha</button>
                                 <button @click="addLink()">🔗 Enlace</button>
-                                <button @click="addImage()">🖼️ Imagen</button>
-                            </div>
-                                <div v-if="isEditing">
+                                <button @click="addImage()">🖼️ Imagen</button> -->
+                            <!-- </div> -->
+                                <!-- <div v-if="isEditing">
                                     <EditorContent :editor="editor" class="border p-3 rounded" />
                                 </div>
-                                <div v-else v-html="material.content" class="border p-3 rounded bg-light readonly-content" />
+                                <div v-else v-html="material.content" class="border p-3 rounded bg-light readonly-content" /> -->
                             </div>
                             <p v-if="error" class="error">{{ error }}</p>     
                             <div v-if="isEditing" class="d-flex justify-content-center gap-3">
@@ -267,13 +267,13 @@ import $ from 'jquery';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 import 'datatables.net-bs4';
 import Multiselect from 'vue-multiselect';
-import { Editor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import Placeholder from '@tiptap/extension-placeholder'
-import TextAlign from '@tiptap/extension-text-align'
-import Link from '@tiptap/extension-link'
-import Image from '@tiptap/extension-image'
+// import { Editor, EditorContent } from '@tiptap/vue-3'
+// import StarterKit from '@tiptap/starter-kit'
+// import Underline from '@tiptap/extension-underline'
+// import Placeholder from '@tiptap/extension-placeholder'
+// import TextAlign from '@tiptap/extension-text-align'
+// import Link from '@tiptap/extension-link'
+// import Image from '@tiptap/extension-image'
 
 export default {
     data() {
@@ -304,7 +304,7 @@ export default {
             showSearchBar:false,
             showFormCourseMaterial:false,
             coursesList:[],
-            editor: null,
+            // editor: null,
 
         };
     },
@@ -314,21 +314,21 @@ export default {
         } else if (this.$route.name === 'MaterialDetalleEditar') {
             this.isEditing = true;
         };
-        this.editor = new Editor({
-            content: this.material?.content || '<p>Escribe aquí...</p>',
-            extensions: [
-            StarterKit,
-            Underline,
-            TextAlign.configure({ types: ['heading', 'paragraph'] }),
-            Link.configure({ openOnClick: false }),
-            Image,
-            Placeholder.configure({ placeholder: 'Escribe el contenido del material...' })
-            ],
-            onUpdate: ({ editor }) => {
-            this.material.content = editor.getHTML(); // Sincroniza con v-model
-            },
-            editable: this.isEditing,
-        });
+        // this.editor = new Editor({
+        //     content: this.material?.content || '<p>Escribe aquí...</p>',
+        //     extensions: [
+        //     StarterKit,
+        //     Underline,
+        //     TextAlign.configure({ types: ['heading', 'paragraph'] }),
+        //     Link.configure({ openOnClick: false }),
+        //     Image,
+        //     Placeholder.configure({ placeholder: 'Escribe el contenido del material...' })
+        //     ],
+        //     onUpdate: ({ editor }) => {
+        //     this.material.content = editor.getHTML(); // Sincroniza con v-model
+        //     },
+        //     editable: this.isEditing,
+        // });
         this.getMaterialDetails();
         this.getAvailableCourses();
     },
@@ -350,7 +350,7 @@ export default {
     components:{
         Preloader,
         Multiselect,
-        EditorContent,
+        // EditorContent,
     },
     methods: {
         async getMaterialDetails() {
@@ -579,7 +579,7 @@ export default {
     },
 }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
