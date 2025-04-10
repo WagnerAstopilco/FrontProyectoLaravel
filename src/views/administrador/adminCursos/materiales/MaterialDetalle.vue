@@ -114,9 +114,26 @@
                                 <label for="link">Link</label>
                                 <input type="text" id="link" v-model="material.url" class="form-control p-2" placeholder="Enlace al material" :readonly="!isEditing"/>
                             </div>
-                            <div class="form-group" v-if="material.type==='text'&&isEditing">
+                            <div class="form-group" v-if="material.type==='text'">
                                 <label for="content">Contenido</label>
-                                <textarea id="content" v-model="material.content" class="form-control p-2" placeholder="Contenido del material" :readonly="!isEditing"></textarea>
+                                <div v-if="isEditing" class="editor-toolbar mb-2">
+                                <button type="button" @click="toggleBold" :class="{ active: editor.isActive('bold') }"><strong>B</strong></button>
+                                <button type="button" @click="toggleItalic" :class="{ active: editor.isActive('italic') }"><em>I</em></button>
+                                <button type="button" @click="toggleUnderline" :class="{ active: editor.isActive('underline') }"><u>U</u></button>
+                                <button type="button" @click="setHeading(1)">H1</button>
+                                <button type="button" @click="setHeading(2)">H2</button>
+                                <button type="button" @click="setParagraph">P</button>
+                                <button type="button" @click="toggleBulletList">• Lista</button>
+                                <button @click="toggleAlign('left')">Izquierda</button>
+                                <button @click="toggleAlign('center')">Centro</button>
+                                <button @click="toggleAlign('right')">Derecha</button>
+                                <button @click="addLink()">🔗 Enlace</button>
+                                <button @click="addImage()">🖼️ Imagen</button>
+                            </div>
+                                <div v-if="isEditing">
+                                    <EditorContent :editor="editor" class="border p-3 rounded" />
+                                </div>
+                                <div v-else v-html="material.content" class="border p-3 rounded bg-light readonly-content" />
                             </div>
                             <p v-if="error" class="error">{{ error }}</p>     
                             <div v-if="isEditing" class="d-flex justify-content-center gap-3">
@@ -126,7 +143,7 @@
                         </form>
                         <div v-if="isViewing" class="mb-3">
                             <div v-if="material.type==='file'">
-                                <h3>Archivo</h3>
+                                <h3 class="fs-5">Archivo</h3>
                                 <div class="d-flex align-items-center gap-2 ">
                                     <p>{{ getFileName(material.file) }}</p>
                                     <a :href="getFileUrl(material.file)" class="btn btn-blue mt-2" target="_blank">
@@ -138,20 +155,13 @@
                                 </div>
                             </div>
                             <div v-if="material.type === 'link' || material.type === 'video'">
-                                <h3>Enlace</h3>
+                                <h3 class="fs-5">Enlace</h3>
                                 <div class="d-flex align-items-center gap-2">
                                     <a :href="material.url" target="_blank" rel="noopener noreferrer">
                                         {{ material.url }}
                                     </a>
                                 </div>
                             </div>
-                            <div v-if="material.type === 'text'">
-                                <h3>Contenido</h3>
-                                <div class="d-flex align-items-center gap-2">
-                                    <textarea :value="material.content" readonly class="form-group"></textarea>
-
-                                </div>
-                            </div>                            
                         </div>
                     </div>                    
                     <div class="materialLessons" v-if="material.grade==='leccion'&&material.lesson">
@@ -163,15 +173,15 @@
                                         <th>Título</th>
                                         <th>Descripción</th>
                                         <th>Estado</th>
-                                        <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>{{ material.lesson.title }}</td>
                                         <td>{{ material.lesson.description }}</td>
-                                        <td>{{ material.lesson.state }}</td>
-                                        <td><button>Cambiar</button></td>
+                                        <td :class="{'text-success text-bold fs-5': material.lesson.state === 'activo', 'text-danger': material.lesson.state !== 'activo'}">
+                                            {{ material.lesson.state === 'activo' ? 'Activo' : 'Inactivo' }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -181,37 +191,38 @@
                     <div class="materialCourses" v-if="material.grade==='curso'&&material.courses.length>0">
                         <div class="d-flex align-items-center gap-3">
                             <h2 class="fs-5">Cursos</h2>
-                            <button type="button" class="btn btn-green" @click="showFormCourseMaterial">Vincular Curso</button>
+                            <button type="button" class="btn btn-green" @click="showFormCourseMaterial=!showFormCourseMaterial">Vincular Curso</button>
                         </div>
-    
-                        <form class="courses-form d-flex w-60" v-if="showSearchBar" @submit.prevent="addCourseToMaterial(selectedCourse?.id)">
-                                <div class="form-group">
-                                    <div class="search-bar">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                        </svg>
-                                        <input v-model="searchQuery" type="text" class=" search-bar-input" placeholder="Buscar cursos..." @click="filterCourses" @input="filterCourses" @focus="inputFocus = true" @blur="handleBlur"/>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16" @click="reset">
-                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="courses-container"  v-if="inputFocus && (filteredCourses.length > 0 || searchQuery)" >
-                                        <ul class="coursesList">
-                                            <li v-for="course in filteredCourses" :key="course.id" 
-                                            @click="addCourseToInput(course)">
-                                            {{ course.name_long }}
-                                            </li>
-                                            <li v-if="searchQuery && filteredCourses.length ===0">Sin resultados.</li>
-                                        </ul>
-                                </div> 
-                                </div>
-                                <div class="">
-                                    <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                                    <button type="button" id="button-cancel" class="btn btn-warring m-2" @click="showFormCourseMaterial">Cancelar</button>
-                                </div>
-                            </form>
+                        <form @submit.prevent="linkCourseToMaterial()" class="w-50" v-if="showFormCourseMaterial" >
+                            <div class="form-group d-flex flex-column">
+                                <Multiselect 
+                                    v-model="selectedCourses" 
+                                    :options="availableCourses" 
+                                    :multiple="true"
+                                    :searchable="true" 
+                                    openDirection="bottom"
+                                    placeholder="Selecciona cursos para agregar"
+                                    label="name_long"
+                                    selectLabel="Presiona enter para seleccionar"
+                                    selectedLabel="Seleccionado"
+                                    deselectLabel="Presiona enter para quitar"
+                                    track-by="id" class="">
+                                    <template #noOptions>
+                                        <span class="text-gray-500">No hay cursos disponibles</span>
+                                    </template>
+                                    <template #noResult>
+                                        <span class="text-gray-500"> No se encontraron coincidencias. </span>
+                                    </template>
+                                </Multiselect>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3">
+                                <button type="submit" class="btn btn-cyan">Vincular</button>
+                                <button type="button" class="btn btn-blue" @click="showFormCourseMaterial=false">Cancelar</button>
+                            </div>
+                        </form>
                         
-                        <div v-if="material.courses && material.courses.length > 0">
+                        
+                        <div v-if="coursesList && coursesList.length > 0">
                             <table id="materialCoursesTable" class="table table-striped">
                                 <thead>
                                     <tr>
@@ -222,10 +233,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="course in material.courses" :key="course.id">
+                                    <tr v-for="course in coursesList" :key="course.id">
                                         <td><img :src="getImagenUrl(course.image)" class="card-img img-fluid" style="max-width: 150px; max-height: 100px;" alt="CursoImagen"/></td>
                                         <td >{{ course.name_long}}</td>
-                                        <td>{{ course.category_id}}</td>
+                                        <td>{{ course.category.name}}</td>
                                         <td><button type="button" class="btn btn-danger" @click="deleteCourseToMaterial(course.id)">Elinimar</button></td>
                                     </tr>
                                 </tbody>
@@ -256,6 +267,13 @@ import $ from 'jquery';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 import 'datatables.net-bs4';
 import Multiselect from 'vue-multiselect';
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import Underline from '@tiptap/extension-underline'
+import Placeholder from '@tiptap/extension-placeholder'
+import TextAlign from '@tiptap/extension-text-align'
+import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
 
 export default {
     data() {
@@ -284,6 +302,10 @@ export default {
             error:'',
             cargando:false,
             showSearchBar:false,
+            showFormCourseMaterial:false,
+            coursesList:[],
+            editor: null,
+
         };
     },
     mounted() {
@@ -292,10 +314,27 @@ export default {
         } else if (this.$route.name === 'MaterialDetalleEditar') {
             this.isEditing = true;
         };
+        this.editor = new Editor({
+            content: this.material?.content || '<p>Escribe aquí...</p>',
+            extensions: [
+            StarterKit,
+            Underline,
+            TextAlign.configure({ types: ['heading', 'paragraph'] }),
+            Link.configure({ openOnClick: false }),
+            Image,
+            Placeholder.configure({ placeholder: 'Escribe el contenido del material...' })
+            ],
+            onUpdate: ({ editor }) => {
+            this.material.content = editor.getHTML(); // Sincroniza con v-model
+            },
+            editable: this.isEditing,
+        });
         this.getMaterialDetails();
         this.getAvailableCourses();
     },
     beforeUnmount() {
+        this.editor.destroy()
+
         if ($.fn.dataTable.isDataTable('#materialCoursesTable')) {
             $('#materialCoursesTable').DataTable().destroy();
         }
@@ -310,14 +349,16 @@ export default {
 
     components:{
         Preloader,
-        Multiselect
+        Multiselect,
+        EditorContent,
     },
     methods: {
         async getMaterialDetails() {
             try{
                 this.cargando=true;
                 const response = await MaterialService.getMaterialDetails(this.idmaterial);
-                this.material = response.data.data;
+                this.material = response.data.data;                
+                this.getCoursesLinked();
                 this.originalGrade=this.material.grade;
                 this.originalType=this.material.type;
                 this.$nextTick(() => {
@@ -463,8 +504,19 @@ export default {
             link.click();
         },
         async getAvailableCourses(){
-            const response=await CourseService.getCourses();
-            this.availableCourses=response.data.data;
+            try {
+                const response = await CourseService.getCourses();
+                const allCourses = response.data.data;
+                if (this.material.grade === 'curso' && this.originalGrade === 'curso') {
+                    const assignedCourseIds = this.material.courses.map(course => course.course_id);
+                    this.availableCourses = allCourses.filter(course => !assignedCourseIds.includes(course.id));
+                } else {
+                    this.availableCourses = allCourses;
+                }
+            } catch (error) {
+                console.error("Error al obtener cursos:", error);
+                this.availableCourses = [];
+            }
         },
 
         async getAvailableLessons(){
@@ -495,7 +547,63 @@ export default {
                 this.material.file=file; 
             }
         },
+        async getCoursesLinked(){
+            this.coursesList=[];
+            for(let course of this.material.courses){
+                const response=await CourseService.getCourseDetails(course.course_id);
+                this.coursesList.push(response.data.data);
+            }
+        },
+        linkCourseToMaterial(){
+            if (this.selectedCourses.length === 0) {
+                alert("No se han seleccionado cursos para vincular.");
+                return;
+            }
+            for (let course of this.selectedCourses) {
+                this.newCourseMaterial.order = this.material.courses.length + 1;
+                this.newCourseMaterial.material_id = this.material.id;
+                this.newCourseMaterial.course_id = course.id;
+                CourseMaterialService.postCourseMaterial(this.newCourseMaterial);
+            }
+            alert("Cursos vinculados correctamente.");
+            this.getMaterialDetails(this.material.id);
+        },
+        deleteCourseToMaterial(courseId){
+            const confirmed = confirm('¿Estás seguro de que deseas desvincular este curso?');
+            if (confirmed) {
+                CourseMaterialService.deleteCourseMaterial(this.material.id,courseId);
+                alert("Curso desvinculado correctamente.");
+                this.getMaterialDetails(this.material.id);
+            } 
+        }
     },
 }
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style scoped>
+/* Estilos personalizados para tu TipTap */
+.editor-content {
+  min-height: 200px;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  font-family: sans-serif;
+}
+
+/* También puedes personalizar partes específicas como párrafos, encabezados, etc. */
+.editor-content p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Si quieres que el contenido en modo lectura tenga otro estilo */
+.readonly-content {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ddd;
+}
+</style>

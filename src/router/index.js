@@ -36,6 +36,8 @@ import PagoDetalles from "../views/administrador/pagos/PagoDetalles.vue";
 import Usuarios from "../views/administrador/usuarios/Usuarios.vue";
 import UsuarioNuevo from "../views/administrador/usuarios/UsuarioNuevo.vue";
 import UsuarioDetalles from "../views/administrador/usuarios/UsuarioDetalles.vue"
+import LeccionDetalles from "../views/administrador/lecciones/LeccionDetalles.vue";
+import EvaluacionDetalles from "../views/administrador/evaluaciones/EvaluacionDetalles.vue"
 
 const routes = [
   {
@@ -301,6 +303,28 @@ const routes = [
     path:'/usuarios/:idusuario?/editar',
     name: 'UsuarioDetallesEditar',
     component:UsuarioDetalles,
+  },
+  //routes lecciones
+  {
+    path:'/lecciones/:idleccion?/ver/:idmodulo?',
+    name: 'LeccionDetallesVer',
+    component:LeccionDetalles,
+  },
+  {
+    path:'/lecciones/:idleccion?/editar/:idmodulo?',
+    name: 'LeccionDetallesEditar',
+    component:LeccionDetalles,
+  },
+  //routes evaluaciones
+  {
+    path:'/evaluaciones/:idevaluacion?/ver/:idcurso?',
+    name: 'EvaluacionDetallesVer',
+    component:EvaluacionDetalles,
+  },
+  {
+    path:'/evaluaciones/:idevaluacion?/editar/:idcurso?',
+    name: 'EvaluacionDetallesEditar',
+    component:EvaluacionDetalles,
   },
 ];
 

@@ -169,7 +169,7 @@
                                                 <input type="text" class="form-control" id="name" v-model="newModule.name" placeholder="Nombre del módulo"/>
                                             </div>
                                             <div class="form-group">
-                                                <label for="description">Fecha de inicio</label>
+                                                <label for="description">Descripción</label>
                                                 <textarea id="description" class="form-control p-2" v-model="newModule.description" placeholder="Descripción del módulo"></textarea> 
                                             </div>
                                         </fieldset>
@@ -334,14 +334,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="evaluation in course.evaluations" :key="evaluation.id" @click="evaluationDetail(evaluation.id)" class="table-pointer">
-                                    <td class="text-center">{{ evaluation.start_date }}</td>
-                                    <td class="text-center">{{ evaluation.end_date }}</td>
-                                    <td class="text-center">{{ evaluation.title }}</td>
-                                    <td class="text-center">{{ evaluation.duration }}</td>
-                                    <td class="text-center">{{ evaluation.attempts_allowed }}</td>
-                                    <!-- TODO: AGREGAR FUNCIONALIDAD PARA DESACTIVAR LA EVAL. -->
-                                    <td class="text-center">{{ evaluation.state }}</td>
+                                <tr v-for="evaluation in course.evaluations" :key="evaluation.id" class="table-pointer">
+                                    <td class="text-center" @click="evaluationDetail(evaluation.id,this.course.id)">{{ evaluation.start_date }}</td>
+                                    <td class="text-center" @click="evaluationDetail(evaluation.id,this.course.id)">{{ evaluation.end_date }}</td>
+                                    <td class="text-center" @click="evaluationDetail(evaluation.id,this.course.id)">{{ evaluation.title }}</td>
+                                    <td class="text-center" @click="evaluationDetail(evaluation.id,this.course.id)">{{ evaluation.duration }}</td>
+                                    <td class="text-center" @click="evaluationDetail(evaluation.id,this.course.id)">{{ evaluation.attempts_allowed }}</td>
+                                    <td>
+                                        <button type="button" :class="evaluation.state === 'activo' ? 'btn btn-success' : 'btn btn-danger'" @click="changeStatus(evaluation.id)">
+                                        <svg v-if="evaluation.state === 'activo'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                            <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zM7.646 10.854a.5.5 0 0 1-.708 0L4 7.707 5.207 6.5l2.439 2.438 4.708-4.707 1.414 1.414-5.854 5.854z"/>
+                                        </svg>
+                                        <svg v-if="evaluation.state === 'inactivo'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                        </svg>
+                                        {{evaluation.state}}
+                                    </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -377,44 +387,38 @@
                                     <button type="button" class="btn-close btn-black" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form @submit.prevent="createNewMaterial">
+                                    <form @submit.prevent="createMaterial()">
                                         <fieldset>
+                                            <div class="form-group d-flex flex-column">
+                                                <label for="title">Titulo</label>
+                                                <input type="text" id="title" class="form-control p-2" v-model="newMaterial.title" placeholder="Titulo del material"/>
+                                            </div>                    
                                             <div class="form-group">
-                                                <label for="title">Título</label>
-                                                <input type="text" class="form-control" id="title" v-model="newMaterial.title" placeholder="Título del material"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="type">Título</label>
-                                                <select name="type" class="form-control p-2" v-model="newMaterial.type">
-                                                    <option value="" disabled selected>---Selecciona un tipo---</option>
+                                                <label for="type">Tipo</label>
+                                                <select name="type" v-model="newMaterial.type" class="form-control p-2">
                                                     <option value="file">Archivo</option>
                                                     <option value="link">Enlace</option>
                                                     <option value="video">Video</option>
-                                                    <option value="text">texto</option>
+                                                    <option value="text">Texto</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group" v-if="newMaterial.type === 'file'">
+                                            <div class="form-group" v-if="newMaterial.type==='file'">
                                                 <label for="file">Archivo</label>
-                                                <!-- <input type="file" class="form-control" id="file" @change="handleFileUpload"> -->
-                                                <input type="file" class="form-control" id="file">
+                                                <input type="file" class="form-control" id="file" @change="handleFileUpload">
                                             </div>
-                                            <div class="form-group" v-if="newMaterial.type === 'link'">
-                                                <label for="link">Enlace</label>
-                                                <input type="text" class="form-control" id="link" v-model="newMaterial.url" placeholder="Enlace del material"/>
+                                            <div class="form-group" v-if="newMaterial.type==='link'||newMaterial.type==='video'">
+                                                <label for="link">Link</label>
+                                                <input type="text" id="link" v-model="newMaterial.url" class="form-control p-2" placeholder="Enlace al material"/>
                                             </div>
-                                            <div class="form-group" v-if="newMaterial.type === 'video'">
-                                                <label for="video">Video</label>
-                                                <input type="text" class="form-control" id="video" v-model="newMaterial.url" placeholder="Enlace del video"/>
-                                            </div>
-                                            <div class="form-group" v-if="newMaterial.type === 'text'">
+                                            <div class="form-group" v-if="newMaterial.type==='text'">
                                                 <label for="content">Contenido</label>
-                                                <!-- TODO: reemplazar el input por una libreria que permita editar textos-->
-                                                <input type="text" class="form-control" id="content" v-model="newMaterial.content" />
+                                                <textarea id="content" v-model="newMaterial.content" class="form-control p-2" placeholder="Contenido del material"></textarea>
                                             </div>
+                                            <p v-if="error" class="error">{{ error }}</p>     
                                         </fieldset>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-cyan" @click="createNewMaterial">{{loadingMaterial?'Creando...':'Crear'}}</button>
-                                            <button type="button" class="btn btn-black" data-bs-dismiss="modal">Cerrar</button>
+                                        <div class="modal-footer d-flex justify-content-center gap-3">
+                                            <button type="submit" class="btn btn-green" data-bs-dismiss="modal">{{ loading ? "Creando..." : "Crear"}}</button>
+                                            <button type="button" class="btn btn-blue" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -433,7 +437,7 @@
                                     :searchable="true" 
                                     openDirection="bottom"
                                     placeholder="Seleccionar materiales"
-                                    label="name"
+                                    label="title"
                                     selectLabel="Presiona enter para seleccionar"
                                     selectedLabel="Seleccionado"
                                     deselectLabel="Presiona enter para quitar"
@@ -452,29 +456,55 @@
                             </div>
                         </form>
                     </div>
-                    <!-- <div v-if="course.materials && course.materials.length > 0">
+                    <div v-if="materialsList && materialsList.length > 0">
                         <table id="coursematerialsTable" class="table">
                             <thead>
                                 <tr>
-                                    <th>Órden</th>
-                                    <th>Titulo</th>
-                                    <th>Tipo</th>
-                                    <th>Opciones</th>
+                                    <th class="text-center">Órden</th>
+                                    <th class="text-center">Titulo</th>
+                                    <th class="text-center">Tipo</th>
+                                    <th class="text-center">Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="material in course.materials" :key="material.id">
-                                    <td>{{ material.order }}</td>
-                                    <td>{{ material.title }}</td>
-                                    <td>{{ material.type }}</td>
-                                    <td><button type="button" class="btn btn-outline-danger" @click="deleteMaterialToCourse(material.id)">Elinimar</button></td>
+                                <tr v-for="material in materialsList" :key="material.id">
+                                    <td class="text-center">{{ material.order }}</td>
+                                    <td>{{ material.material.title }}</td>
+                                    <td class="text-center">{{ material.material.type }}</td>
+                                    <td class="d-flex justify-content-center gap-2">
+                                        
+                                        <a v-if="material.material.type==='file'" :href="getFileUrl(material.material.file)" class="btn btn-blue" target="_blank">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+                                            </svg>
+                                        </a>
+                                        <a v-if="material.material.type==='link'||material.material.type==='video'" :href="material.material.url" class="btn btn-green" target="_blank">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                                            </svg>
+                                        </a>
+                                        <button  v-if="material.material.type==='text'" type="button" class="btn btn-primary" @click="viewMaterial(material.material.id)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                                            </svg>
+                                        </button>
+                                        <button type="button" class="btn btn-danger" @click="deleteMaterialToCourse(material.id)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                            </svg>
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>  -->
-                    <!-- <div v-show="course.materials.length === 0 && !showSearchMaterial&&!showNewMaterial">
+                    </div>
+                    <div v-show="materialsList.length === 0 && !showSearchMaterial">
                         <p>Sin materiales en el curso</p>
-                    </div> -->
+                    </div>
                 </section>
             </div>
             <div class="card-bottom d-flex">
@@ -485,6 +515,7 @@
 </template>
 <script>
 import CourseService from '@/services/CoursesService.js';
+import CourseMaterialService from '@/services/CourseMaterialService.js';
 import MaterialService from '@/services/MaterialsService.js';
 import CategoryService from '@/services/CategoryService.js';
 import TrainerService from '@/services/TrainersService.js';
@@ -516,8 +547,10 @@ export default {
             loadingEvaluation: false,
             loadingMaterial: false,
             imagePreview: null,
+            evaluation:null,
             error:'',
 
+            materialsList:[],
             newModule:{
                 name:'',
                 description:'',
@@ -536,12 +569,18 @@ export default {
                 state:'',
                 course_id:'',
             },
-            newMaterial:{
+            newMaterial: {
                 title:'',
-                grado:'curso',
-                type:'',
-                url:'',
-                content:'',
+                grade:'curso',
+                type: 'file ',
+                file:'',
+                url: '',
+                content: '',
+            },
+            newCourseMaterial:{
+                order:'',
+                material_id:'',
+                course_id:'',
             },
 
             showSearchTrainers:false,
@@ -598,9 +637,11 @@ export default {
                 this.cargando=true;
                 const response = await CourseService.getCourseDetails(this.idcurso);
                 this.course = response.data.data;
+                this.getMaterialsLinked();
                 this.getAvailableTrainers();
                 this.getModulesToCourse();
                 this.getAvailableModules();
+                this.getAvailableMaterials();
                 this.getTrainers(this.course);
                 this.$nextTick(() => {
                     $('#courseTrainersTable').DataTable();
@@ -693,7 +734,7 @@ export default {
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este curso?');
             if (confirmed) {
                 try {
-                    await CourseService.deleteCourse(this.course.id); 
+                    await CourseService.deleteCourse(this.course.id ); 
                     this.$router.push({ name: 'Cursos' });
                 } catch (error) {
                     alert('Hubo un error al intentar eliminar el curso.');
@@ -726,12 +767,6 @@ export default {
             };
             if (file) {
                 reader.readAsDataURL(file);  
-            }
-        },
-        handleFileUpload(event) {
-            const file = event.target.files[0]; 
-            if (file) {
-                this.newMaterial.url = file;
             }
         },
         goToEditmodule(id){
@@ -805,6 +840,7 @@ export default {
                 console.error("Error al agregar modulos:", error);
             } finally {
                 this.loadingModule = false;
+                this.showSearchModule=false;
             }
         },
         async deleteTrainerToCourse(trainerId){
@@ -822,12 +858,21 @@ export default {
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este material del curso?');
             if (confirmed) {
                 try {
-                    await MaterialService.deleteCourseToMaterial(materialId,this.idcurso);
+                    this.reorderedMaterials(materialId);
+                    await CourseMaterialService.deleteCourseMaterial(materialId);
                     this.getCourseDetails(); 
                 } catch (error) {
                     alert('Hubo un error al intentar eliminar el curso.');
                 }
             }   
+        },
+        reorderedMaterials(materialId){
+            const materialToDelete=this.course.materials.find(material=>material.id===materialId);
+            const materialsToReorder=this.course.materials.filter(material=>material.order>materialToDelete.order);
+            for(let material of materialsToReorder){
+                material.order=material.order-1;
+                CourseMaterialService.patchCourseMaterial(material.id,material);
+            }
         },
         getFullName (trainer) {
             return `${trainer.user.names} ${trainer.user.last_names}`;
@@ -910,8 +955,109 @@ export default {
                 this.cargando=false;
             }
         },
-        evaluationDetail(){
+        handleFileUpload(event) {
+            const file = event.target.files[0];  
+            if (file) {
+                this.newMaterial.file=file; 
+            }
+        },
+        async createMaterial() {
+        this.error = "";
+        this.loading = true;
+        const formData = new FormData();
+            formData.append("title", this.newMaterial.title);
+            formData.append("grade", this.newMaterial.grade);
+            formData.append("type", this.newMaterial.type);
+            formData.append("url", this.newMaterial.url);
+            formData.append("content", this.newMaterial.content);            
+            if (this.newMaterial.file) {
+                formData.append("file", this.newMaterial.file);
+            }
+        try {
+                const response=await MaterialService.postMaterial(formData);
+                const materialId=response.data.data.id;
+                this.newCourseMaterial.material_id=materialId;
+                this.newCourseMaterial.course_id=this.course.id;
+                this.newCourseMaterial.order=this.course.materials.length+1;
+                await CourseMaterialService.postCourseMaterial(this.newCourseMaterial);
+                this.$router.push({name: 'CursoDetalleVer',params: { idcurso: this.idcurso },});
+        } catch (err) {
+            console.log(err);
+            if (err.response && err.response.status === 422) {
+            this.error = Object.values(err.response.data.errors).flat().join(" ");
+            } else {
+            this.error = "Error al agregar el material.";
+            }
+        } finally {
+            this.loading = false;
+        }
+    },
+    async getMaterialsLinked(){
+            this.materialsList=[];
+            for(let material of this.course.materials){
+                const response=await CourseMaterialService.getCourseMaterialDetails(material.id);
+                this.materialsList.push(response.data.data);
+            }
+            console.log(this.materialsList)
+        },
+        getFileUrl(file) {
+            if (file) {
+                return process.env.VUE_APP_API_URL + "/storage/" + file; 
+            }
+        },
+        viewMaterial(id) {
+            this.$router.push({ name: 'MaterialDetalleVer', params: { idmaterial: id } });
+        },
+        async getAvailableMaterials() {
+            this.availableMaterials = [];
+            try {
+                const response = await MaterialService.getMaterials();
+                const allMaterials = response.data.data; 
+                console.log("mat",allMaterials);
+                const linkedMaterialIds = this.course.materials.map(m => m.material_id);
+                this.availableMaterials = allMaterials.filter(m => !linkedMaterialIds.includes(m.id));
+                console.log("materiales disponibles",this.availableMaterials);
 
+            } catch (error) {
+                console.error("Error al obtener materiales disponibles:", error);
+                this.availableMaterials = [];
+            }
+        },
+
+        addMaterialToCourse(){
+            for(let material of this.selectedMaterials){
+                let newCourseMaterial = {
+                    course_id:this.idcurso,
+                    material_id:material.id,
+                    order:this.course.materials.length+1
+                }
+                CourseMaterialService.postCourseMaterial(newCourseMaterial);
+            }
+            this.selectedMaterials = [];
+            this.getCourseDetails(this.id);
+        },
+        async changeStatus(id){
+            const response= await EvaluationService.getEvaluationDetails(id);
+            this.evaluation=response.data.data;
+            if(this.evaluation.state==="activo"){
+                this.evaluation.state='inactivo'
+            }
+            else{
+                this.evaluation.state='activo'
+            }
+            try{
+                this.cargando=true
+                await EvaluationService.patchEvaluation(id,this.evaluation);
+                this.getCourseDetails();
+            }catch(err){
+                console.log(err);
+            }
+            finally{
+                this.cargando=false;
+            }
+        },
+        evaluationDetail(evaluationId,courseId){
+            this.$router.push({ name: 'EvaluacionDetallesVer', params: { idevaluacion: evaluationId, idcurso: courseId } });
         }
 
     }

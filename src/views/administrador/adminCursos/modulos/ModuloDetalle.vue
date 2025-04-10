@@ -78,8 +78,8 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="lesson in module.lessons" class="table-pointer" :key="lesson.id">
-                                        <td @click="goToLessonDetails()" class="text-center">{{ lesson.order }}</td>
-                                        <td @click="goToLessonDetails()">{{ lesson.title }}</td>
+                                        <td @click="goToLessonDetails(lesson.id,this.module.id)" class="text-center">{{ lesson.order }}</td>
+                                        <td @click="goToLessonDetails(lesson.id,this.module.id)">{{ lesson.title }}</td>
                                         <td class="d-flex justify-content-center gap-2">
                                             <button type="button" class="btn btn-success" @click="lessonUp(lesson.id)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
@@ -451,8 +451,8 @@ export default {
                 this.cargando = false;
             }
         },
-        goToLessonDetails(){
-
+        goToLessonDetails(lessonId,moduleId){
+            this.$router.push({ name: 'LeccionDetallesVer', params: { idleccion: lessonId ,idmodulo:moduleId} });
         }
     }
 };
