@@ -231,7 +231,7 @@ export default{
                         formDataUser.append(key, value);
                     }
                 });
-                await UserService.patchUser(this.idadmin,formDataUser);
+                await UserService.patchUser(this.user.id,formDataUser);
                 this.isEditing = false;
                 this.isViewing=true;
                 this.$router.replace({name:'UsuarioDetallesVer',params:{idusuario:this.iduser}})

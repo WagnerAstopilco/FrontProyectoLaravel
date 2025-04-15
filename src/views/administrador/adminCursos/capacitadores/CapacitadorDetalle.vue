@@ -168,8 +168,7 @@
                                 </template>
                             </multiselect>
                         </fieldset>
-                        <div>
-                            <!-- TODO:CREAR addCoursesToTrainer PARA AGREGAR  CURSOS AL CAPACITADOR-->
+                        <div>                            
                             <button type="submit" class="btn m-2 btn-cyan" >{{this.loadingCourse?'Agregando....':'Agregar'}}</button>
                             <button type="button" class="btn m-2 btn-black" @click="showSearchCourses=false">Cancelar</button>
                         </div>
@@ -378,9 +377,9 @@ export default{
             this.loadingCourse=true;
             try {
                 const requestData = {
-                    courses_ids: this.selectedCourses.map(course => course.id)
+                    course_ids: this.selectedCourses.map(course => course.id)
                 };
-                await TrainerService.postCoursesToTrainer(this.idtrainer, requestData);
+                await TrainerService.postCourseToTrainer(this.idtrainer, requestData);
                 this.selectedCourses = [];
                 this.showSearchCourses=false;
                 this.getTrainerDetails();

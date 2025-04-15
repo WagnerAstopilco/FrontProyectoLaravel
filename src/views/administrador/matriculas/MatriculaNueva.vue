@@ -3,7 +3,7 @@
         <div class="card p-4">
             <h1 class="fs-4">{{name}}</h1>
             <div >
-                <form class="courses-form col-12 mx-auto p-4"  @submit.prevent="createEnrollment(selectedCourse?.id,selectedStudent?.id)">
+                <form class="courses-form col-12 mx-auto p-4"  @submit.prevent="createEnrollment()">
                     <div class="d-flex">
                         <div class="form-group col-6 m-2">
                             <label for="startDate">Inicio de matrícula</label>
@@ -18,30 +18,32 @@
                         <div class="form-group col-6 m-2">
                             <label>Alumnos</label>
                             <Multiselect 
-                                    v-model="selectedStudents" 
-                                    :options="availableStudents" 
-                                    :searchable="true" 
-                                    openDirection="bottom"
-                                    placeholder="Selecciona estudiantes"
-                                    label="names"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
-                                    track-by="id"
-                                    @change="getAvailableCourses()">
-                                    <template #noOptions>
-                                        <span class="text-gray-500">No hay estudiantes disponibles</span>
-                                    </template>
-                                    <template #noResult>
-                                        <span class="text-gray-500"> No se encontraron coincidencias. </span>
-                                    </template>
-                                </Multiselect>
+                                v-model="selectedStudents" 
+                                :options="availableStudents" 
+                                :multiple="true"
+                                :searchable="true" 
+                                openDirection="bottom"
+                                placeholder="Selecciona estudiantes"
+                                label="names"
+                                selectLabel="Presiona enter para seleccionar"
+                                selectedLabel="Seleccionado"
+                                deselectLabel="Presiona enter para quitar"
+                                track-by="id"
+                                @change="getAvailableCourses()">
+                                <template #noOptions>
+                                    <span class="text-gray-500">No hay estudiantes disponibles</span>
+                                </template>
+                                <template #noResult>
+                                    <span class="text-gray-500"> No se encontraron coincidencias. </span>
+                                </template>
+                            </Multiselect>
                         </div>
                         <div class="form-group col-6 m-2">
                             <label>Cursos</label>
                             <Multiselect 
                                     v-model="selectedCourses" 
                                     :options="availableCourses" 
+                                    :multiple="true"
                                     :searchable="true" 
                                     openDirection="bottom"
                                     placeholder="Selecciona el curso"
@@ -60,7 +62,7 @@
                         </div>
                     </div>    
                     <div class="d-flex">
-                        <div class="col-6 m-2" v-if="selectedStudent">
+                        <div class="col-6 m-2" v-if="selectedStudents.length===1">
                             <div>
                                 <h3 class="fs-5">Alumno seleccionado</h3>
                             </div>
@@ -68,24 +70,24 @@
                                 <div>
                                     <div class="form-group">
                                         <label for="name">Nombre</label>
-                                        <input type="text" class="form-control w-50" id="name" v-model="selectedStudent.names" readonly>
+                                        <input type="text" class="form-control w-50" id="name" v-model="selectedStudents[0].names" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="last_name">Apellidos</label>
-                                        <input type="text" class="form-control w-50" id="last_name" v-model="selectedStudent.last_names" readonly>
+                                        <input type="text" class="form-control w-50" id="last_name" v-model="selectedStudents[0].last_names" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Correo</label>
-                                        <input type="text" class="form-control w-50" id="email" v-model="selectedStudent.email" readonly>
+                                        <input type="text" class="form-control w-50" id="email" v-model="selectedStudents[0].email" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Correo</label>
-                                        <input type="text" class="form-control w-50" id="email" v-model="selectedStudent.role" readonly>
+                                        <input type="text" class="form-control w-50" id="email" v-model="selectedStudents[0].role" readonly>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6 m-2" v-if="selectedCourse">
+                        <div class="col-6 m-2" v-if="selectedCourses.length===1">
                             <div>
                                 <h3 class="fs-5">Curso seleccionado</h3>
                             </div>
@@ -93,15 +95,15 @@
                                 <div class="">
                                     <div class="form-group">
                                         <label for="name_long">Nombre</label>
-                                        <input type="text" class="form-control w-50" id="name_long" v-model="selectedCourse.name_long" readonly>
+                                        <input type="text" class="form-control w-50" id="name_long" v-model="selectedCourses[0].name_long" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="price">Precio</label>
-                                        <input type="text" class="form-control w-50" id="price" v-model="selectedCourse.price" readonly>
+                                        <input type="text" class="form-control w-50" id="price" v-model="selectedCourses[0].price" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="description">Descripción</label>
-                                        <input type="text" class="form-control w-50" id="description" v-model="selectedCourse.description" readonly>
+                                        <input type="text" class="form-control w-50" id="description" v-model="selectedCourses[0].description" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -152,7 +154,11 @@ export default{
     },
     created(){
         this.getAvailableStudents();
-        this.getAvailableCourses();
+    },
+    watch: {
+        selectedStudents() {
+            this.getAvailableCourses();
+        }
     },
     components:{
         Multiselect
@@ -163,7 +169,6 @@ export default{
         },
         async getAvailableStudents(){
             const response=await UserService.getUsers();
-            console.log("alumnos",response.data.data);
             this.availableStudents=response.data.data.filter(user=>user.role==='alumno' &&user.status==='activo');
         },
 
@@ -173,7 +178,7 @@ export default{
 
             if (this.selectedStudents.length === 1) {
                 const student = this.selectedStudents[0];
-                const assignedCourseIds = student.courses.map(course => course.id);
+                const assignedCourseIds = student.enrollments.map(enroll => enroll.course_id);
 
                 this.availableCourses = allCourses.filter(course => 
                     !assignedCourseIds.includes(course.id)
@@ -188,8 +193,9 @@ export default{
             const modulos = [];
             for (let course of this.selectedCourses) {
                 const response = await CourseService.getCourseDetails(course.id);
+                console.log("curso",response.data.data);
                 const courseModules = response.data.data.modules;
-                
+                console.log("coursemodulos",courseModules);
                 courseModules.forEach(module => {
                     if (!modulos.includes(module.module_id)) {
                         modulos.push(module.module_id);
@@ -197,15 +203,20 @@ export default{
                 });
                 
             }
+            console.log("modulos",modulos);
 
             for(let module of modulos) {
                 const response = await ModuleService.getModuleDetails(module);
                 const lessons = response.data.data.lessons;
+                console.log("lecciones",lessons);
                 this.courseLessons.push(...lessons);
             }
+            console.log("leccionesdel curso",this.courseLessons);
         },
 
         async createEnrollment(){
+            console.log("alumnos",this.selectedStudents);
+            console.log("cursos",this.selectedCourses);
             try{                
                 this.loading=true;
                 this.getCourseLessons();
@@ -220,6 +231,7 @@ export default{
                         this.newEnrollment.course_id=course.id;
                         await EnrollmentsService.postEnrollment(this.newEnrollment);
                     }
+                    console.log("lecciones",this.courseLessons);
                     for(let lesson of this.courseLessons){
                         this.newUserLessons.user_id=student.id;
                         this.newUserLessons.lesson_id=lesson.id;

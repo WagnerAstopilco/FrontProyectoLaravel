@@ -16,72 +16,76 @@
                     </ul>
                 </div>   
             </div>
-            <form class="courses-form col-12 mx-auto p-4"  @submit.prevent="updateCertificate">
-                    <div class="d-flex">
-                        <div class="col-6 m-2" v-if="certificate">
-                            <div class=" w-50">
-                                <label for="startDate">Fecha de emisíon</label>
-                                <input type="date" id="startDate" class="form-control" v-model="certificate.issue_date" :readonly="!isEditing">
-                            </div>
-                            <div class=" w-50">
-                                <label for="code">Código</label>
-                                <input type="text" id="code" class="form-control" v-model="certificate.code" :readonly="!isEditing">
-                            </div>
-                            <div>
-                                <h3 class="fs-5">Alumno matriculado</h3>
-                            </div>
-                            <div>
-                                <div>
-                                    <div class="form-group">
-                                        <label for="name">Nombre</label>
-                                        <input type="text" class="form-control w-50" id="name" v-model="certificate.user.names" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="last_name">Apellidos</label>
-                                        <input type="text" class="form-control w-50" id="last_name" v-model="certificate.user.last_names" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Correo</label>
-                                        <input type="text" class="form-control w-50" id="email" v-model="certificate.user.email" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Rol</label>
-                                        <input type="text" class="form-control w-50" id="email" v-model="certificate.user.role" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 m-2" v-if="certificate">
-                            <div>
-                                <h3 class="fs-5">Curso</h3>
-                            </div>
-                            <div>
-                                <div class="">
-                                    <div class="form-group">
-                                        <label for="name_long">Nombre</label>
-                                        <input type="text" class="form-control w-50" id="name_long" v-model="certificate.course.name_long" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="price">Precio</label>
-                                        <input type="text" class="form-control w-50" id="price" v-model="certificate.course.price" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="description">Descripción</label>
-                                        <input type="text" class="form-control w-50" id="description" v-model="certificate.course.description" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-if="isEditing ">
-                        <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
-                        <button type="button" class="btn btn-outline-secondary m-2" @click="cancelEdit">Cancelar</button>
-                    </div>
-                </form>
 
-                <div class="d-flex justify-content-center">
-                    <button type="button" id="button-cancel" class="btn btn-warning m-2" @click="goBack">Volver</button>
+            <div class="d-flex gap-3" v-if="certificate">
+                <div class="w-50">
+                    <h3 class="fs-5">Alumno matriculado</h3>
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" class="form-control w-80" id="name" v-model="certificate.user.names" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Apellidos</label>
+                        <input type="text" class="form-control w-80" id="last_name" v-model="certificate.user.last_names" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo</label>
+                        <input type="text" class="form-control w-80" id="email" v-model="certificate.user.email" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Rol</label>
+                        <input type="text" class="form-control w-80" id="email" v-model="certificate.user.role" readonly>
+                    </div>
                 </div>
+                <div class="w-50">
+                    <h3 class="fs-5">Curso</h3>
+                    <div class="form-group">
+                        <label for="name_long">Nombre</label>
+                        <input type="text" class="form-control w-80" id="name_long" v-model="certificate.course.name_long" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Precio</label>
+                        <input type="text" class="form-control w-80" id="price" v-model="certificate.course.price" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descripción</label>
+                        <input type="text" class="form-control w-80" id="description" v-model="certificate.course.description" readonly>
+                    </div>
+                </div>
+            </div>
+            <form  @submit.prevent="updateCertificate()">
+                <legend>Detalles del certificado</legend>
+                <fieldset class="d-flex flex-column justify-content-center align-items-center">
+                    <div class="form-group w-80">
+                        <label for="start_date">Fecha de inicio</label>
+                        <input type="date" id="start_date" class="form-control" v-model="certificate.start_date" :readonly="isViewing">
+                    </div>
+                    <div class="form-group w-80">
+                        <label for="end_date">Fecha de fin</label>
+                        <input type="date" id="end_date" class="form-control" v-model="certificate.end_date" :readonly="isViewing">
+                    </div>
+                    <div class="form-group w-80">
+                        <label for="duration_in_hours">Horas de duración</label>
+                        <input type="number" id="duration_in_hours" class="form-control" v-model="certificate.duration_in_hours" :readonly="isViewing">
+                    </div>
+                    <div class="form-group w-80">
+                        <label for="issue_date">Fecha de emisión</label>
+                        <input type="date" id="issue_date" class="form-control" v-model="certificate.issue_date" :readonly="isViewing">
+                    </div>
+                    <div class="form-group w-80">
+                        <label for="code">Código</label>
+                        <input type="text" id="code" class="form-control" v-model="certificate.code" :readonly="isViewing">
+                    </div>
+                </fieldset>    
+                <div v-if="isEditing" class="d-flex justify-content-center align-items-center">
+                    <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
+                    <button type="button" class="btn btn-outline-secondary m-2" @click="cancelEdit">Cancelar</button>
+                </div>
+            </form>
+
+            <div class="d-flex justify-content-center">
+                <button type="button" id="button-cancel" class="btn btn-warning m-2" @click="goBack">Volver</button>
+            </div>
         </div>
     </div>
 </template>
@@ -129,8 +133,9 @@ export default{
             {
                 this.loading = true;
                 this.cargando=true;
-                await CertificateService.patchEnrollment(this.idcertificate, this.certificate);
+                await CertificateService.patchCertificate(this.certificate.id, this.certificate);
                 this.isEditing = false;
+                this.isViewing = true;
                 this.$router.replace({ name: 'CertificadoDetallesEditar', params: { idcertificado: this.idcertificate }});
             }catch(error){
                 console.log(error);

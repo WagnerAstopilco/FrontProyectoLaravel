@@ -17,24 +17,20 @@
                 <table id="paymentsTable" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Fecha de pago</th>
-                            <th>Código de TRX</th>
-                            <th>Tipo</th>
-                            <th>Monto</th>
-                            <th>Estudiante</th>
-                            <th>Curso</th>
-                            <th>Estado</th>
+                            <th class="text-center">Fecha de pago</th>
+                            <th class="text-center">Código de TRX</th>
+                            <th class="text-center">Tipo</th>
+                            <th class="text-center">Monto</th>
+                            <th class="text-center">Estado</th>
                         </tr>
                     </thead>
                     <tbody >
                         <tr v-for="pay in this.payments" :key="pay.id" @click="payDetail(pay.id)" style="cursor:pointer"> 
-                            <td >{{ pay.payment_date }}</td>
-                            <td >{{ pay.transaction_code }}</td>
-                            <td >{{ pay.type }}</td>
-                            <td >{{ pay.amount }}</td>
-                            <td >{{ pay.enrrolement_id }}</td>
-                            <td >{{ pay.enrrolement_id }}</td>
-                            <td >{{ pay.status }}</td>
+                            <td class="text-center">{{ pay.payment_date }}</td>
+                            <td class="text-center">{{ pay.transaction_code }}</td>
+                            <td class="text-center">{{ pay.type }}</td>
+                            <td class="text-center">{{ pay.amount }}</td>
+                            <td class="text-center">{{ pay.status }}</td>
                         </tr>
                     </tbody>
                 </table>

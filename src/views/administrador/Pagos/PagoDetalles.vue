@@ -19,7 +19,7 @@
             </div>
             <div v-if="payment" class="d-flex">
                 <div class="w-50">
-                    <form class="courses-form p-4"  @submit.prevent="createPayment()">
+                    <form class="courses-form p-4"  @submit.prevent="updatePayment()">
                         <div class="form-group ">
                             <label for="payment_date">Fecha de pago</label>
                             <input type="date" id="payment_date" class="form-control" v-model="payment.payment_date" :readonly="!isEditing">
@@ -33,12 +33,12 @@
                             <input type="text" id="voucher" class="form-control" v-model="payment.voucher" :readonly="!isEditing">
                         </div>
                         <div class="form-group ">
-                            <label for="amount">Monto</label>
+                            <label for="amount">Monto de couta</label>
                             <input type="text" id="amount" class="form-control" v-model="payment.amount" :readonly="!isEditing">
                         </div>
                         <div class="form-group d-flex flex-column">
                             <label for="type">Tipo</label>
-                            <select name="type" class="form-control p-2" v-model="payment.type" :readonly="!isEditing">
+                            <select name="type" class="form-control p-2" v-model="payment.type" :disabled="!isEditing">
                                 <option value="" disabled selected>---Selecciona un tipo de pago---</option>
                                 <option value="transferencia">Transferencia</option>
                                 <option value="yape">Yape</option>
@@ -47,12 +47,12 @@
                             </select>
                         </div>
                         <div class="form-group d-flex flex-column">
-                            <label for="status">Tipo</label>
-                            <select name="status" class="form-control p-2" v-model="payment.status" :readonly="!isEditing">
+                            <label for="status">Estado</label>
+                            <select name="status" class="form-control p-2" v-model="payment.status" :disabled="!isEditing">
                                 <option value="" disabled selected>---Selecciona un estado de la TRX---</option>
-                                <option value="pending">Pendiente</option>
-                                <option value="completed">Completado</option>
-                                <option value="failed">Fallido</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="completada">Completado</option>
+                                <option value="fallida">Fallido</option>
                             </select>
                         </div>
                         
@@ -65,10 +65,10 @@
                 <div class="w-50 p-4">
                     <div v-if="enrollment" class="m-2">
                         <div class="card">
-                            <img src="" class="card-img-top" alt="student image">
                             <div class="card-body">
                                 <h5 class="card-title">Datos del alumno</h5>
                             </div>
+                            <img :src="enrollment.user.photo" class="card-img-top" alt="student image">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">Nombre: {{ this.enrollment.user.names }}</li>
                                 <li class="list-group-item">Apellidos: {{ this.enrollment.user.last_names }}</li>
@@ -78,10 +78,10 @@
                     </div>
                     <div v-if="enrollment" class="m-2">
                         <div class="card">
-                            <img src="" class="card-img-top" alt="course image">
                             <div class="card-body">
                                 <h5 class="card-title">Datos del curso</h5>
                             </div>
+                            <img :src="enrollment.course.image" class="card-img-top" alt="course image">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">Nombre: {{ this.enrollment.course.name_long }}</li>
                                 <li class="list-group-item">Descripción: {{ this.enrollment.course.description }}</li>
@@ -169,7 +169,22 @@ export default{
                     alert('Hubo un error al intentar eliminar el pago.');
                 }
             }   
-        }
+        },
+        async updatePayment(){
+            try{
+                this.cargando=true;
+                this.loading=true;
+                await PaymentService.patchPayment(this.payment.id, this.payment);
+                this.$router.replace({ name: 'PagoDetallesVer', params:{idpago: this.idpayment} });
+                this.isEditing=false;
+                this.isViewing=true;
+            }catch(error){
+                console.log(error);
+            }finally{
+                this.loading=false;
+                this.cargando=false;
+            }
+        },
     }
 }
 </script>

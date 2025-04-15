@@ -471,8 +471,7 @@
                                     <td class="text-center">{{ material.order }}</td>
                                     <td>{{ material.material.title }}</td>
                                     <td class="text-center">{{ material.material.type }}</td>
-                                    <td class="d-flex justify-content-center gap-2">
-                                        
+                                    <td class="d-flex justify-content-center gap-2"> 
                                         <a v-if="material.material.type==='file'" :href="getFileUrl(material.material.file)" class="btn btn-blue" target="_blank">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                                                 <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
@@ -931,6 +930,7 @@ export default {
             try{
                 this.cargando=true;
                 this.newEvaluation.course_id=this.course.id;
+                console.log("evaluacion enviada",this.newEvaluation)
                 await EvaluationService.postEvaluation(this.newEvaluation);
                 this.getCourseDetails();
             }catch(error){
@@ -962,36 +962,36 @@ export default {
             }
         },
         async createMaterial() {
-        this.error = "";
-        this.loading = true;
-        const formData = new FormData();
-            formData.append("title", this.newMaterial.title);
-            formData.append("grade", this.newMaterial.grade);
-            formData.append("type", this.newMaterial.type);
-            formData.append("url", this.newMaterial.url);
-            formData.append("content", this.newMaterial.content);            
-            if (this.newMaterial.file) {
-                formData.append("file", this.newMaterial.file);
+            this.error = "";
+            this.loading = true;
+            const formData = new FormData();
+                formData.append("title", this.newMaterial.title);
+                formData.append("grade", this.newMaterial.grade);
+                formData.append("type", this.newMaterial.type);
+                formData.append("url", this.newMaterial.url);
+                formData.append("content", this.newMaterial.content);            
+                if (this.newMaterial.file) {
+                    formData.append("file", this.newMaterial.file);
+                }
+            try {
+                    const response=await MaterialService.postMaterial(formData);
+                    const materialId=response.data.data.id;
+                    this.newCourseMaterial.material_id=materialId;
+                    this.newCourseMaterial.course_id=this.course.id;
+                    this.newCourseMaterial.order=this.course.materials.length+1;
+                    await CourseMaterialService.postCourseMaterial(this.newCourseMaterial);
+                    this.$router.push({name: 'CursoDetalleVer',params: { idcurso: this.idcurso },});
+            } catch (err) {
+                console.log(err);
+                if (err.response && err.response.status === 422) {
+                this.error = Object.values(err.response.data.errors).flat().join(" ");
+                } else {
+                this.error = "Error al agregar el material.";
+                }
+            } finally {
+                this.loading = false;
             }
-        try {
-                const response=await MaterialService.postMaterial(formData);
-                const materialId=response.data.data.id;
-                this.newCourseMaterial.material_id=materialId;
-                this.newCourseMaterial.course_id=this.course.id;
-                this.newCourseMaterial.order=this.course.materials.length+1;
-                await CourseMaterialService.postCourseMaterial(this.newCourseMaterial);
-                this.$router.push({name: 'CursoDetalleVer',params: { idcurso: this.idcurso },});
-        } catch (err) {
-            console.log(err);
-            if (err.response && err.response.status === 422) {
-            this.error = Object.values(err.response.data.errors).flat().join(" ");
-            } else {
-            this.error = "Error al agregar el material.";
-            }
-        } finally {
-            this.loading = false;
-        }
-    },
+        },
     async getMaterialsLinked(){
             this.materialsList=[];
             for(let material of this.course.materials){

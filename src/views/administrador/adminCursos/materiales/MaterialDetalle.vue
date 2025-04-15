@@ -333,7 +333,7 @@ export default {
         this.getAvailableCourses();
     },
     beforeUnmount() {
-        this.editor.destroy()
+        // this.editor.destroy()
 
         if ($.fn.dataTable.isDataTable('#materialCoursesTable')) {
             $('#materialCoursesTable').DataTable().destroy();

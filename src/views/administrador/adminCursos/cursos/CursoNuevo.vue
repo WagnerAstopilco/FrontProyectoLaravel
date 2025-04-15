@@ -30,6 +30,7 @@
                             <input type="number" class="form-control p-2" id="duration_in_hours" v-model="newCourse.duration_in_hours" placeholder="Duración del curso"/>
                         </div>
                         <div class="form-group">
+                            <!-- TODO: cambiar por un multiselect-->
                             <label for="category">Categoria</label>
                             <select name="category" class="form-control p-2" v-model="newCourse.category_id">
                                 <option value="" disabled selected>---Selecciona una Categoría---</option>

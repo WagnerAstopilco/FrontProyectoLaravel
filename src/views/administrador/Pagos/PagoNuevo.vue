@@ -6,6 +6,7 @@
             <div class="col-8 mx-auto">
                     <!-- Tabla de matrículas -->
                     <div class="table-responsive mt-3">
+                        <h2 class="fs-5">Mátriculas disponibles</h2>
                         <table id="enrollmentsTable" class="table table-striped">
                             <thead>
                                 <tr>
@@ -18,7 +19,7 @@
                             <tbody>
                                 <tr v-for="enrollment in enrollments" :key="enrollment.id">
                                     <td>
-                                        <input type="radio" v-model="selectedEnrollment" :value="enrollment.id" >
+                                        <input type="radio" v-model="selectedEnrollment" :value="enrollment" >
                                     </td>
                                     <td>{{ enrollment.user.names}} {{ enrollment.user.last_names}}</td>
                                     <td>{{ enrollment.course.name_long }}</td>
@@ -29,6 +30,8 @@
                     </div>
 
                 <form class="courses-form  p-4"  @submit.prevent="createPayment()">
+                    <legend class="fs-5">Datos del pago</legend>
+                    <fieldset>
                         <div class="form-group ">
                             <label for="payment_date">Fecha de pago</label>
                             <input type="date" id="payment_date" class="form-control" v-model="newPayment.payment_date" required>
@@ -42,8 +45,8 @@
                             <input type="text" id="voucher" class="form-control" v-model="newPayment.voucher" required>
                         </div>
                         <div class="form-group ">
-                            <label for="amount">Monto</label>
-                            <input type="text" id="amount" class="form-control" v-model="newPayment.amount" required>
+                            <label for="amount">Cuotas</label>
+                            <input type="number" id="amount" class="form-control" v-model="quotas" required>
                         </div>
                         <div class="form-group d-flex flex-column">
                             <label for="type">Tipo</label>
@@ -56,14 +59,15 @@
                             </select>
                         </div>
                         <div class="form-group d-flex flex-column">
-                            <label for="status">Tipo</label>
+                            <label for="status">Estado</label>
                             <select name="status" class="form-control p-2" v-model="newPayment.status" required>
                                 <option value="" disabled selected>---Selecciona un estado de la TRX---</option>
-                                <option value="pending">Pendiente</option>
-                                <option value="completed">Completado</option>
-                                <option value="failed">Fallido</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="completada">Completado</option>
+                                <option value="fallida">Fallido</option>
                             </select>
                         </div>
+                    </fieldset>
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
                         <button type="button" id="button-cancel" class="btn btn-warning m-2" @click="goBack">Volver</button>
@@ -86,6 +90,7 @@ export default{
         return{
             name:'Nuevo Pago',
             cargando:false,
+            quotas:0,
             enrollments:[],
             selectedEnrollment:null,
             loading:false,
@@ -120,6 +125,7 @@ export default{
                 this.cargando=true;
                 const response=await EnrollmentService.getEnrollments();
                 this.enrollments=response.data.data;
+                console.log(this.enrollments);
                 this.$nextTick(() => {
                         if (!$.fn.dataTable.isDataTable('#enrollmentsTable')) {
                             $('#enrollmentsTable').DataTable();
@@ -133,15 +139,26 @@ export default{
         },
         
         async createPayment(){
+            console.log(this.selectedEnrollment);
             try{
                 if (!this.selectedEnrollment) {
                     alert("Selecciona una matrícula");
                     return;
                 }
-                this.newPayment.enrollment_id=this.selectedEnrollment;
+                this.newPayment.enrollment_id=this.selectedEnrollment.id;
                 this.loading=true;
-                await PaymentService.postPayment(this.newPayment);
-                this.$router.push({name:'Pagos'});
+                if(this.quotas===0||this.quotas===1){
+                    this.newPayment.amount=this.selectedEnrollment.course.price;
+                    await PaymentService.postPayment(this.newPayment);
+                    this.$router.push({name:'Pagos'});
+                }
+                else{
+                    this.newPayment.amount=this.selectedEnrollment.course.price/this.quotas;
+                    for(let i=0;i<this.quotas;i++){
+                        await PaymentService.postPayment(this.newPayment);
+                    }
+                    this.$router.push({name:'Pagos'});
+                }
             }catch(error){
                 console.log(error);
             }

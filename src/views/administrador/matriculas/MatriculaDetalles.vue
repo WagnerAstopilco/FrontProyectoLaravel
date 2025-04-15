@@ -79,25 +79,27 @@
                     </div>
                 </form>
                 <div class="Payments" >
+                    <div class="d-flex align-items-center gap-3">
                         <h3>Pagos</h3>
+                    </div>
                         <div v-if="enrollment.payments && enrollment.payments.length>0">
-                            <table id="paymentsEnrollTable" class="table table-striped">
+                            <table id="paymentsEnrollTable" class="table table-striped table-pointer">
                                 <thead>
                                     <tr>
-                                        <th>Fecha de pago</th>
-                                        <th>Tipo</th>
-                                        <th>Código Trx</th>
-                                        <th>Monto</th>
-                                        <th>Estado</th>
+                                        <th class="text-center">Fecha de pago</th>
+                                        <th class="text-center">Tipo</th>
+                                        <th class="text-center">Código Trx</th>
+                                        <th class="text-center">Monto</th>
+                                        <th class="text-center">Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>{{ enrollment.payments.payment_date }}</td>
-                                        <td>{{ enrollment.payments.type }}</td>
-                                        <td>{{ enrollment.payments.transaction_code }}</td>
-                                        <td>{{ enrollment.payments.mount }}</td>
-                                        <td>{{ enrollment.payments.state }}</td>
+                                    <tr v-for="payment in enrollment.payments" :key="payment.id" @click="goToPaymentDetails(payment.id)">
+                                        <td class="text-center">{{ payment.payment_date }}</td>
+                                        <td class="text-center">{{ payment.type }}</td>
+                                        <td class="text-center">{{ payment.transaction_code }}</td>
+                                        <td class="text-center">{{ payment.amount }}</td>
+                                        <td class="text-center">{{ payment.status }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -199,6 +201,9 @@ export default{
         },
         goBack(){
             this.$router.push({name:'Matriculas'});
+        },
+        goToPaymentDetails(paymentId) {
+            this.$router.push({ name: 'PagoDetallesVer', params: { idpago: paymentId } });
         }
     }
 }

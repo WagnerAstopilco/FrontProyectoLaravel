@@ -15,8 +15,8 @@ export default{
     deleteTrainer(id){
         return apiClient.delete(`/trainers/${id}`);
     },
-    postCourseToTrainer(trainerId,courseId){
-        return  apiClient.post(`/trainers/${trainerId}/${courseId}/`);
+    postCourseToTrainer(trainerId,courseIds){
+        return  apiClient.post(`/trainers/${trainerId}/courses/`,courseIds);
     },
     
 }

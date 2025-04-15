@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="card p-4">
-            <div class="head d-flex">
+            <div class="d-flex">
                 <h1 class="fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="dropdown ms-auto" >
@@ -327,6 +327,13 @@ export default {
             }          
         },
         async addCourseToModule(){
+            try{
+                this.cargando=true;
+                this.loading=true;
+                if(this.selectedCourses.length === 0) {
+                    alert("Por favor, selecciona al menos un curso.");
+                    return;
+                }
                 for(let course of this.selectedCourses){
                     let newCourseModule = {
                         module_id:this.module.id,
@@ -337,7 +344,15 @@ export default {
                     await CourseModuleService.postCourseModule(newCourseModule);
                 }
                 this.selectedCourses = [];
-                this.$router.push({name: 'ModuloDetalleVer',params: { idmodulo: this.idmodulo },});
+                this.getModuleDetails();
+            }
+            catch(error){
+                console.log(error);
+            }finally{   
+                this.cargando=false;
+                this.loading=false;
+                this.showSearchCourse = false;
+            }
         },
         async deleteCourseToModule(courseId){
             const confirmed = confirm('¿Estás seguro de que deseas eliminar este curso del módulo?');

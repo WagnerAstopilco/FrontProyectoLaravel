@@ -16,17 +16,23 @@
             <table id="certificatesTable" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Fecha de emisión</th>
-                        <th>Alumno</th>
-                        <th>Curso</th>
+                        <th class="text-center">Fecha de emisión</th>
+                        <th class="text-center">Alumno</th>
+                        <th class="text-center">Curso</th>
+                        <th class="text-center">F. Inicio</th>
+                        <th class="text-center">F. Fin</th>
+                        <th class="text-center">Duración (H)</th>
 
                     </tr>
                 </thead>
                 <tbody >
                     <tr v-for="certificate in certificates" :key="certificate.id" @click="certificateDetail(certificate.id)" style="cursor:pointer"> 
-                        <td >{{ certificate.issue_date }}</td>
-                        <td>{{ certificate.user.names }} {{ certificate.user.last_names }}</td>
-                        <td>{{ certificate.course.name_long }}</td>
+                        <td class="text-center">{{ certificate.issue_date }}</td>
+                        <td class="text-center">{{ certificate.user.names }} {{ certificate.user.last_names }}</td>
+                        <td class="text-center">{{ certificate.course.name_long }}</td>
+                        <td class="text-center">{{ certificate.start_date }}</td>
+                        <td class="text-center">{{ certificate.end_date }}</td>
+                        <td class="text-center">{{ certificate.duration_in_hours }}</td>
                     </tr>
                 </tbody>
             </table>
