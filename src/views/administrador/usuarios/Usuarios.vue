@@ -44,8 +44,8 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-black" data-bs-dismiss="modal">Cancelar</button>
                                     <button type="button" class="btn btn-blue" @click="userModifyRole" data-bs-dismiss="modal">Guardar cambios</button>
+                                    <button type="button" class="btn btn-black" data-bs-dismiss="modal">Cancelar</button>
                                 </div>
                             </div>
                         </div>
@@ -213,24 +213,21 @@ export default {
             }
         },
         getButtonClass(role) {
-      // Asignar un color diferente según el rol
             switch(role) {
                 case 'admin':
-                    return 'btn btn-outline-primary';  // Color para el admin
+                    return 'btn btn-outline-primary'; 
                 case 'supervisor':
-                    return 'btn btn-outline-warning';  // Color para el editor
+                    return 'btn btn-outline-warning';  
                 case 'comercial':
-                    return 'btn btn-outline-info';     // Color para el viewer
+                    return 'btn btn-outline-info';     
                 case 'alumno':
-                    return 'btn btn-outline-secondary';// Color para el guest
+                    return 'btn btn-outline-secondary';
                 case 'capacitador':
                     return 'btn btn-outline-success'
                 default:
-                return 'btn btn-outline-ligth'; // Color por defecto
+                return 'btn btn-outline-ligth'; 
             }
         },
     }
 };
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

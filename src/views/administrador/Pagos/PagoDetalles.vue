@@ -1,11 +1,11 @@
 <template>
     <div class="container">
         <div class="card p-4">
-            <div class="head d-flex">
+            <div class="d-flex">
                 <h1 class="fs-4">{{name}}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="dropdown ms-auto">
-                    <button class="btn btn-info dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-black dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Opciones
                     </button>
                     <ul class="dropdown-menu">
@@ -14,56 +14,56 @@
                         <li><a class="dropdown-item" @click="deletePayment">Eliminar</a></li>
                         </div>
                     </ul>
-                </div> 
-                
+                </div>                
             </div>
-            <div v-if="payment" class="d-flex">
-                <div class="w-50">
-                    <form class="courses-form p-4"  @submit.prevent="updatePayment()">
-                        <div class="form-group ">
-                            <label for="payment_date">Fecha de pago</label>
-                            <input type="date" id="payment_date" class="form-control" v-model="payment.payment_date" :readonly="!isEditing">
-                        </div>
-                        <div class="form-group ">
-                            <label for="transaction_code">Código de TRX</label>
-                            <input type="text" id="transaction_code" class="form-control" v-model="payment.transaction_code" :readonly="!isEditing">
-                        </div>
-                        <div class="form-group ">
-                            <label for="voucher">Voucher</label>
-                            <input type="text" id="voucher" class="form-control" v-model="payment.voucher" :readonly="!isEditing">
-                        </div>
-                        <div class="form-group ">
-                            <label for="amount">Monto de couta</label>
-                            <input type="text" id="amount" class="form-control" v-model="payment.amount" :readonly="!isEditing">
-                        </div>
-                        <div class="form-group d-flex flex-column">
-                            <label for="type">Tipo</label>
-                            <select name="type" class="form-control p-2" v-model="payment.type" :disabled="!isEditing">
-                                <option value="" disabled selected>---Selecciona un tipo de pago---</option>
-                                <option value="transferencia">Transferencia</option>
-                                <option value="yape">Yape</option>
-                                <option value="plin">Plin</option>
-                                <option value="tarjeta">Tarjeta</option>
-                            </select>
-                        </div>
-                        <div class="form-group d-flex flex-column">
-                            <label for="status">Estado</label>
-                            <select name="status" class="form-control p-2" v-model="payment.status" :disabled="!isEditing">
-                                <option value="" disabled selected>---Selecciona un estado de la TRX---</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="completada">Completado</option>
-                                <option value="fallida">Fallido</option>
-                            </select>
-                        </div>
-                        
-                        <div v-if="isEditing ">
-                            <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
-                            <button type="button" class="btn btn-outline-secondary m-2" @click="cancelEdit">Cancelar</button>
+            <div v-if="payment" class="d-flex flex-lg-row flex-column gap-3">
+                <div class="w-lg-50 w-100">
+                    <form   @submit.prevent="updatePayment()">
+                        <fieldset>
+                            <div class="form-group ">
+                                <label for="payment_date">Fecha de pago</label>
+                                <input type="date" id="payment_date" class="form-control" v-model="payment.payment_date" :readonly="!isEditing">
+                            </div>
+                            <div class="form-group ">
+                                <label for="transaction_code">Código de TRX</label>
+                                <input type="text" id="transaction_code" class="form-control" v-model="payment.transaction_code" :readonly="!isEditing">
+                            </div>
+                            <div class="form-group ">
+                                <label for="voucher">Voucher</label>
+                                <input type="text" id="voucher" class="form-control" v-model="payment.voucher" :readonly="!isEditing">
+                            </div>
+                            <div class="form-group ">
+                                <label for="amount">Monto de couta</label>
+                                <input type="text" id="amount" class="form-control" v-model="payment.amount" :readonly="!isEditing">
+                            </div>
+                            <div class="form-group d-flex flex-column">
+                                <label for="type">Tipo</label>
+                                <select name="type" class="form-control p-2" v-model="payment.type" :disabled="!isEditing">
+                                    <option value="" disabled selected>---Selecciona un tipo de pago---</option>
+                                    <option value="transferencia">Transferencia</option>
+                                    <option value="yape">Yape</option>
+                                    <option value="plin">Plin</option>
+                                    <option value="tarjeta">Tarjeta</option>
+                                </select>
+                            </div>
+                            <div class="form-group d-flex flex-column">
+                                <label for="status">Estado</label>
+                                <select name="status" class="form-control p-2" v-model="payment.status" :disabled="!isEditing">
+                                    <option value="" disabled selected>---Selecciona un estado de la TRX---</option>
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="completada">Completado</option>
+                                    <option value="fallida">Fallido</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                        <div v-if="isEditing" class="d-flex gap-3">
+                            <button type="submit" class="btn btn-cyan">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
+                            <button type="button" class="btn btn-blue" @click="cancelEdit">Cancelar</button>
                         </div>
                     </form>
                 </div>
-                <div class="w-50 p-4">
-                    <div v-if="enrollment" class="m-2">
+                <div class="w-lg-50 w-100 d-flex flex-column gap-3">
+                    <div v-if="enrollment">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Datos del alumno</h5>
@@ -76,7 +76,7 @@
                             </ul>
                         </div>                        
                     </div>
-                    <div v-if="enrollment" class="m-2">
+                    <div v-if="enrollment">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Datos del curso</h5>
@@ -91,8 +91,8 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center">
-                <button type="button" id="button-cancel" class="btn btn-warning m-2" @click="goBack">Volver</button>
+            <div class="d-flex justify-content-center mt-3">
+                <button type="button" id="button-cancel" class="btn btn-blue" @click="goBack">Volver</button>
             </div>
         </div>
     </div>

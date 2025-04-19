@@ -5,37 +5,38 @@
                 <h1 class="fs-4">{{name}}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="ms-auto">
-                    <button type="button" class="btn btn-info" @click="newCertificate">
+                    <button type="button" class="btn btn-green" @click="newCertificate">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                         </svg>
                         Nuevo</button>            
                 </div>
             </div>
+            <div class="table-responsive">
+                <table id="certificatesTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Fecha de emisión</th>
+                            <th class="text-center">Alumno</th>
+                            <th class="text-center">Curso</th>
+                            <th class="text-center">F. Inicio</th>
+                            <th class="text-center">F. Fin</th>
+                            <th class="text-center">Duración (H)</th>
 
-            <table id="certificatesTable" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-center">Fecha de emisión</th>
-                        <th class="text-center">Alumno</th>
-                        <th class="text-center">Curso</th>
-                        <th class="text-center">F. Inicio</th>
-                        <th class="text-center">F. Fin</th>
-                        <th class="text-center">Duración (H)</th>
-
-                    </tr>
-                </thead>
-                <tbody >
-                    <tr v-for="certificate in certificates" :key="certificate.id" @click="certificateDetail(certificate.id)" style="cursor:pointer"> 
-                        <td class="text-center">{{ certificate.issue_date }}</td>
-                        <td class="text-center">{{ certificate.user.names }} {{ certificate.user.last_names }}</td>
-                        <td class="text-center">{{ certificate.course.name_long }}</td>
-                        <td class="text-center">{{ certificate.start_date }}</td>
-                        <td class="text-center">{{ certificate.end_date }}</td>
-                        <td class="text-center">{{ certificate.duration_in_hours }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr v-for="certificate in certificates" :key="certificate.id" @click="certificateDetail(certificate.id)" style="cursor:pointer"> 
+                            <td class="text-center">{{ certificate.issue_date }}</td>
+                            <td class="text-center">{{ certificate.user.names }} {{ certificate.user.last_names }}</td>
+                            <td class="text-center">{{ certificate.course.name_long }}</td>
+                            <td class="text-center">{{ certificate.start_date }}</td>
+                            <td class="text-center">{{ certificate.end_date }}</td>
+                            <td class="text-center">{{ certificate.duration_in_hours }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>

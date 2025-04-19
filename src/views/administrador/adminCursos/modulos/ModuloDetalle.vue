@@ -57,8 +57,8 @@
                                         <textarea id="description" class="form-control" v-model="lesson.description" placeholder="Descripción de la lección"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-blue" data-bs-dismiss="modal">Cancelar</button>
                                         <button type="submit" class="btn btn-green" data-bs-dismiss="modal">Crear</button>
+                                        <button type="button" class="btn btn-blue" data-bs-dismiss="modal">Cancelar</button>
                                     </div>
                                 </form>
                             </div>
@@ -121,12 +121,10 @@
                                     :options="availableCourses" 
                                     :multiple="true"
                                     :searchable="true" 
+                                    :showLabels="false"
                                     openDirection="bottom"
                                     placeholder="Seleccionar cursos"
                                     label="name_long"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
                                     track-by="id" class="mb-3">
                                     <template #noOptions>
                                         <span class="text-gray-500">No hay cursos disponibles</span>

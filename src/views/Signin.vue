@@ -1,11 +1,10 @@
 <script setup>
-import { ref,onBeforeUnmount, onBeforeMount, onMounted } from "vue";
+import { ref, onBeforeUnmount,computed, onBeforeMount, onMounted } from "vue";
 import { useStore } from "vuex";
-import { useRoute,useRouter } from "vue-router";
-// import Navbar from "@/examples/PageLayout/Navbar.vue";
-// import ArgonInput from "@/components/ArgonInput.vue";
-// import ArgonSwitch from "@/components/ArgonSwitch.vue";
-// import ArgonButton from "@/components/ArgonButton.vue";
+import { useRoute, useRouter } from "vue-router";
+import apiClient from "../axios";
+import UserService from '@/services/UsersService';
+
 const body = document.getElementsByTagName("body")[0];
 
 const store = useStore();
@@ -13,19 +12,104 @@ const route = useRoute();
 const router = useRouter();
 const isSingIn = ref(false);
 const isSingUp = ref(false);
+
+const email = ref('');
+const password = ref('');
+
 const toggleSignup = () => {
   isSingUp.value = !isSingUp.value;
   isSingIn.value = !isSingIn.value;
-  router.push({name:'Signin'})
+  router.push({ name: 'Signin' });
 };
+
 const toggleSignin = () => {
   isSingUp.value = !isSingUp.value;
   isSingIn.value = !isSingIn.value;
-  router.push({name:'Signup'})
+  router.push({ name: 'Signup' });
 };
-const goToDashboard=()=>{
-  router.push({name:'Dashboard'})
+
+const loginWithGoogle = () => {
+  window.location.href = "http://127.0.0.1:8000/auth/redirect/google";
 };
+
+const login = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await apiClient.post('/login', {
+      email: email.value,
+      password: password.value,
+    });
+
+    localStorage.setItem('access_token', response.data.access_token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+
+    const user = response.data.user;
+    if (user.role === 'admin') {
+      await router.push({ name: 'Usuarios' });
+    } else if (user.role === 'supervisor') {
+      await router.push({ name: 'Capacitadores' });
+    } else if (user.role === 'capacitador') {
+      await router.push({ name: 'Cursos' });
+    }else if (user.role === 'comercial') {
+      await router.push({ name: 'Pagos' });
+    }
+  } catch (error) {
+    console.error('Error en login:', error);
+    alert('Credenciales incorrectas');
+  }
+};
+
+const nombres = ref('');
+const apellidos = ref('');
+const emailRegistro = ref('');
+const passwordRegistro = ref('');
+const passwordRegistro_confirm = ref('');
+const aceptaTerminos = ref(false);
+
+
+const passwordRegistroMismatch = computed(() => {
+  return passwordRegistro.value && passwordRegistro.value !== passwordRegistro_confirm.value;
+});
+
+const register = async (e) => {
+  e.preventDefault();
+  if (!aceptaTerminos.value) {
+    alert('Debe aceptar los términos y condiciones para continuar');
+    return;
+  }
+
+  if (passwordRegistroMismatch.value) return;
+
+  const newUser={
+    names: nombres.value,
+    last_names: apellidos.value,
+    email: emailRegistro.value,
+    password: passwordRegistro.value,
+    role: 'alumno',
+    status: 'activo'
+  }
+  const formData = new FormData();
+            formData.append("names", newUser.names);
+            formData.append("last_names", newUser.last_names);
+            formData.append("email", newUser.email);
+            formData.append("password", newUser.password);
+            formData.append("role", newUser.role);
+            formData.append("status", newUser.status);
+
+  try {
+    await UserService.postUser(formData)
+
+    alert('Usuario registrado correctamente');
+    isSingIn.value = true;
+    isSingUp.value = false;
+    router.push({ name: 'Signin' });
+  } catch (error) {
+    console.error('Error al registrar:', error);
+    alert('Error al registrar usuario');
+  }
+};
+
 onBeforeMount(() => {
   store.state.hideConfigButton = true;
   store.state.showNavbar = false;
@@ -40,98 +124,111 @@ onBeforeUnmount(() => {
   store.state.showFooter = true;
   body.classList.add("bg-gray-100");
 });
-onMounted(()=>{
+onMounted(() => {
   if (route.name === 'Signin') {
-      isSingIn.value = true;
+    isSingIn.value = true;
   } else if (route.name === 'Signup') {
-      isSingUp.value = true;
+    isSingUp.value = true;
   }
 });
 </script>
 <template>
-  <main class="d-flex" style="background-image: url('/background_principal.png'); background-size: cover; background-position: center;">
-    <div class="min-vh-100 col-6 d-flex justify-content-end align-items-center">
-      <img src="/Logo_blanco.png" alt="" class="w-60">
+  <main class="row gx-0 min-vh-100" style="background-image: url('/background_principal.png'); background-size: cover; background-position: center;">
+    
+
+    <div class="col-12 col-lg-6 d-flex justify-content-center justify-content-lg-end align-items-center p-4">
+      <img src="/Logo_blanco.png" alt="Logo" class="img-fluid w-75 w-lg-60" />
     </div>
 
-    <div class="min-vh-100 col-6 d-flex justify-content-center align-items-center">
-      <div class="col-6 min-vh-70 rounded-3 p-5 d-flex flex-column align-items-center text-center justify-content-center" style="background-color:rgb(2,33,96);" v-if="isSingIn">
-        <h2 class="fs-2 p-2" style="color:white">Iniciar Sesión</h2>
-        
-        <button class="btn btn-outline-secondary w-80">
-            <img src="/google-icon.png" alt="Google"> Iniciar Sesión Con Google
+    <div class="col-12 col-lg-6 d-flex justify-content-center align-items-center p-4">
+
+      <!-- Login -->
+      <div 
+        class="w-100 w-md-75 w-lg-60 rounded-3 p-4 p-md-5 d-flex flex-column align-items-center text-center justify-content-center"
+        style="background-color:rgb(2,33,96);"
+        v-if="isSingIn"
+      >
+        <h2 class="fs-2 text-white mb-3">Iniciar Sesión</h2>
+
+        <button class="btn btn-outline-secondary w-100 mb-3" @click="loginWithGoogle">
+          <img src="/google-icon.png" alt="Google" /> Iniciar Sesión Con Google
         </button>
-        <div class="mt-2 position-relative text-center">
-          <p
-            class="text-sm font-weight-bold mb-2  text-border d-inline z-index-2 text-white px-7" 
-          >
-            o ingresar con Email
-          </p>
-        </div>
-        <form>
-            
-          <input type="email" class="w-80 m-3 p-2 rounded-3 bg-transparent text-white border-white" placeholder="Email" required>
-          <input type="password" class="w-80 m-3 p-2 rounded-3 bg-transparent text-white border-white" placeholder="Password" required>
-          <div class="remember-me p-2  d-flex justify-content-center">
-            <label for="remember" style="color:rgb(88,176,49)" >
-                <input type="checkbox" class="" id="remember">
-                <span class="custom-checkbox"></span>
-                Recordar Contraseña
+
+        <p class="text-white my-3 position-relative">o ingresar con Email</p>
+
+        <form @submit="login" class="w-100">
+          <input type="email" v-model="email" class="form-control bg-transparent text-white border-white mb-3" placeholder="Email" required />
+          <input type="password" v-model="password" class="form-control bg-transparent text-white border-white mb-3" placeholder="Password" required />
+
+          <div class="remember-me p-2 d-flex justify-content-center">
+            <label for="remember" style="color:rgb(88,176,49)">
+              <input type="checkbox" id="remember" />
+              <span class="custom-checkbox"></span>
+              Recordar Contraseña
             </label>
           </div>
-          <div class="m-2">            
-            <button type="submit" @click="goToDashboard" class="btn btn-primary w-50" style="background-color:rgb(29,176,215)">Iniciar Sesión</button>
+
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn w-50 text-white" style="background-color:rgb(29,176,215)">Iniciar Sesión</button>
           </div>
         </form>
-        
-        <div class="">
-            <a  class="p-3" style="color:white" href="/forgotPass">¿Olvidaste la contraseña?</a>
-            <p class="p-3" style="color:white">¿No tienes cuenta? <a  href="#" @click="toggleSignin" style="color:rgb(88,176,49);cursor:pointer">Crear Cuenta</a></p>
+
+        <div class="mt-4">
+          <a href="/forgotPass" class="text-white d-block mb-2">¿Olvidaste la contraseña?</a>
+          <p class="text-white">¿No tienes cuenta?
+            <a href="#" @click="toggleSignin" class="text-success" style="cursor:pointer">Crear Cuenta</a>
+          </p>
         </div>
       </div>
 
+      <!-- Registro -->
+      <div 
+        class="w-100 w-md-75 w-lg-60 rounded-3 p-4 p-md-5 d-flex flex-column align-items-center text-center justify-content-center"
+        style="background-color:rgb(2,33,96);"
+        v-if="isSingUp"
+      >
+        <h2 class="fs-2 text-white mb-3">Crear cuenta</h2>
 
-      <div class="col-6 min-vh-70 rounded-3 p-5 d-flex flex-column align-items-center text-center justify-content-center" style="background-color:rgb(2,33,96);" v-if="isSingUp">
-        <h2 class="fs-2 p-2" style="color:white">Crear cuenta</h2>
-        
-        <button class="btn btn-outline-secondary w-80">
-            <img src="/google-icon.png" alt="Google"> Iniciar Sesión Con Google
+        <button class="btn btn-outline-secondary w-100 mb-3" @click="loginWithGoogle">
+          <img src="/google-icon.png" alt="Google" /> Crear Cuenta Con Google
         </button>
-        <div class="mt-2 position-relative text-center">
-          <p
-            class="text-sm font-weight-bold mb-2  text-border d-inline z-index-2 text-white px-7" 
-          >
-            o ingresar con Email
-          </p>
-        </div>
-        <form>
-            
-          <input type="email" class="w-80 m-2 p-2 rounded-3 bg-transparent text-white border-white" placeholder="Nombres" required>
-          <input type="email" class="w-80 m-2 p-2 rounded-3 bg-transparent text-white border-white" placeholder="Apellidos" required>
-          <input type="email" class="w-80 m-2 p-2 rounded-3 bg-transparent text-white border-white" placeholder="Correo" required>
-          <input type="password" class="w-80 m-2 p-2 rounded-3 bg-transparent text-white border-white" placeholder="Contraseña" required>
-          <input type="password" class="w-80 m-2 p-2 rounded-3 bg-transparent text-white border-white" placeholder="Confirmar Contraseña" required>
-          <div class="remember-me p-2  d-flex justify-content-center align-items-center">
-            <label for="remember" style="color:white" >
-                <input type="checkbox" class="" id="remember">
-                <span class="custom-checkbox-singup"></span>
-                Yo acepto, los
-                <a href="#"  style="color:rgb(88,176,49)">términos y condiciones</a>
+
+        <p class="text-white my-3 position-relative">o ingresar con Email</p>
+
+        <form @submit="register" class="w-100">
+          <input type="text" v-model="nombres" class="form-control bg-transparent text-white border-white mb-2" placeholder="Nombres" required />
+          <input type="text" v-model="apellidos" class="form-control bg-transparent text-white border-white mb-2" placeholder="Apellidos" required />
+          <input type="email" v-model="emailRegistro" class="form-control bg-transparent text-white border-white mb-2" placeholder="Correo" required />
+          <input type="password" v-model="passwordRegistro" class="form-control bg-transparent text-white border-white mb-2" placeholder="Contraseña" required />
+          <input type="password" v-model="passwordRegistro_confirm" class="form-control bg-transparent text-white border-white mb-2" placeholder="Confirmar Contraseña" required />
+
+          <div class="remember-me p-2 d-flex justify-content-center align-items-center">
+            <label for="remember" style="color:white">
+              <input type="checkbox" id="remember" v-model="aceptaTerminos" />
+              <span class="custom-checkbox-singup"></span>
+              Yo acepto, los
+              <a href="#" style="color:rgb(88,176,49)">términos y condiciones</a>
             </label>
           </div>
-          <div class="m-2">            
-            <button type="submit" class="btn btn-primary w-50" style="background-color:rgb(29,176,215)">Crear Cuenta</button>
+
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn w-50 text-white" style="background-color:rgb(29,176,215)">Crear Cuenta</button>
           </div>
         </form>
-        
-        <div class="">
-            <p class="p-3" style="color:white">¿Ya tienes una cuenta? <a href="#" @click="toggleSignup" style="color:rgb(88,176,49);cursor:pointer">Inicia Sesión</a></p>
+
+        <div class="mt-4">
+          <p class="text-white">¿Ya tienes una cuenta?
+            <a href="#" @click="toggleSignup" class="text-success" style="cursor:pointer">Inicia Sesión</a>
+          </p>
         </div>
       </div>
+
     </div>
   </main>
-
 </template>
+
+
+
 <style scoped>
 .divider {
     display: flex;

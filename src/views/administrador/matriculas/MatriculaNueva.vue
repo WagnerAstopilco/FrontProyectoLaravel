@@ -3,31 +3,29 @@
         <div class="card p-4">
             <h1 class="fs-4">{{name}}</h1>
             <div >
-                <form class="courses-form col-12 mx-auto p-4"  @submit.prevent="createEnrollment()">
-                    <div class="d-flex">
-                        <div class="form-group col-6 m-2">
+                <form class="courses-form mx-auto"  @submit.prevent="createEnrollment()">
+                    <div class="d-flex flex-md-row flex-column gap-3 ">
+                        <div class="form-group w-md-50 w-100">
                             <label for="startDate">Inicio de matrícula</label>
                             <input type="date" id="startDate" class="form-control" v-model="newEnrollment.enrollment_date" required>
                         </div>
-                        <div class="form-group col-6 m-2">
+                        <div class="form-group w-md-50 w-100">
                             <label for="endDate">Fin de matrícula</label>
                             <input type="date" id="endDate" class="form-control" v-model="newEnrollment.end_enrollment_date" required>
                         </div>
                     </div>
-                    <div class="d-flex">
-                        <div class="form-group col-6 m-2">
+                    <div class="d-flex flex-lg-row flex-column gap-3 ">
+                        <div class="form-group w-lg-50 w-100">
                             <label>Alumnos</label>
                             <Multiselect 
                                 v-model="selectedStudents" 
                                 :options="availableStudents" 
                                 :multiple="true"
                                 :searchable="true" 
+                                :showLabels="false"
                                 openDirection="bottom"
                                 placeholder="Selecciona estudiantes"
                                 label="names"
-                                selectLabel="Presiona enter para seleccionar"
-                                selectedLabel="Seleccionado"
-                                deselectLabel="Presiona enter para quitar"
                                 track-by="id"
                                 @change="getAvailableCourses()">
                                 <template #noOptions>
@@ -38,19 +36,17 @@
                                 </template>
                             </Multiselect>
                         </div>
-                        <div class="form-group col-6 m-2">
+                        <div class="form-group w-lg-50 w-100">
                             <label>Cursos</label>
                             <Multiselect 
                                     v-model="selectedCourses" 
                                     :options="availableCourses" 
                                     :multiple="true"
-                                    :searchable="true" 
+                                    :searchable="true"
+                                    :showLabels="false"
                                     openDirection="bottom"
                                     placeholder="Selecciona el curso"
                                     label="name_long"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
                                     track-by="id">
                                     <template #noOptions>
                                         <span class="text-gray-500">No hay cursos disponibles</span>
@@ -61,8 +57,8 @@
                                 </Multiselect>
                         </div>
                     </div>    
-                    <div class="d-flex">
-                        <div class="col-6 m-2" v-if="selectedStudents.length===1">
+                    <div class="d-flex flex-md-row flex-column gap-3">
+                        <div class="w-md-50 w-100 " v-if="selectedStudents.length===1">
                             <div>
                                 <h3 class="fs-5">Alumno seleccionado</h3>
                             </div>
@@ -70,24 +66,20 @@
                                 <div>
                                     <div class="form-group">
                                         <label for="name">Nombre</label>
-                                        <input type="text" class="form-control w-50" id="name" v-model="selectedStudents[0].names" readonly>
+                                        <input type="text" class="form-control" id="name" v-model="selectedStudents[0].names" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="last_name">Apellidos</label>
-                                        <input type="text" class="form-control w-50" id="last_name" v-model="selectedStudents[0].last_names" readonly>
+                                        <input type="text" class="form-control" id="last_name" v-model="selectedStudents[0].last_names" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Correo</label>
-                                        <input type="text" class="form-control w-50" id="email" v-model="selectedStudents[0].email" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Correo</label>
-                                        <input type="text" class="form-control w-50" id="email" v-model="selectedStudents[0].role" readonly>
+                                        <input type="text" class="form-control" id="email" v-model="selectedStudents[0].email" readonly>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6 m-2" v-if="selectedCourses.length===1">
+                        <div class="w-md-50 w-100" v-if="selectedCourses.length===1">
                             <div>
                                 <h3 class="fs-5">Curso seleccionado</h3>
                             </div>
@@ -95,23 +87,23 @@
                                 <div class="">
                                     <div class="form-group">
                                         <label for="name_long">Nombre</label>
-                                        <input type="text" class="form-control w-50" id="name_long" v-model="selectedCourses[0].name_long" readonly>
+                                        <input type="text" class="form-control" id="name_long" v-model="selectedCourses[0].name_long" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="price">Precio</label>
-                                        <input type="text" class="form-control w-50" id="price" v-model="selectedCourses[0].price" readonly>
+                                        <input type="text" class="form-control" id="price" v-model="selectedCourses[0].price" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="description">Descripción</label>
-                                        <input type="text" class="form-control w-50" id="description" v-model="selectedCourses[0].description" readonly>
+                                        <input type="text" class="form-control" id="description" v-model="selectedCourses[0].description" readonly>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                        <button type="button" id="button-cancel" class="btn btn-warning m-2" @click="goBack">Volver</button>
+                        <button type="submit" class="btn btn-green m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                        <button type="button" id="button-cancel" class="btn btn-blue m-2" @click="goBack">Volver</button>
                     </div>
                     </form>
             </div>
@@ -193,9 +185,7 @@ export default{
             const modulos = [];
             for (let course of this.selectedCourses) {
                 const response = await CourseService.getCourseDetails(course.id);
-                console.log("curso",response.data.data);
                 const courseModules = response.data.data.modules;
-                console.log("coursemodulos",courseModules);
                 courseModules.forEach(module => {
                     if (!modulos.includes(module.module_id)) {
                         modulos.push(module.module_id);
@@ -203,20 +193,15 @@ export default{
                 });
                 
             }
-            console.log("modulos",modulos);
 
             for(let module of modulos) {
                 const response = await ModuleService.getModuleDetails(module);
                 const lessons = response.data.data.lessons;
-                console.log("lecciones",lessons);
                 this.courseLessons.push(...lessons);
             }
-            console.log("leccionesdel curso",this.courseLessons);
         },
 
         async createEnrollment(){
-            console.log("alumnos",this.selectedStudents);
-            console.log("cursos",this.selectedCourses);
             try{                
                 this.loading=true;
                 this.getCourseLessons();
@@ -231,7 +216,6 @@ export default{
                         this.newEnrollment.course_id=course.id;
                         await EnrollmentsService.postEnrollment(this.newEnrollment);
                     }
-                    console.log("lecciones",this.courseLessons);
                     for(let lesson of this.courseLessons){
                         this.newUserLessons.user_id=student.id;
                         this.newUserLessons.lesson_id=lesson.id;

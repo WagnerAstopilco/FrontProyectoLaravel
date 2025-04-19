@@ -81,7 +81,6 @@ export default{
             try{
                 this.cargando=true;
                 const response=await UserService.getUsers();
-                console.log(response);
                 this.students=response.data.data.filter(user=>user.role==='alumno');
                 this.$nextTick(() => {
                         $('#studentsTable').DataTable();

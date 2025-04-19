@@ -74,7 +74,6 @@ export default {
             this.$router.push({name:'ModuloNuevo'});
         },
         moduleDetail(id){
-            console.log(id);
             this.$router.push({ name: 'ModuloDetalleVer', params: { idmodulo: id } });
         }
     }

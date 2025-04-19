@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card p-4">
             <Preloader :visible="cargando"></Preloader>
-            <div class="card-header d-flex pb-0">
+            <div class="d-flex">
                 <h1 class="fs-4">{{ name }}</h1>
                 <div class="dropdown ms-auto">
                     <button class="btn btn-black dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -16,7 +16,7 @@
                     </ul>
                 </div>            
             </div>
-            <div v-if="user" class="card-body pb-0">
+            <div v-if="user">
                 <div class="d-flex flex-lg-row flex-column gap-3 mx-auto">
                     <div class="w-lg-60 w-md-90 w-100">
                         <form @submit.prevent="updateUser">
@@ -281,5 +281,3 @@ export default{
     }
 }
 </script>
-<style scoped>
-</style>

@@ -2,8 +2,8 @@
     <div class="container">
         <div class="card p-4">
             <h1 class="fs-4">{{name}}</h1>
-            <div class="col-8 mx-auto">
-                <form class="courses-form  p-4"  @submit.prevent="createCertificate()">
+            <div class="col-8 w-lg-80 w-md-90 w-100 mx-auto">
+                <form class="courses-form"  @submit.prevent="createCertificate()">
                         <div class="form-group ">
                             <label for="issue_date">Fecha de emisión</label>
                             <input type="date" id="issue_date" class="form-control" v-model="newCertificate.issue_date" required>
@@ -14,12 +14,10 @@
                                 v-model="selectedStudent" 
                                 :options="availableStudents" 
                                 :searchable="true" 
+                                :showLabels="false"
                                 openDirection="bottom"
                                 placeholder="Selecciona el estudiante"
                                 label="names"
-                                selectLabel="Presiona enter para seleccionar"
-                                selectedLabel="Seleccionado"
-                                deselectLabel="Presiona enter para quitar"
                                 track-by="id"
                                 @change="getAvailableCourses()">
                                 <template #noOptions>
@@ -37,12 +35,10 @@
                                 v-model="selectedCourse" 
                                 :options="coursesStudent" 
                                 :searchable="true" 
+                                :showLabels="false"
                                 openDirection="bottom"
                                 placeholder="Selecciona el curso"
                                 label="name_long"
-                                selectLabel="Presiona enter para seleccionar"
-                                selectedLabel="Seleccionado"
-                                deselectLabel="Presiona enter para quitar"
                                 track-by="id"
                                 @change="setDataCertificate()">
                                 <template #noOptions>
@@ -71,9 +67,9 @@
                                 <input type="text" id="code" class="form-control" v-model="newCertificate.code" required>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                            <button type="button" id="button-cancel" class="btn btn-warning m-2" @click="goBack">Volver</button>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-green">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                            <button type="button" id="button-cancel" class="btn btn-blue" @click="goBack">Volver</button>
                         </div>
                     </form>
             </div>
@@ -130,7 +126,6 @@ export default{
             const response=await UserService.getUsers();
             console.log(response);
             this.availableStudents=response.data.data.filter(user=>user.role==='alumno' &&user.status==='activo');
-            console.log(this.availableStudents);
         },
 
         async getAvailableCourses() {
@@ -175,51 +170,3 @@ export default{
     }
 }
 </script>
-<style scoped>
-.search-bar-student{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border:3px solid rgb(19, 136, 103);
-    border-radius: 10px;
-    padding:5px;
-}
-.search-bar-student-input {
-    background-color: transparent; 
-    border: none; 
-    outline: none; 
-    padding: 8px 12px; 
-    font-size: 16px;  
-    color: #333;
-    width: 100%;
-}
-.search-bar-student-input:focus {
-    outline: none; 
-}
-
-.student-container {
-    position: absolute;
-    top: 100%; 
-    left: 0;
-    width: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    max-height: 200px; 
-}
-
-.studentsList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.studentsList li {
-    padding: 8px;
-    cursor: pointer;
-}
-
-.studentsList li:hover {
-    background-color: #f1f1f1;
-}
-
-</style>

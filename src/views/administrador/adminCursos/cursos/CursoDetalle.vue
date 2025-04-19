@@ -75,9 +75,9 @@
                 </div>
                 <!-- capacitadores -->
                 <section class="mb-3">
-                    <div class="d-flex ">
-                        <h3>Capacitadores</h3>
-                        <button class="btn btn-green ms-3" @click="showSearchTrainers=!showSearchTrainers">
+                    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+                        <h3 class="mb-2 mb-md-0">Capacitadores</h3>
+                        <button class="btn btn-green ms-0 ms-md-3" @click="showSearchTrainers=!showSearchTrainers">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
                                 <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
                                 <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
@@ -85,6 +85,7 @@
                             Vincular
                         </button>
                     </div>
+
                     <form v-show="showSearchTrainers" class="w-lg-50 w-md-60 w-100 mb-4" @submit.prevent="addTrainersToCourse" >
                         <fieldset>
                             <Multiselect 
@@ -93,12 +94,10 @@
                                 :multiple="true"
                                 :searchable="true" 
                                 :custom-label="getFullName" 
+                                :showLabels="false"
                                 openDirection="bottom"
                                 placeholder="Seleccionar capacitadores"
                                 label="names"
-                                selectLabel="Presiona enter para seleccionar"
-                                selectedLabel="Seleccionado"
-                                deselectLabel="Presiona enter para quitar"
                                 track-by="id" class="mb-3">
                                 <template #noOptions>
                                     <span class="text-gray-500">No hay capacitadores disponibles</span>
@@ -137,22 +136,25 @@
                 </section>
                 <!-- modulos -->
                 <section class="mb-3">
-                    <div class="d-flex gap-md-3 gap-2">
-                        <h3>Modulos</h3>
-                        <button type="button" class="btn btn-blue" data-bs-toggle="modal" data-bs-target="#newModule">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                            </svg>
-                            Nuevo
-                        </button>
-                        <button class="btn btn-green" @click="showNewModule=false;showSearchModule=!showSearchModule;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
-                                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
-                                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
-                            </svg>
-                            Vincular
-                        </button>
+                    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 gap-md-3">
+                        <h3 class="mb-2 mb-md-0">Módulos</h3>
+                        <div class="d-flex gap-3">
+                            <button type="button" class="btn btn-blue" data-bs-toggle="modal" data-bs-target="#newModule">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                                </svg>
+                                Nuevo
+                            </button>
+                            <button class="btn btn-green" @click="showNewModule=false;showSearchModule=!showSearchModule;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                                </svg>
+                                Vincular
+                            </button>
+                        </div>
                     </div>
+
                     <!-- modal nuevo modulo -->
                     <div class="modal fade" id="newModule" tabindex="-1" aria-labelledby="newModuleLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -193,12 +195,10 @@
                                     :options="availableModules" 
                                     :multiple="true"
                                     :searchable="true" 
+                                    :showLabels="false"
                                     openDirection="bottom"
                                     placeholder="Seleccionar módulos"
                                     label="name"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
                                     track-by="id" class="mb-3">
                                     <template #noOptions>
                                         <span class="text-gray-500">No hay módulos disponibles</span>
@@ -321,7 +321,7 @@
                         </div>
                     </div>
                     <!-- fin modal evaluación-->
-                    <div v-show="course.evaluations && course.evaluations.length > 0">
+                    <div v-show="course.evaluations && course.evaluations.length > 0" class="table-responsive">
                         <table id="courseEvaluationsTable" class="table table-striped table-hover table-bordered">
                             <thead>
                                 <tr>
@@ -362,21 +362,23 @@
                 </section>
                 <!-- materiales -->
                 <section>
-                    <div class="d-flex gap-3">
-                        <h3>Materiales</h3> 
-                        <button type="button" class="btn btn-blue" data-bs-toggle="modal" data-bs-target="#newMaterial">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                            </svg>
-                            Nuevo
-                        </button>
-                        <button class="btn btn-green" @click="showSearchMaterial=!showSearchMaterial; showNewMaterial=false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
-                                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
-                                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
-                            </svg>
-                            Vincular
-                        </button>
+                    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 gap-md-3">
+                        <h3 class="mb-2 mb-md-0">Materiales</h3> 
+                        <div class="d-flex gap-3">
+                            <button type="button" class="btn btn-blue" data-bs-toggle="modal" data-bs-target="#newMaterial">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                                </svg>
+                                Nuevo
+                            </button>
+                            <button class="btn btn-green" @click="showSearchMaterial=!showSearchMaterial; showNewMaterial=false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                                </svg>
+                                Vincular
+                            </button>
+                        </div>
                     </div>
                     <!-- Modal nuevo material -->
                     <div class="modal fade" id="newMaterial" tabindex="-1" aria-labelledby="newMaterialLabel" aria-hidden="true">
@@ -435,12 +437,10 @@
                                     :options="availableMaterials" 
                                     :multiple="true"
                                     :searchable="true" 
+                                    :showLabels="false"
                                     openDirection="bottom"
                                     placeholder="Seleccionar materiales"
                                     label="title"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
                                     track-by="id" class="mb-3">
                                     <template #noOptions>
                                         <span class="text-gray-500">No hay materiales disponibles</span>
@@ -456,7 +456,7 @@
                             </div>
                         </form>
                     </div>
-                    <div v-if="materialsList && materialsList.length > 0">
+                    <div v-if="materialsList && materialsList.length > 0" class="table-responsive">
                         <table id="coursematerialsTable" class="table">
                             <thead>
                                 <tr>
@@ -507,7 +507,7 @@
                 </section>
             </div>
             <div class="card-bottom d-flex">
-                <button type="button" class="btn btn-primary mx-auto" style="background-color:rgb(0,87,163);color:white;" @click="goBack">Volver</button>
+                <button type="button" class="btn btn-blue mx-auto"  @click="goBack">Volver</button>
             </div>
         </div>
     </div>
@@ -646,7 +646,6 @@ export default {
                     $('#courseTrainersTable').DataTable();
                     $('#courseModulesTable').DataTable();
                     $('#courseEvaluationsTable').DataTable();
-                    // $('#courseEvaluationsTable').DataTable();
                 }); 
             }catch(error){
                 console.log(error);
@@ -708,12 +707,6 @@ export default {
             if (this.course.image && this.course.image instanceof File) {
                 formData.append("image", this.course.image);
             }
-            console.log("id curso",this.idcurso);
-            console.log("Datos enviados en FormData:");
-            for (let pair of formData.entries()) {
-                console.log(pair[0] + ':', pair[1]);
-            }
-
             try {
                 this.error = "";
                 this.loading = true;
@@ -904,8 +897,6 @@ export default {
                 this.cargando = true;
                 const { data } = await CourseModuleService.getCourseModuleDetails(courseModuleId);
                 const moduleToDown = data.data;
-                console.log(moduleToDown);
-                console.log(this.course.modules.length);
                 if (moduleToDown.order === this.course.modules.length) {
                     alert("Este módulo ya tiene el último N° de orden");
                     this.cargando=false;
@@ -930,7 +921,6 @@ export default {
             try{
                 this.cargando=true;
                 this.newEvaluation.course_id=this.course.id;
-                console.log("evaluacion enviada",this.newEvaluation)
                 await EvaluationService.postEvaluation(this.newEvaluation);
                 this.getCourseDetails();
             }catch(error){
@@ -998,7 +988,6 @@ export default {
                 const response=await CourseMaterialService.getCourseMaterialDetails(material.id);
                 this.materialsList.push(response.data.data);
             }
-            console.log(this.materialsList)
         },
         getFileUrl(file) {
             if (file) {
@@ -1013,10 +1002,8 @@ export default {
             try {
                 const response = await MaterialService.getMaterials();
                 const allMaterials = response.data.data; 
-                console.log("mat",allMaterials);
                 const linkedMaterialIds = this.course.materials.map(m => m.material_id);
                 this.availableMaterials = allMaterials.filter(m => !linkedMaterialIds.includes(m.id));
-                console.log("materiales disponibles",this.availableMaterials);
 
             } catch (error) {
                 console.error("Error al obtener materiales disponibles:", error);

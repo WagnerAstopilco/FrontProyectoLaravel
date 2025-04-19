@@ -30,6 +30,7 @@
                                 :options="availableUsers" 
                                 :multiple="true"
                                 :searchable="true" 
+                                :showLabels="false"
                                 openDirection="bottom"
                                 placeholder="Seleccionar usuarios"
                                 label="names"
@@ -171,12 +172,6 @@ export default {
                 await Promise.all(updatePromises);
                 this.selectedUsers = [];
                 this.showSearchUsers=false;
-                // if ($.fn.dataTable.isDataTable('#courseCategoryTable')) {
-                //     $('#courseCategoryTable').DataTable().clear().destroy();
-                // }
-                // this.$nextTick(() => {                    
-                //     $('#courseCategoryTable').DataTable();
-                // });
                 this.getAdministrators();
                 
             } catch (error) {

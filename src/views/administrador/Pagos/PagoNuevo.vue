@@ -1,12 +1,15 @@
 <template>
     <div class="container">
         <div class="card p-4">
-            <h1 class="fs-4">{{name}}</h1>
             <Preloader :visible="cargando"></Preloader>
-            <div class="col-8 mx-auto">
+            <div class="mb-3">
+                <h1 class="fs-4">{{name}}</h1>
+            </div>
+            <div class="w-lg-80 w-md-90 w-100 mx-auto ">
+                <div class="mb-3">
                     <!-- Tabla de matrículas -->
+                    <h2 class="fs-5">Mátriculas disponibles</h2>
                     <div class="table-responsive mt-3">
-                        <h2 class="fs-5">Mátriculas disponibles</h2>
                         <table id="enrollmentsTable" class="table table-striped">
                             <thead>
                                 <tr>
@@ -28,8 +31,9 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
 
-                <form class="courses-form  p-4"  @submit.prevent="createPayment()">
+                <form  @submit.prevent="createPayment()">
                     <legend class="fs-5">Datos del pago</legend>
                     <fieldset>
                         <div class="form-group ">
@@ -68,9 +72,9 @@
                             </select>
                         </div>
                     </fieldset>
-                    <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-info m-2">{{ loading ? "Agregando..." : "Agregar" }}</button>
-                        <button type="button" id="button-cancel" class="btn btn-warning m-2" @click="goBack">Volver</button>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="submit" class="btn btn-green">{{ loading ? "Agregando..." : "Agregar" }}</button>
+                        <button type="button" id="button-cancel" class="btn btn-blue" @click="goBack">Volver</button>
                     </div>
                     </form>
             </div>
@@ -125,7 +129,6 @@ export default{
                 this.cargando=true;
                 const response=await EnrollmentService.getEnrollments();
                 this.enrollments=response.data.data;
-                console.log(this.enrollments);
                 this.$nextTick(() => {
                         if (!$.fn.dataTable.isDataTable('#enrollmentsTable')) {
                             $('#enrollmentsTable').DataTable();
@@ -139,7 +142,6 @@ export default{
         },
         
         async createPayment(){
-            console.log(this.selectedEnrollment);
             try{
                 if (!this.selectedEnrollment) {
                     alert("Selecciona una matrícula");
@@ -170,51 +172,3 @@ export default{
     }
 }
 </script>
-<style scoped>
-.search-bar-student{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border:3px solid rgb(19, 136, 103);
-    border-radius: 10px;
-    padding:5px;
-}
-.search-bar-student-input {
-    background-color: transparent; 
-    border: none; 
-    outline: none; 
-    padding: 8px 12px; 
-    font-size: 16px;  
-    color: #333;
-    width: 100%;
-}
-.search-bar-student-input:focus {
-    outline: none; 
-}
-
-.student-container {
-    position: absolute;
-    top: 100%; 
-    left: 0;
-    width: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    max-height: 200px; 
-}
-
-.studentsList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.studentsList li {
-    padding: 8px;
-    cursor: pointer;
-}
-
-.studentsList li:hover {
-    background-color: #f1f1f1;
-}
-
-</style>

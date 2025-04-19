@@ -153,12 +153,10 @@
                                 :options="availableCourses" 
                                 :multiple="true"
                                 :searchable="true" 
+                                :showLabels="false"
                                 openDirection="bottom"
                                 placeholder="Selecciona cursos para agregar"
                                 label="name_long"
-                                selectLabel="Presiona enter para seleccionar"
-                                selectedLabel="Seleccionado"
-                                deselectLabel="Presiona enter para quitar"
                                 track-by="id" class="mb-3">
                                 <template #noOptions>
                                     <span class="text-gray-500">No hay cursos disponibles</span>
@@ -265,7 +263,6 @@ export default{
                 let response=await TrainerService.getTrainerDetails(this.idtrainer);
                 this.trainer=response.data.data;
                 this.getAvailableCourses();
-                console.log("entrenador",this.trainer);
                 response=await UserService.getUserDetails(this.trainer.user.id);
                 this.user=response.data.data;
             }catch(error){

@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="card p-4">
-            <div class="d-flex">
+            <div class="d-flex gap-3">
                 <h1 class="fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="dropdown ms-auto" >

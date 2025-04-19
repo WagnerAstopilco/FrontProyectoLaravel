@@ -5,7 +5,7 @@
                 <h1 class="fs-4">{{name}}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="dropdown ms-auto">
-                    <button class="btn btn-info dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-black dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Opciones
                     </button>
                     <ul class="dropdown-menu">
@@ -19,7 +19,7 @@
 
             <div class="d-flex gap-3" v-if="certificate">
                 <div class="w-50">
-                    <h3 class="fs-5">Alumno matriculado</h3>
+                    <h3 class="fs-5">Alumno</h3>
                     <div class="form-group">
                         <label for="name">Nombre</label>
                         <input type="text" class="form-control w-80" id="name" v-model="certificate.user.names" readonly>
@@ -31,10 +31,6 @@
                     <div class="form-group">
                         <label for="email">Correo</label>
                         <input type="text" class="form-control w-80" id="email" v-model="certificate.user.email" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Rol</label>
-                        <input type="text" class="form-control w-80" id="email" v-model="certificate.user.role" readonly>
                     </div>
                 </div>
                 <div class="w-50">
@@ -78,13 +74,13 @@
                     </div>
                 </fieldset>    
                 <div v-if="isEditing" class="d-flex justify-content-center align-items-center">
-                    <button type="submit" class="btn btn-outline-warning m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
-                    <button type="button" class="btn btn-outline-secondary m-2" @click="cancelEdit">Cancelar</button>
+                    <button type="submit" class="btn btn-cyan m-2">{{ loading ? "Actualizando..." : "Actualizar" }}</button>
+                    <button type="button" class="btn btn-blue m-2" @click="cancelEdit">Cancelar</button>
                 </div>
             </form>
 
             <div class="d-flex justify-content-center">
-                <button type="button" id="button-cancel" class="btn btn-warning m-2" @click="goBack">Volver</button>
+                <button type="button" id="button-cancel" class="btn btn-blue m-2" @click="goBack">Volver</button>
             </div>
         </div>
     </div>

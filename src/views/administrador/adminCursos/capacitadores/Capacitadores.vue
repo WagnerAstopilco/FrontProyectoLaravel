@@ -30,12 +30,10 @@
                                 :options="availableUsers" 
                                 :multiple="true"
                                 :searchable="true" 
+                                :showLabels="false"
                                 openDirection="bottom"
                                 placeholder="Seleccionar usuarios"
                                 label="names"
-                                selectLabel="Presiona enter para seleccionar"
-                                selectedLabel="Seleccionado"
-                                deselectLabel="Presiona enter para quitar"
                                 track-by="id" >
                                 <template #noOptions>
                                     <span class="text-gray-500">No hay usuarios disponibles</span>

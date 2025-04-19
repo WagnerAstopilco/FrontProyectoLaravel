@@ -1,20 +1,19 @@
 <script setup>
 import { reactive } from "vue";
 import { useRoute } from "vue-router";
-
-
 import SidenavItem from "./SidenavItem.vue";
 
 const state = reactive({
   dropdownOpen: false
 });
 
-const getRoute = () => {
-  const route = useRoute();
-  const routeArr = route.path.split("/");
-  return routeArr[1];
-};
+const route = useRoute();
+const getRoute = () => route.path.split("/")[1];
+
+const user = JSON.parse(localStorage.getItem('user'));
+const userRole = user?.role || null;
 </script>
+
 <template>
   <div class="collapse navbar-collapse w-auto h-auto h-100" id="sidenav-collapse-main">
     <ul class="navbar-nav">
@@ -26,8 +25,8 @@ const getRoute = () => {
           <span class="m-1">{{ ' Administrar Cursos' }}</span>
           <i class="ms-auto" :class="state.dropdownOpen ? 'ni ni-bold-down' : 'ni ni-bold-right'"></i>
         </a>
-        <ul v-if="state.dropdownOpen" class="dropdown-menu show">
-          <li>
+        <ul v-if="state.dropdownOpen" class="dropdown-menu show">          
+          <li v-if="['admin', 'supervisor'].includes(userRole)">
             <sidenav-item to="/AdminCursos/categorias" :class="getRoute() === 'Categorias' ? 'active' : ''" navText="Categorías">
               <template v-slot:icon>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tags" viewBox="0 0 16 16">
@@ -37,7 +36,7 @@ const getRoute = () => {
               </template>
             </sidenav-item>
           </li>
-          <li>
+          <li v-if="['admin', 'capacitador'].includes(userRole)">
             <sidenav-item to="/AdminCursos/cursos" :class="getRoute() === 'Cursos' ? 'active' : ''" navText="Cursos" >
               <template v-slot:icon>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal" viewBox="0 0 16 16">
@@ -47,7 +46,7 @@ const getRoute = () => {
               </template>
             </sidenav-item>
           </li>
-          <li>
+          <li v-if="['admin', 'capacitador'].includes(userRole)">
             <sidenav-item to="/AdminCursos/materiales" :class="getRoute() === 'Materiales' ? 'active' : ''" navText="Materiales" >
               <template v-slot:icon>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
@@ -56,7 +55,7 @@ const getRoute = () => {
               </template>
             </sidenav-item>
           </li>
-          <li>
+          <li v-if="['admin', 'capacitador'].includes(userRole)">
             <sidenav-item to="/AdminCursos/modulos" :class="getRoute() === 'Modulos' ? 'active' : ''" navText="Modulos" >
               <template v-slot:icon>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid-fill" viewBox="0 0 16 16">
@@ -65,7 +64,7 @@ const getRoute = () => {
               </template>
             </sidenav-item>
           </li>
-          <li>
+          <li v-if="['admin', 'supervisor'].includes(userRole)">
             <sidenav-item to="/AdminCursos/capacitadores" :class="getRoute() === 'Capacitadores' ? 'active' : ''" navText="Capacitadores" >
               <template v-slot:icon>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-workspace" viewBox="0 0 16 16">
@@ -78,7 +77,7 @@ const getRoute = () => {
         </ul>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="['admin'].includes(userRole)">
         <sidenav-item to="/alumnos" :class="getRoute() === 'alumnos' ? 'active' : ''" navText="Alumnos">
           <template v-slot:icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill text-success" viewBox="0 0 16 16">
@@ -88,7 +87,7 @@ const getRoute = () => {
         </sidenav-item>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="['admin', 'comercial'].includes(userRole)">
         <sidenav-item to="/matriculas" :class="getRoute() === 'matriculas' ? 'active' : ''" navText="Matrículas">
           <template v-slot:icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-check-fill text-warning" viewBox="0 0 16 16">
@@ -98,7 +97,7 @@ const getRoute = () => {
         </sidenav-item>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="['admin', 'comercial'].includes(userRole)">
         <sidenav-item to="/certificados" :class="getRoute() === 'certificados' ? 'active' : ''" navText="Certificados">
           <template v-slot:icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-award-fill text-danger" viewBox="0 0 16 16">
@@ -109,7 +108,7 @@ const getRoute = () => {
         </sidenav-item>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" v-if="['admin', 'comercial'].includes(userRole)">
         <sidenav-item to="/pagos" :class="getRoute() === 'pagos' ? 'active' : ''" navText="Pagos">
           <template v-slot:icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card-fill text-secondary" viewBox="0 0 16 16">
@@ -119,7 +118,7 @@ const getRoute = () => {
         </sidenav-item>
       </li>
       
-      <li class="nav-item">
+      <li class="nav-item" v-if="['admin'].includes(userRole)">
         <sidenav-item to="/administradores" :class="getRoute() === 'administradores' ? 'active' : ''" navText="Administradores">
           <template v-slot:icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-lock text-info" viewBox="0 0 16 16">
@@ -128,7 +127,7 @@ const getRoute = () => {
           </template>
         </sidenav-item>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="['admin'].includes(userRole)">
         <sidenav-item to="/usuarios" :class="getRoute() === 'usuarios' ? 'active' : ''" navText="usuarios">
           <template v-slot:icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle text-dark" viewBox="0 0 16 16">

@@ -69,7 +69,6 @@ export default {
                 this.cargando=true;
                 const response = await CategoryService.getCategories();
                 this.categories = response.data.data;
-                console.log("categorias", this.categories);
                 this.$nextTick(() => {
                     $('#categoryTable').DataTable();
                 });

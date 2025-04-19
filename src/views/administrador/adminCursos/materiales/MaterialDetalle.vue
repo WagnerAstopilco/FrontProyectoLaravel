@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="card p-4">
-            <div class="head d-flex">
+            <div class="d-flex gap-3">
                 <h1 class="fs-4">{{ name }}</h1>
                 <Preloader :visible="cargando"></Preloader>
                 <div class="dropdown ms-auto">
@@ -38,12 +38,10 @@
                                     :options="availableCourses" 
                                     :multiple="true"
                                     :searchable="true" 
+                                    :showLabels="false"
                                     openDirection="bottom"
                                     placeholder="Selecciona cursos para agregar"
                                     label="name_long"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
                                     track-by="id" class="">
                                     <template #noOptions>
                                         <span class="text-gray-500">No hay cursos disponibles</span>
@@ -59,12 +57,10 @@
                                     v-model="course" 
                                     :options="availableCourses" 
                                     :searchable="true" 
+                                    :showLabels="false"
                                     openDirection="bottom"
                                     placeholder="Selecciona el curso"
                                     label="name_long"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
                                     track-by="id" 
                                     @change="getAvailableLessons()">
                                     <template #noOptions>
@@ -80,13 +76,11 @@
                                 <Multiselect 
                                     v-model="selectedLesson" 
                                     :options="availableLessons" 
-                                    :searchable="true"                             
+                                    :searchable="true"        
+                                    :showLabels="false"                     
                                     openDirection="bottom"
                                     placeholder="Selecciona lección para agregar"
                                     label="title"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
                                     track-by="id" class="">
                                     <template #noOptions>
                                         <span class="text-gray-500">No hay lecciones disponibles</span>
@@ -115,25 +109,7 @@
                                 <input type="text" id="link" v-model="material.url" class="form-control p-2" placeholder="Enlace al material" :readonly="!isEditing"/>
                             </div>
                             <div class="form-group" v-if="material.type==='text'">
-                                <label for="content">Contenido</label>
-                                <!-- <div v-if="isEditing" class="editor-toolbar mb-2">
-                                <button type="button" @click="toggleBold" :class="{ active: editor.isActive('bold') }"><strong>B</strong></button>
-                                <button type="button" @click="toggleItalic" :class="{ active: editor.isActive('italic') }"><em>I</em></button>
-                                <button type="button" @click="toggleUnderline" :class="{ active: editor.isActive('underline') }"><u>U</u></button>
-                                <button type="button" @click="setHeading(1)">H1</button>
-                                <button type="button" @click="setHeading(2)">H2</button>
-                                <button type="button" @click="setParagraph">P</button>
-                                <button type="button" @click="toggleBulletList">• Lista</button>
-                                <button @click="toggleAlign('left')">Izquierda</button>
-                                <button @click="toggleAlign('center')">Centro</button>
-                                <button @click="toggleAlign('right')">Derecha</button>
-                                <button @click="addLink()">🔗 Enlace</button>
-                                <button @click="addImage()">🖼️ Imagen</button> -->
-                            <!-- </div> -->
-                                <!-- <div v-if="isEditing">
-                                    <EditorContent :editor="editor" class="border p-3 rounded" />
-                                </div>
-                                <div v-else v-html="material.content" class="border p-3 rounded bg-light readonly-content" /> -->
+                                <label for="content">Contenido</label>                                
                             </div>
                             <p v-if="error" class="error">{{ error }}</p>     
                             <div v-if="isEditing" class="d-flex justify-content-center gap-3">
@@ -200,12 +176,10 @@
                                     :options="availableCourses" 
                                     :multiple="true"
                                     :searchable="true" 
+                                    :showLabels="false"
                                     openDirection="bottom"
                                     placeholder="Selecciona cursos para agregar"
                                     label="name_long"
-                                    selectLabel="Presiona enter para seleccionar"
-                                    selectedLabel="Seleccionado"
-                                    deselectLabel="Presiona enter para quitar"
                                     track-by="id" class="">
                                     <template #noOptions>
                                         <span class="text-gray-500">No hay cursos disponibles</span>
@@ -222,7 +196,7 @@
                         </form>
                         
                         
-                        <div v-if="coursesList && coursesList.length > 0">
+                        <div v-if="coursesList && coursesList.length > 0" class="table-responsive">
                             <table id="materialCoursesTable" class="table table-striped">
                                 <thead>
                                     <tr>
@@ -267,13 +241,6 @@ import $ from 'jquery';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
 import 'datatables.net-bs4';
 import Multiselect from 'vue-multiselect';
-// import { Editor, EditorContent } from '@tiptap/vue-3'
-// import StarterKit from '@tiptap/starter-kit'
-// import Underline from '@tiptap/extension-underline'
-// import Placeholder from '@tiptap/extension-placeholder'
-// import TextAlign from '@tiptap/extension-text-align'
-// import Link from '@tiptap/extension-link'
-// import Image from '@tiptap/extension-image'
 
 export default {
     data() {
@@ -304,7 +271,6 @@ export default {
             showSearchBar:false,
             showFormCourseMaterial:false,
             coursesList:[],
-            // editor: null,
 
         };
     },
@@ -314,26 +280,10 @@ export default {
         } else if (this.$route.name === 'MaterialDetalleEditar') {
             this.isEditing = true;
         };
-        // this.editor = new Editor({
-        //     content: this.material?.content || '<p>Escribe aquí...</p>',
-        //     extensions: [
-        //     StarterKit,
-        //     Underline,
-        //     TextAlign.configure({ types: ['heading', 'paragraph'] }),
-        //     Link.configure({ openOnClick: false }),
-        //     Image,
-        //     Placeholder.configure({ placeholder: 'Escribe el contenido del material...' })
-        //     ],
-        //     onUpdate: ({ editor }) => {
-        //     this.material.content = editor.getHTML(); // Sincroniza con v-model
-        //     },
-        //     editable: this.isEditing,
-        // });
         this.getMaterialDetails();
         this.getAvailableCourses();
     },
     beforeUnmount() {
-        // this.editor.destroy()
 
         if ($.fn.dataTable.isDataTable('#materialCoursesTable')) {
             $('#materialCoursesTable').DataTable().destroy();
@@ -350,7 +300,6 @@ export default {
     components:{
         Preloader,
         Multiselect,
-        // EditorContent,
     },
     methods: {
         async getMaterialDetails() {
@@ -561,7 +510,7 @@ export default {
             }
             for (let course of this.selectedCourses) {
                 this.newCourseMaterial.order = this.material.courses.length + 1;
-                this.newCourseMaterial.material_id = this.material.id;
+                this.newCourseMaterial.material_id = this.material.id;   
                 this.newCourseMaterial.course_id = course.id;
                 CourseMaterialService.postCourseMaterial(this.newCourseMaterial);
             }
@@ -581,29 +530,3 @@ export default {
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
-<style scoped>
-/* Estilos personalizados para tu TipTap */
-.editor-content {
-  min-height: 200px;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  background-color: #fff;
-  font-family: sans-serif;
-}
-
-/* También puedes personalizar partes específicas como párrafos, encabezados, etc. */
-.editor-content p {
-  margin: 0;
-  line-height: 1.6;
-}
-
-/* Si quieres que el contenido en modo lectura tenga otro estilo */
-.readonly-content {
-  background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #ddd;
-}
-</style>

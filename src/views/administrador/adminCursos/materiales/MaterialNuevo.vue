@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card p-4">
             <h1 class="card-title fs-4">{{ name }}</h1>
-            <div class="card-body col-8 mx-auto">
+            <div class="card-body w-lg-80 w-md-90 w-100  mx-auto">
                 <form @submit.prevent="createMaterial()">
                     <div class="form-group d-flex flex-column">
                         <label for="title">Titulo</label>
@@ -23,12 +23,10 @@
                             :options="availableCourses" 
                             :multiple="true"
                             :searchable="true" 
+                            :showLabels="false"
                             openDirection="bottom"
                             placeholder="Selecciona cursos para agregar"
                             label="name_long"
-                            selectLabel="Presiona enter para seleccionar"
-                            selectedLabel="Seleccionado"
-                            deselectLabel="Presiona enter para quitar"
                             track-by="id" class="">
                             <template #noOptions>
                                 <span class="text-gray-500">No hay cursos disponibles</span>
@@ -44,12 +42,10 @@
                             v-model="course" 
                             :options="availableCourses" 
                             :searchable="true" 
+                            :showLabels="false"
                             openDirection="bottom"
                             placeholder="Selecciona el curso"
                             label="name_long"
-                            selectLabel="Presiona enter para seleccionar"
-                            selectedLabel="Seleccionado"
-                            deselectLabel="Presiona enter para quitar"
                             track-by="id" 
                             @change="getAvailableLessons()">
                             <template #noOptions>
@@ -65,13 +61,11 @@
                         <Multiselect 
                             v-model="selectedLesson" 
                             :options="availableLessons" 
-                            :searchable="true"                             
+                            :searchable="true"       
+                            :showLabels="false"                      
                             openDirection="bottom"
                             placeholder="Selecciona lección para agregar"
                             label="title"
-                            selectLabel="Presiona enter para seleccionar"
-                            selectedLabel="Seleccionado"
-                            deselectLabel="Presiona enter para quitar"
                             track-by="id" class="">
                             <template #noOptions>
                                 <span class="text-gray-500">No hay lecciones disponibles</span>
@@ -226,7 +220,6 @@ methods: {
         try {
         let response = await CourseService.getCourseDetails(this.course.id);
         this.modulesToCourse = response.data.data.modules;
-        console.log("modulos del curso sel.",this.modulesToCourse);
         for (let module of this.modulesToCourse) {
             response = await ModuleService.getModuleDetails(module.module_id);
             if (response.data.data.lessons) {

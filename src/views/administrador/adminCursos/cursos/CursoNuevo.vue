@@ -30,7 +30,6 @@
                             <input type="number" class="form-control p-2" id="duration_in_hours" v-model="newCourse.duration_in_hours" placeholder="Duración del curso"/>
                         </div>
                         <div class="form-group">
-                            <!-- TODO: cambiar por un multiselect-->
                             <label for="category">Categoria</label>
                             <select name="category" class="form-control p-2" v-model="newCourse.category_id">
                                 <option value="" disabled selected>---Selecciona una Categoría---</option>
@@ -111,7 +110,6 @@ export default {
         async getCategories() {
             const response = await CategoryService.getCategories();
             this.categories = response.data.data;
-            console.log("categorias", this.categories);
         },
         handleImageUpload(event) {
             const file = event.target.files[0];  
@@ -154,13 +152,11 @@ export default {
                 this.$router.push({ name: 'CursoDetalleVer', params: { idcurso: courseId } });
             } catch (err) {
                 console.error("Error en addCourse:", err);
-    
-    // Verifica si la estructura del error es válida
-    if (err.response?.data?.errors) {
-        this.error = Object.values(err.response.data.errors).flat().join(" ");
-    } else {
-        this.error = "Ocurrió un error inesperado al agregar el curso.";
-    }
+                if (err.response?.data?.errors) {
+                    this.error = Object.values(err.response.data.errors).flat().join(" ");
+                } else {
+                    this.error = "Ocurrió un error inesperado al agregar el curso.";
+                }
             } finally {
                 this.loading = false;
             }

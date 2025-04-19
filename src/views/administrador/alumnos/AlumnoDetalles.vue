@@ -173,12 +173,10 @@
                                                     :options="availableCourses" 
                                                     :multiple="true"
                                                     :searchable="true" 
+                                                    :showLabels="false"
                                                     openDirection="bottom"
                                                     placeholder="Selecciona el curso"
                                                     label="name_long"
-                                                    selectLabel="Presiona enter para seleccionar"
-                                                    selectedLabel="Seleccionado"
-                                                    deselectLabel="Presiona enter para quitar"
                                                     track-by="id">
                                                     <template #noOptions>
                                                         <span class="text-gray-500">No hay cursos disponibles</span>
@@ -258,12 +256,10 @@
                                                     v-model="selectedCourse" 
                                                     :options="coursesStudent" 
                                                     :searchable="true" 
+                                                    :showLabels="false"
                                                     openDirection="bottom"
                                                     placeholder="Selecciona el curso"
                                                     label="name_long"
-                                                    selectLabel="Presiona enter para seleccionar"
-                                                    selectedLabel="Seleccionado"
-                                                    deselectLabel="Presiona enter para quitar"
                                                     track-by="id"
                                                     @change="setDataCertificate()">
                                                     <template #noOptions>
